@@ -7,7 +7,7 @@ async function getMovies() {
     
     // Fallback to static data if no API key is provided
     if (!apiKey) {
-        return DATA.movies?.map(m => ({ ...m, isTVShow: m.tags?.includes("TV Show") || m.tags?.includes("Series") })) || [];
+        return DATA.movies?.map(m => ({ ...m, isTVShow: (m.tags as string[])?.includes("TV Show") || (m.tags as string[])?.includes("Series") })) || [];
     }
 
     try {
@@ -28,7 +28,7 @@ async function getMovies() {
         }));
     } catch (e) {
         console.error("TMDB fetch failed:", e);
-        return DATA.movies?.map(m => ({ ...m, isTVShow: m.tags?.includes("TV Show") || m.tags?.includes("Series") })) || [];
+        return DATA.movies?.map(m => ({ ...m, isTVShow: (m.tags as string[])?.includes("TV Show") || (m.tags as string[])?.includes("Series") })) || [];
     }
 }
 
