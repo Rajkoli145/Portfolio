@@ -195,7 +195,7 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
+      image: "/projects/freelancerflow.png",
       video: "",
     },
     {
@@ -227,7 +227,7 @@ export const DATA = {
       dates: "Recent",
       active: true,
       description:
-        "Built a fully interactive macOS-style personal portfolio running in the browser — complete with a working dock, draggable windows, and project showcases, deployed via GitHub Pages.",
+        "Built a fully interactive macOS-style personal portfolio running in the browser — complete with a working dock, draggable windows, and project showcases, deployed via Vercel.",
       technologies: [
         "JavaScript",
         "HTML",
@@ -238,6 +238,57 @@ export const DATA = {
           type: "Website",
           href: "https://rajkoli.vercel.app",
           icon: <Icons.globe className="size-3" />,
+        },
+      ],
+      image: "/projects/macos.png",
+      video: "",
+    },
+    {
+      title: "DealVault Escrow",
+      href: "https://github.com/DealVaultHQ/dealvault-platform-escrow",
+      dates: "Ongoing",
+      active: true,
+      description: "Modern escrow web application for secure buyer-seller transactions. Building a robust platform to handle transaction states and verifiable escrow logic.",
+      technologies: ["TypeScript", "Next.js", "Tailwind CSS"],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/DealVaultHQ/dealvault-platform-escrow",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
+      title: "Almost Friday",
+      href: "https://github.com/Soldier224K/ALMOST_FRIDAY",
+      dates: "Ongoing",
+      active: true,
+      description: "An ongoing collaborative software project focusing on modern web infrastructure and dynamic user experiences.",
+      technologies: ["React", "TypeScript", "Node.js"],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/Soldier224K/ALMOST_FRIDAY",
+          icon: <Icons.github className="size-3" />,
+        },
+      ],
+      image: "",
+      video: "",
+    },
+    {
+      title: "AI Founder Intelligence",
+      href: "https://github.com/Rajkoli145/ai-founder-intelligence",
+      dates: "Ongoing",
+      active: true,
+      description: "An AI-powered intelligence platform tailored for startup founders, providing data-driven market insights and strategic AI playbooks.",
+      technologies: ["Next.js", "OpenAI", "Python"],
+      links: [
+        {
+          type: "Source",
+          href: "https://github.com/Rajkoli145/ai-founder-intelligence",
+          icon: <Icons.github className="size-3" />,
         },
       ],
       image: "",
