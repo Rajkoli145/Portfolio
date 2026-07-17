@@ -177,7 +177,7 @@ export const DATA = {
     {
       title: "FreelancerFlow",
       href: "https://github.com/Rajkoli145/freelancerflow",
-      dates: "Recent",
+      dates: "May 13, 2026 - Present",
       active: true,
       description:
         "Built a complete full-stack platform from scratch handling project tracking, invoicing, and client management for freelancers. Reduced invoice generation time by designing a structured file I/O export pipeline. Secured all API routes with JWT authentication and middleware validation. Wrote automated endpoint tests covering all critical API routes.",
@@ -201,7 +201,7 @@ export const DATA = {
     {
       title: "EduStory",
       href: "https://github.com/Rajkoli145/edustory",
-      dates: "Recent",
+      dates: "May 13, 2026 - Present",
       active: true,
       description:
         "Built an end-to-end AI storytelling platform delivering dynamic, personalised story generation. Designed a prompt pipeline architecture that reduced AI output inconsistency by structuring inputs and validating outputs programmatically. Implemented NextAuth with persistent sessions and role-based access. Wrote validation scripts to automatically test AI-generated content quality.",
@@ -224,7 +224,7 @@ export const DATA = {
     {
       title: "macOS Portfolio",
       href: "https://rajkoli.vercel.app",
-      dates: "Recent",
+      dates: "Dec 26, 2025 - Present",
       active: true,
       description:
         "Built a fully interactive macOS-style personal portfolio running in the browser — complete with a working dock, draggable windows, and project showcases, deployed via Vercel.",
@@ -246,7 +246,7 @@ export const DATA = {
     {
       title: "DealVault Escrow",
       href: "https://github.com/DealVaultHQ/dealvault-platform-escrow",
-      dates: "Ongoing",
+      dates: "Feb 15, 2026 - Present",
       active: true,
       description: "Modern escrow web application for secure buyer-seller transactions. Building a robust platform to handle transaction states and verifiable escrow logic.",
       technologies: ["TypeScript", "Next.js", "Tailwind CSS"],
@@ -263,7 +263,7 @@ export const DATA = {
     {
       title: "Almost Friday",
       href: "https://github.com/Soldier224K/ALMOST_FRIDAY",
-      dates: "Ongoing",
+      dates: "May 25, 2026 - Present",
       active: true,
       description: "An ongoing collaborative software project focusing on modern web infrastructure and dynamic user experiences.",
       technologies: ["React", "TypeScript", "Node.js"],
@@ -280,7 +280,7 @@ export const DATA = {
     {
       title: "AI Founder Intelligence",
       href: "https://github.com/Rajkoli145/ai-founder-intelligence",
-      dates: "Ongoing",
+      dates: "May 25, 2026 - Present",
       active: true,
       description: "An AI-powered intelligence platform tailored for startup founders, providing data-driven market insights and strategic AI playbooks.",
       technologies: ["Next.js", "OpenAI", "Python"],
