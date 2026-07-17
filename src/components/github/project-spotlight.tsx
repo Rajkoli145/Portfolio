@@ -15,11 +15,16 @@ export function ProjectSpotlight({ repos }: { repos: any[] }) {
             if (targetRepo) {
                 setFeatured(targetRepo);
             } else {
-                // Fallback to random if friday isn't found
-                const withDesc = repos.filter(r => r.description && !r.fork);
-                const pool = withDesc.length > 0 ? withDesc : repos;
-                const random = pool[Math.floor(Math.random() * Math.min(pool.length, 10))];
-                setFeatured(random);
+                // Since the repo is private/unavailable in the public API fetch, we hardcode it for the spotlight
+                setFeatured({
+                    name: "friday",
+                    description: "An ongoing collaborative software project focusing on modern web infrastructure and dynamic user experiences.",
+                    language: "TypeScript",
+                    stargazers_count: 0,
+                    forks_count: 0,
+                    html_url: "https://github.com/Rajkoli145/friday",
+                    homepage: "https://github.com/Rajkoli145/friday"
+                });
             }
         }
     }, [repos]);
