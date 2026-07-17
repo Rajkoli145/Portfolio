@@ -1,7 +1,327 @@
 ---
-title: "AI Agent Opportunities"
+title: "Chapter 8: AI Agent Opportunities — Finding Automatable Work"
 publishedAt: "2026-07-17"
 summary: "Chapter from the Startup Research Handbook."
 ---
 
-Find repetitive work, approvals, reporting, monitoring, scheduling.
+> *"Every AI agent startup is really just a well-researched workflow, wearing a new coat of paint. The research is the same as every other chapter in this handbook. The only new question is: can a model actually do this step now?"*
+
+---
+
+## Why This Chapter Comes After the Others, Not Before
+
+It would be tempting to start a modern startup research process with "what can AI automate?" This handbook deliberately puts that question eighth, not first, and Chapter 0 already warned you why: **starting with a technology and looking for a problem to apply it to is backwards.** Founders who start with "AI is hot right now" (Chapter 0's Trend-First row) build technology looking for a home.
+
+By this point, you already have validated pain (Chapters 1-6) and, if you did Chapter 7, a specific industry workflow map with each task's current level of automation already documented. This chapter's job is narrow and specific: **take the pain you've already found and determine whether it is now AI-agent-solvable in a way it wasn't 18 months ago.**
+
+This connects directly to Chapter 1's Category 7 (Technology Shifts): "This category does not require you to find new problems. It requires you to revisit old, well-known problems and ask: is this solvable now, in a way it wasn't before?" That is the entire premise of this chapter.
+
+---
+
+## What "AI Agent" Actually Means in This Handbook
+
+The term "AI agent" gets used loosely. For research purposes, define it precisely:
+
+> **An AI agent is a system that observes a task's inputs, takes multiple sequential actions (not just a single response), makes decisions between those actions based on intermediate results, and produces a completed outcome — with a human reviewing the outcome rather than performing each step.**
+
+This is different from:
+
+- **A chatbot** (single-turn or conversational Q&A with no multi-step task execution)
+- **Traditional automation/RPA** (rule-based, breaks when inputs vary, cannot handle judgment calls)
+- **A simple API integration** (moves data between systems but makes no decisions)
+
+The distinguishing feature of an AI agent opportunity is that the task requires *judgment* at intermediate steps — not just execution of a fixed script. A workflow that's 100% deterministic (if X then Y, always) is better served by traditional automation, which is cheaper and more reliable. A workflow that requires reading unstructured input, making a contextual decision, and adapting the next step accordingly is where agents add real value over both humans-only and rules-only automation.
+
+---
+
+## The Automation Readiness Framework
+
+Not every repetitive task is a good AI agent opportunity yet. Score each candidate task on these five dimensions (1-5 each, 25 total) before pursuing it.
+
+| Dimension | 1 (Poor Fit) | 5 (Strong Fit) |
+|---|---|---|
+| **Task structure** | Requires deep, ambiguous human judgment with no clear "correct" answer | Has a clear definition of success, even if the path to it varies |
+| **Input format** | Unstructured, highly variable, requires physical presence | Digital, textual/visual, consistently available (documents, emails, dashboards, forms) |
+| **Error tolerance** | Mistakes are catastrophic/irreversible (e.g., medical dosing, legal filing deadlines) | Mistakes are correctable, low-stakes, or easily caught by review |
+| **Verification cost** | Checking the agent's work takes as long as doing the task manually | A human can verify the output much faster than producing it themselves |
+| **Current workaround maturity** | No workaround exists yet — it's a brand new task | Workaround already exists (manual or RPA) — proves demand and gives you a benchmark to beat |
+
+**Scoring guide:**
+- **20-25**: Strong AI agent candidate — pursue now
+- **14-19**: Viable but needs a narrower scope or human-in-the-loop design
+- **8-13**: Premature — technology or task structure isn't ready yet; revisit in 6-12 months
+- **Below 8**: Poor fit — likely better solved with traditional software or process redesign, not an agent
+
+**Critical case: Error Tolerance.** This dimension deserves special weight. A task can score high on every other dimension and still be a poor early candidate if a mistake is catastrophic and hard to catch — healthcare dosing decisions, legal filing deadlines, financial transaction approvals above a threshold. For high-stakes categories, design for human-in-the-loop review rather than full autonomy, at least in the MVP.
+
+---
+
+## The Automation Pattern Taxonomy
+
+Rather than searching for "AI opportunities" generically, search for these six specific, recognizable work patterns. Each pattern maps to a distinct research approach.
+
+### 1. Repetitive Work
+**Definition:** The same sequence of steps performed over and over on different but structurally similar inputs.
+**Example:** Categorizing incoming support tickets by type before routing them.
+**Where to find it:** Job postings with repeated task lists (Chapter 1, Category 4); "I do this every single day" language in interviews and forums.
+
+### 2. Copy-Paste Tasks
+**Definition:** Moving the same piece of information between two or more systems that don't natively talk to each other.
+**Example:** Copying a new CRM lead's details into a separate spreadsheet-based forecasting model.
+**Where to find it:** "We manually copy" phrases (Chapter 2's query library); integration feature requests in GitHub Issues (Chapter 5).
+
+### 3. Approvals
+**Definition:** A human reviewing a request against a set of criteria and deciding yes/no/escalate.
+**Example:** Reviewing expense reports against a policy before approving reimbursement.
+**Where to find it:** "Approval bottleneck," "waiting on sign-off," "review queue" language; job postings for review/QA-titled roles.
+
+### 4. Reporting
+**Definition:** Aggregating data from multiple sources into a human-readable summary on a recurring schedule.
+**Example:** Compiling weekly campaign performance across five ad platforms into one client-facing deck.
+**Where to find it:** "Reporting takes X hours" complaints; Chapter 7's Marketing Agencies playbook is a direct example of this pattern.
+
+### 5. Monitoring
+**Definition:** Continuously watching a system, metric, or data feed for a condition that requires a response.
+**Example:** Watching server error rates and paging an engineer when a threshold is breached.
+**Where to find it:** GitHub Issues about alerting gaps (Chapter 5); "we found out too late" language, which signals a monitoring failure.
+
+### 6. Scheduling
+**Definition:** Coordinating timing across multiple constrained parties or resources.
+**Example:** Finding a meeting time across five interviewers' calendars, or routing a delivery truck around warehouse capacity.
+**Where to find it:** "Back and forth" and "coordination overhead" language; Chapter 7's Logistics playbook (fulfillment routing) and HR playbook (interview scheduling) are direct examples.
+
+### Pattern Summary Table
+
+| Pattern | Core Action | Verification Difficulty | Typical Error Tolerance |
+|---|---|---|---|
+| Repetitive Work | Classify/transform | Low | Medium-High |
+| Copy-Paste Tasks | Transfer data | Low | Medium-High |
+| Approvals | Judge against criteria | Medium | Low-Medium (depends on stakes) |
+| Reporting | Aggregate and summarize | Low-Medium | High |
+| Monitoring | Watch and alert | Medium | Low (false negatives are costly) |
+| Scheduling | Coordinate constraints | Medium | Medium |
+
+---
+
+## Functional Domain Query Library
+
+Combine these domain-specific seed terms with the pattern language above and the platform techniques from Chapters 2-6.
+
+### CRM / Sales Operations
+```
+"CRM" "manually update" "every deal"
+"lead routing" "manual" "workaround"
+"sales report" "compile" "hours"
+"pipeline" "copy and paste" "spreadsheet"
+```
+
+### HR / Recruiting
+```
+"resume screening" "manual" "too many applicants"
+"interview scheduling" "back and forth" "nightmare"
+"onboarding checklist" "manual" "missed steps"
+"reference check" "time consuming"
+```
+
+### Finance / Accounting
+```
+"expense report" "approval" "bottleneck"
+"invoice matching" "manual" "reconciliation"
+"month-end" "compile" "spreadsheet" "hours"
+"budget approval" "waiting on" "sign-off"
+```
+
+### Legal
+```
+"contract review" "first pass" "manual"
+"redlining" "compare versions" "time consuming"
+"compliance checklist" "manual" "every filing"
+"discovery review" "manual" "document by document"
+```
+
+### Healthcare
+```
+"prior authorization" "status" "manual check"
+"patient intake forms" "manual entry"
+"clinical documentation" "time consuming" "after hours"
+"denial management" "manual" "resubmission"
+```
+
+### Marketing
+```
+"campaign reporting" "compile" "manual" "hours"
+"content calendar" "manual" "coordination"
+"social media" "scheduling" "manual" "every post"
+"ad performance" "cross-platform" "manual"
+```
+
+### Customer Support
+```
+"ticket triage" "manual" "categorize"
+"support queue" "backlog" "response time"
+"FAQ" "same question" "repeatedly"
+"escalation" "manual" "routing"
+```
+
+### Operations
+```
+"vendor onboarding" "manual" "checklist"
+"inventory reconciliation" "manual" "count"
+"SOP" "manual" "compliance check"
+"quality audit" "manual" "checklist" "every"
+```
+
+### Recruiting (agency/staffing specific)
+```
+"candidate sourcing" "manual" "hours per role"
+"job description" "write from scratch" "every time"
+"candidate follow-up" "manual" "forget to"
+```
+
+### Documentation
+```
+"meeting notes" "manual" "transcribe"
+"documentation" "out of date" "nobody updates"
+"knowledge base" "manual" "maintain"
+```
+
+### Developer Workflows
+```
+"code review" "backlog" "waiting"
+"PR review" "manual" "bottleneck"
+"changelog" "manual" "compile"
+"incident response" "runbook" "manual steps"
+```
+
+---
+
+## The Human-in-the-Loop Design Decision Tree
+
+For any candidate task scoring in the "Viable but needs narrower scope" range (14-19) on the Automation Readiness Framework, use this tree to determine the right level of autonomy for an MVP.
+
+```
+Is a mistake reversible and low-cost?
+│
+├── YES → Is verification faster than doing the task manually?
+│         │
+│         ├── YES → FULL AUTONOMY VIABLE
+│         │         Agent completes the task end-to-end;
+│         │         human spot-checks periodically, not every instance.
+│         │
+│         └── NO  → AGENT-DRAFTS, HUMAN-APPROVES
+│                   Agent produces the output; human reviews and
+│                   approves/edits before it takes effect.
+│
+└── NO  → Is the decision boundary well-defined (clear policy/rule)?
+          │
+          ├── YES → AGENT-FLAGS, HUMAN-DECIDES
+          │         Agent identifies cases matching criteria and routes
+          │         them to a human; human makes the final call.
+          │
+          └── NO  → NOT YET VIABLE FOR AUTONOMY
+                    Keep the task human-led; use AI only as a research/
+                    drafting assistant within the process, not as the
+                    decision-maker.
+```
+
+Most successful early-stage AI agent startups deliberately start in the "Agent-Drafts, Human-Approves" or "Agent-Flags, Human-Decides" quadrants, even when full autonomy is technically possible, because it builds trust with early customers and creates a natural upsell path toward more autonomy as the product proves reliable.
+
+---
+
+## From Workflow Map to Agent Opportunity: A Worked Example
+
+Applying this chapter's framework to a finding from Chapter 7's Marketing Agencies playbook:
+
+```
+CANDIDATE TASK: Cross-platform client performance reporting
+(sourced from Ch. 7, Marketing Agencies Playbook, Pain Inventory)
+
+AUTOMATION READINESS SCORE
+   Task structure: 5 — clear success definition (accurate, on-time report)
+   Input format: 5 — fully digital (ad platform APIs, dashboards)
+   Error tolerance: 4 — mistakes are correctable before client sees report
+   Verification cost: 4 — a human can visually check a report much
+                          faster than compiling one from scratch
+   Workaround maturity: 5 — manual Data Studio dashboards already
+                             exist, proving demand and setting a
+                             clear benchmark to beat
+   TOTAL: 23/25 — Strong AI agent candidate
+
+PATTERN CLASSIFICATION: Reporting (primary), Copy-Paste Tasks (secondary
+   — pulling data from multiple ad platform APIs)
+
+HUMAN-IN-THE-LOOP DESIGN
+   Mistake reversibility: Yes, correctable before client delivery
+   Verification speed: Faster to review than to build manually
+   → FULL AUTONOMY VIABLE for report generation, with an optional
+     human review step before client delivery in the MVP (builds
+     trust, can be removed once reliability is proven)
+
+MVP SCOPE
+   Start with 2-3 major ad platforms (not all possible integrations),
+   generate a weekly report matching the format agencies already
+   send clients, with one-click approval before delivery.
+```
+
+Notice this worked example reuses Chapter 7's industry research directly — this is intentional. The strongest AI agent opportunities in this handbook's methodology are not found by searching for "AI opportunities" as a category; they're found by taking your best Chapter 1-7 findings and running them through this chapter's scoring framework.
+
+---
+
+## Cross-Industry Automation Opportunity Matrix
+
+A quick-reference view combining Chapter 7's industries with this chapter's patterns. Use this to spot where you already have strong pain evidence (from Chapter 7) intersecting with a favorable automation pattern.
+
+| Industry | Strongest Pattern Match | Chapter 7 Reference |
+|---|---|---|
+| Healthcare | Approvals (prior auth), Monitoring (denial tracking) | Healthcare Playbook |
+| Legal | Repetitive Work (first-pass contract review) | Legal Playbook |
+| Finance/Accounting | Copy-Paste Tasks (reconciliation), Reporting (close) | Finance Playbook |
+| Construction | Scheduling (subcontractor coordination) | Construction Playbook |
+| Logistics | Scheduling (fulfillment routing) | Logistics Playbook |
+| HR/Recruiting | Repetitive Work (screening), Scheduling (interviews) | HR Playbook |
+| Marketing Agencies | Reporting (client dashboards) | Marketing Playbook |
+| Real Estate | Monitoring (lease renewals) | Real Estate Playbook |
+| Restaurants | Scheduling (staff), Reporting (food cost) | Restaurants Playbook |
+| Manufacturing | Monitoring (equipment/OEE) | Manufacturing Playbook |
+| Education | Repetitive Work (grading) | Education Playbook |
+
+---
+
+## Common Mistakes When Evaluating AI Agent Opportunities
+
+### Mistake 1: Leading With the Technology Instead of the Pain
+As covered in Chapter 0's Mistake 7 ("Optimizing for Coolness") — if you find yourself asking "what could I build with AI?" before you've validated a real problem, you've skipped the first six chapters of this handbook. Always start from validated pain, then apply this chapter's scoring framework.
+
+### Mistake 2: Ignoring the Error Tolerance Dimension
+A task can look automatable on paper (clear structure, digital inputs) and still be a poor early candidate if mistakes are costly and hard to catch. Healthcare, legal, and financial approval workflows are common places founders underweight this dimension.
+
+### Mistake 3: Designing for Full Autonomy Too Early
+Even when full autonomy is technically achievable, starting with "Agent-Drafts, Human-Approves" builds trust faster with early, skeptical customers and gives you a natural product roadmap (increasing autonomy over time) rather than asking for maximum trust on day one.
+
+### Mistake 4: Confusing Traditional Automation With Agent Opportunities
+If a task is 100% rule-based with no judgment calls, it's usually cheaper and more reliable to solve with traditional RPA or a simple integration than an AI agent. Reserve agent-based approaches for tasks that genuinely require contextual judgment at intermediate steps.
+
+### Mistake 5: Underestimating Verification Cost
+If checking the agent's output takes as long as doing the task manually, you haven't actually saved the customer time — you've just moved the labor from "doing" to "checking." Always evaluate verification cost explicitly, not just task-completion cost.
+
+### Mistake 6: Skipping the Workaround Maturity Check
+A task with zero existing workaround (manual or automated) is often a sign the pain isn't strong enough yet to have prompted anyone to solve it, even badly. Prioritize tasks where a workaround already exists — it proves demand and gives you a clear bar to beat (see Chapter 1's Evidence Hierarchy).
+
+---
+
+## Chapter 8 Checklist
+
+Before moving to Customer Interviews in the next chapter, confirm you have:
+
+- [ ] Selected 2-3 candidate tasks from your Chapter 1-7 research (not invented new ones from scratch)
+- [ ] Scored each candidate against the Automation Readiness Framework (25-point scale)
+- [ ] Classified each candidate against the Automation Pattern Taxonomy
+- [ ] Run the Human-in-the-Loop Design Decision Tree for your top candidate
+- [ ] Written a concrete MVP scope statement, including which human-in-the-loop stage you're starting at
+- [ ] Cross-checked your candidate against the Cross-Industry Automation Opportunity Matrix for pattern validation
+
+---
+
+*→ Next: [09-Customer-Interviews.md](09-Customer-Interviews.md) — Research Conversation Design*
+
+*→ See also: [01-Finding-Problems.md](01-Finding-Problems.md) — Category 7, Technology Shifts | [07-Industry-Playbooks.md](07-Industry-Playbooks.md) — The Workflow Maps This Chapter Builds On | [05-GitHub-Issues.md](05-GitHub-Issues.md) — Automation Gaps Surfaced in Developer Workflows*

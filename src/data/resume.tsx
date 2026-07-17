@@ -158,7 +158,7 @@ export const DATA = {
   education: [
     {
       school: "ITM Skills University",
-      href: "#",
+      href: "https://isu.ac.in/btech-cse/",
       degree: "BTech in Computer Science",
       logoUrl: "/itm.png",
       start: "Aug 2024",
@@ -166,7 +166,7 @@ export const DATA = {
     },
     {
       school: "12th Grade (PCMB)",
-      href: "#",
+      href: "https://www.stxaviersnerul.com/",
       degree: "Score: 80%",
       logoUrl: "/st.xaviers.png",
       start: "2024",
