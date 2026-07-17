@@ -10,11 +10,17 @@ export function ProjectSpotlight({ repos }: { repos: any[] }) {
 
     useEffect(() => {
         if (repos && repos.length > 0) {
-            // Pick a random repo that has a description (preferably)
-            const withDesc = repos.filter(r => r.description && !r.fork);
-            const pool = withDesc.length > 0 ? withDesc : repos;
-            const random = pool[Math.floor(Math.random() * Math.min(pool.length, 10))];
-            setFeatured(random);
+            const targetRepo = repos.find(r => r.name.toLowerCase() === "friday");
+            
+            if (targetRepo) {
+                setFeatured(targetRepo);
+            } else {
+                // Fallback to random if friday isn't found
+                const withDesc = repos.filter(r => r.description && !r.fork);
+                const pool = withDesc.length > 0 ? withDesc : repos;
+                const random = pool[Math.floor(Math.random() * Math.min(pool.length, 10))];
+                setFeatured(random);
+            }
         }
     }, [repos]);
 
