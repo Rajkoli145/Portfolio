@@ -29,14 +29,17 @@ async function getGithubData() {
     };
 
     try {
-        const [userRes, reposRes, eventsRes] = await Promise.all([
+        const [userRes, reposRes1, reposRes2, eventsRes] = await Promise.all([
             fetch(`https://api.github.com/users/${GITHUB_USERNAME}`, options),
-            fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100`, options),
+            fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&page=1`, options),
+            fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=100&page=2`, options),
             fetch(`https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=20`, options)
         ]);
 
         const user = userRes.ok ? await userRes.json() : null;
-        const repos = reposRes.ok ? await reposRes.json() : [];
+        const repos1 = reposRes1.ok ? await reposRes1.json() : [];
+        const repos2 = reposRes2.ok ? await reposRes2.json() : [];
+        const repos = [...(Array.isArray(repos1) ? repos1 : []), ...(Array.isArray(repos2) ? repos2 : [])];
         const events = eventsRes.ok ? await eventsRes.json() : [];
 
         return { user, repos, events };
