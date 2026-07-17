@@ -1,47 +1,26 @@
-<div align="center">
-<img alt="Portfolio" src="https://github.com/dillionverma/portfolio/assets/16860528/57ffca81-3f0a-4425-b31d-094f61725455" width="90%">
-</div>
+# Raj Koli - Software Engineer Portfolio
 
-# Portfolio [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fdillionverma%2Fportfolio)
+Hi, I'm **Raj Koli**. I'm a full stack developer who enjoys building systems that actually work under pressure — REST APIs, Linux automation, CLI tooling, and backend pipelines.
 
-Built with next.js, [shadcn/ui](https://ui.shadcn.com/), and [magic ui](https://magicui.design/), deployed on Vercel.
+This repository contains my personal portfolio website, built with modern web technologies and custom integrations.
 
-# Features
+## 🚀 Features & Integrations
 
-- Setup only takes a few minutes by editing the [single config file](./src/data/resume.tsx)
-- Built using Next.js 14, React, Typescript, Shadcn/UI, TailwindCSS, Framer Motion, Magic UI
-- Includes a blog
-- Responsive for different devices
-- Optimized for Next.js and Vercel
+- **Next.js & React**: Built on the bleeding edge of the Next.js App Router.
+- **Tailwind CSS & MagicUI**: Custom-designed interfaces with micro-animations and smooth responsive layouts.
+- **Dynamic Watchlist (TMDB)**: Automatically fetches trending movies and TV shows from The Movie Database API to showcase my favorite entertainment.
+- **Spotify Integration**: Displays my actual Spotify vibes via an embedded music player.
+- **Automated Book Publishing Engine**: A custom Node.js pre-build script automatically clones my dedicated *Startup Research Handbook* repository, injects MDX frontmatter, and publishes the latest chapters directly to my portfolio. Zero-touch deployments!
 
-# Getting Started Locally
+## 🛠️ Tech Stack
+- **Framework:** Next.js (App Router)
+- **Styling:** Tailwind CSS + custom CSS
+- **Content:** MDX via `content-collections`
+- **Deployment:** Vercel
 
-1. Clone this repository to your local machine:
+## 📖 The Startup Research Bible
+This portfolio hosts the *Startup Research Bible*, a living handbook I wrote for finding real startup opportunities by researching real problems. It automatically stays synced with my dedicated handbook repository.
 
-   ```bash
-   git clone https://github.com/dillionverma/portfolio
-   ```
+---
 
-2. Move to the cloned directory
-
-   ```bash
-   cd portfolio
-   ```
-
-3. Install dependencies:
-
-   ```bash
-   pnpm install
-   ```
-
-4. Start the local Server:
-
-   ```bash
-   pnpm dev
-   ```
-
-5. Open the [Config file](./src/data/resume.tsx) and make changes
-
-# License
-
-Licensed under the [MIT license](https://github.com/dillionverma/portfolio/blob/main/LICENSE.md).
+*Designed and engineered by Raj Koli.*
