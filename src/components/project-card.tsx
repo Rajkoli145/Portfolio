@@ -109,7 +109,32 @@ export function ProjectCard({
         <div className="flex items-start justify-between gap-2">
           <div className="flex flex-col gap-1">
             <h3 className="font-semibold">{title}</h3>
-            <time className="text-xs text-muted-foreground">{dates}</time>
+            <time className="text-xs text-muted-foreground flex items-center gap-1 flex-wrap">
+              {dates.split(' - ').map((part, i, arr) => {
+                if (i === arr.length - 1 && (part === 'Live' || part === 'Present' || part === 'Ongoing')) {
+                  const isLive = part === 'Live';
+                  return (
+                    <span key={i} className="flex items-center gap-1">
+                      <span>-</span>
+                      <span className={cn(
+                        "inline-flex items-center rounded-sm px-1.5 py-0.5 text-[10px] font-medium leading-none",
+                        isLive ? "bg-green-500/15 text-green-600 dark:text-green-400" : "bg-blue-500/15 text-blue-600 dark:text-blue-400"
+                      )}>
+                        {isLive && (
+                          <span className="relative flex h-1.5 w-1.5 mr-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                          </span>
+                        )}
+                        {part}
+                      </span>
+                    </span>
+                  );
+                }
+                if (i > 0) return <span key={i}>- {part}</span>;
+                return <span key={i}>{part}</span>;
+              })}
+            </time>
           </div>
           <Link
             href={href || "#"}
