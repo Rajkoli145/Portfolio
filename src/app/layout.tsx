@@ -1,3 +1,4 @@
+import { Toaster } from "sonner";
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -87,6 +88,7 @@ export default function RootLayout({
               {children}
             </div>
             <Navbar />
+            <Toaster position="bottom-right" />
           </TooltipProvider>
         </ThemeProvider>
       </body>

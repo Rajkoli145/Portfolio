@@ -99,7 +99,7 @@ export const DATA = {
       },
       email: {
         name: "Send Email",
-        url: "mailto:koliraj911@gmail.com",
+        url: "/contact",
         icon: Icons.email,
         navbar: true,
       },
