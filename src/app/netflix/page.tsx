@@ -31,11 +31,16 @@ async function getMovies() {
             link: `https://www.themoviedb.org/${movie.media_type || 'movie'}/${movie.id}`,
             rating: movie.vote_average ? movie.vote_average.toFixed(1) : null,
             releaseDate: movie.release_date || movie.first_air_date,
-            isTVShow: movie.media_type === 'tv'
+            isTVShow: movie.media_type === 'tv',
+            isAnime: (movie.genre_ids && movie.genre_ids.includes(16)) || (movie.original_language === 'ja')
         }));
     } catch (e) {
         console.error("TMDB fetch failed:", e);
-        return DATA.movies?.map(m => ({ ...m, isTVShow: (m.tags as readonly string[])?.includes("TV Show") || (m.tags as readonly string[])?.includes("Series") })) || [];
+        return DATA.movies?.map(m => ({ 
+            ...m, 
+            isTVShow: (m.tags as readonly string[])?.includes("TV Show") || (m.tags as readonly string[])?.includes("Series"),
+            isAnime: (m.tags as readonly string[])?.includes("Anime") || (m.tags as readonly string[])?.includes("Animation")
+        })) || [];
     }
 }
 
@@ -44,8 +49,10 @@ import { MovieTabs } from "@/components/movie-tabs";
 export default async function NetflixPage() {
     const allItems = await getMovies();
     
-    const movies = allItems.filter((item: any) => !item.isTVShow);
-    const series = allItems.filter((item: any) => item.isTVShow);
+    // Anime can be movies or series, but usually we filter them out of the regular lists if they are in the Anime tab
+    const anime = allItems.filter((item: any) => item.isAnime);
+    const movies = allItems.filter((item: any) => !item.isTVShow && !item.isAnime);
+    const series = allItems.filter((item: any) => item.isTVShow && !item.isAnime);
 
     return (
         <div className="flex flex-col min-h-screen pb-24 bg-background">
@@ -77,7 +84,7 @@ export default async function NetflixPage() {
                         </div>
                     </div>
 
-                    <MovieTabs movies={movies} series={series} />
+                    <MovieTabs movies={movies} series={series} anime={anime} />
                 </div>
             </div>
         </div>

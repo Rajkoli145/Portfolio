@@ -66,8 +66,8 @@ function MovieGrid({ items }: { items: any[] }) {
     );
 }
 
-export function MovieTabs({ movies, series }: { movies: any[], series: any[] }) {
-    const [activeTab, setActiveTab] = useState<"movies" | "series">("movies");
+export function MovieTabs({ movies, series, anime = [] }: { movies: any[], series: any[], anime?: any[] }) {
+    const [activeTab, setActiveTab] = useState<"movies" | "series" | "anime">("movies");
 
     return (
         <div className="flex flex-col gap-6 mt-4 w-full">
@@ -94,14 +94,23 @@ export function MovieTabs({ movies, series }: { movies: any[], series: any[] }) 
                 >
                     TV Series
                 </button>
+                <button
+                    onClick={() => setActiveTab("anime")}
+                    className={cn(
+                        "px-6 py-2 rounded-full font-medium transition-all text-sm",
+                        activeTab === "anime" 
+                            ? "bg-primary text-primary-foreground shadow-md" 
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                    )}
+                >
+                    Anime
+                </button>
             </div>
 
             <div className="mt-4">
-                {activeTab === "movies" ? (
-                    <MovieGrid items={movies} />
-                ) : (
-                    <MovieGrid items={series} />
-                )}
+                {activeTab === "movies" && <MovieGrid items={movies} />}
+                {activeTab === "series" && <MovieGrid items={series} />}
+                {activeTab === "anime" && <MovieGrid items={anime} />}
             </div>
         </div>
     );
