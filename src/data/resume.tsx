@@ -167,7 +167,7 @@ export const DATA = {
     {
       school: "12th Grade (PCMB)",
       href: "https://www.stxaviersnerul.com/",
-      degree: "Score: 80%",
+      degree: "Higher Secondary Certificate (HSC)",
       logoUrl: "/st.xaviers.png",
       start: "2024",
       end: "2024",
