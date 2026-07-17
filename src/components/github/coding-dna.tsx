@@ -16,10 +16,19 @@ export function CodingDNA({ repos }: { repos: any[] }) {
         });
 
         const sorted = Object.entries(langMap)
-            .sort((a, b) => b[1] - a[1])
-            .slice(0, 5); // top 5 languages
+            .sort((a, b) => b[1] - a[1]);
 
-        return { total: totalCount, languages: sorted };
+        const top5 = sorted.slice(0, 5);
+        const remaining = sorted.slice(5);
+        
+        let finalLanguages = [...top5];
+
+        if (remaining.length > 0) {
+            const otherCount = remaining.reduce((acc, curr) => acc + curr[1], 0);
+            finalLanguages.push(["Other", otherCount]);
+        }
+
+        return { total: totalCount, languages: finalLanguages };
     }, [repos]);
 
     if (!languages.length) return null;
