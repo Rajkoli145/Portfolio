@@ -177,7 +177,7 @@ export const DATA = {
     {
       title: "FreelancerFlow",
       href: "https://github.com/Rajkoli145/freelancerflow",
-      dates: "May 13, 2026 - Present",
+      dates: "May 13, 2026 - Live",
       active: true,
       description:
         "Built a complete full-stack platform from scratch handling project tracking, invoicing, and client management for freelancers. Reduced invoice generation time by designing a structured file I/O export pipeline. Secured all API routes with JWT authentication and middleware validation. Wrote automated endpoint tests covering all critical API routes.",
@@ -201,7 +201,7 @@ export const DATA = {
     {
       title: "EduStory",
       href: "https://github.com/Rajkoli145/edustory",
-      dates: "May 13, 2026 - Present",
+      dates: "May 13, 2026 - Live",
       active: true,
       description:
         "Built an end-to-end AI storytelling platform delivering dynamic, personalised story generation. Designed a prompt pipeline architecture that reduced AI output inconsistency by structuring inputs and validating outputs programmatically. Implemented NextAuth with persistent sessions and role-based access. Wrote validation scripts to automatically test AI-generated content quality.",
@@ -224,7 +224,7 @@ export const DATA = {
     {
       title: "macOS Portfolio",
       href: "https://rajkoli.vercel.app",
-      dates: "Dec 26, 2025 - Present",
+      dates: "Dec 26, 2025 - Live",
       active: true,
       description:
         "Built a fully interactive macOS-style personal portfolio running in the browser — complete with a working dock, draggable windows, and project showcases, deployed via Vercel.",
@@ -257,7 +257,7 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
+      image: "/projects/dealvault.png",
       video: "",
     },
     {
@@ -274,7 +274,7 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
+      image: "/projects/almost_friday.png",
       video: "",
     },
     {
