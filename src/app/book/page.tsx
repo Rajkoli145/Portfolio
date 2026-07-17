@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Startup Research Bible",
+  title: "Startup Research Handbook",
   description: "A living handbook for finding real startup opportunities by researching real problems.",
 };
 
@@ -25,7 +25,7 @@ export default function BookPage() {
       <section id="book">
         <BlurFade delay={BLUR_FADE_DELAY}>
           <div className="flex flex-col gap-4 mb-10 items-center text-center">
-            <h1 className="text-4xl font-extrabold tracking-tight">Startup Research Bible</h1>
+            <h1 className="text-4xl font-extrabold tracking-tight">Startup Research Handbook</h1>
             <p className="text-xl text-muted-foreground max-w-[600px]">
               A living handbook for finding real startup opportunities by researching real problems.
             </p>

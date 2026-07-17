@@ -18,8 +18,8 @@ This repository contains my personal portfolio website, built with modern web te
 - **Content:** MDX via `content-collections`
 - **Deployment:** Vercel
 
-## 📖 The Startup Research Bible
-This portfolio hosts the *Startup Research Bible*, a living handbook I wrote for finding real startup opportunities by researching real problems. It automatically stays synced with my dedicated handbook repository.
+## 📖 The Startup Research Handbook
+This portfolio hosts the *Startup Research Handbook*, a living handbook I wrote for finding real startup opportunities by researching real problems. It automatically stays synced with my dedicated handbook repository.
 
 ---
 
