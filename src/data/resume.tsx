@@ -67,6 +67,7 @@ export const DATA = {
     { href: "/book", icon: NotebookIcon, label: "Book" },
     { href: "/spotify", icon: Icons.spotify, label: "Spotify" },
     { href: "/netflix", icon: Icons.netflix, label: "Movies" },
+    { href: "/github", icon: Icons.github, label: "GitHub" },
   ],
   contact: {
     email: "koliraj911@gmail.com",
@@ -76,7 +77,7 @@ export const DATA = {
         name: "GitHub",
         url: "https://github.com/Rajkoli145",
         icon: Icons.github,
-        navbar: true,
+        navbar: false,
       },
       LinkedIn: {
         name: "LinkedIn",
