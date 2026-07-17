@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { Resend } from "resend";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const contactSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -20,11 +23,29 @@ export async function POST(req: Request) {
       );
     }
 
-    // Simulate network latency (2 seconds)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    const { name, email, subject, message } = result.data;
 
-    // Here is where you would normally integrate Resend, Formspree, etc.
-    // e.g. await resend.emails.send({...})
+    const { data, error } = await resend.emails.send({
+      from: "Portfolio Contact Form <onboarding@resend.dev>",
+      to: ["koliraj911@gmail.com"], // Your receiving email address
+      replyTo: email,
+      subject: `[Portfolio] ${subject}`,
+      html: `
+        <h2>New Message from ${name}</h2>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Subject:</strong> ${subject}</p>
+        <hr />
+        <p>${message.replace(/\\n/g, "<br>")}</p>
+      `,
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return NextResponse.json(
+        { error: "Failed to send email via Resend" },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ success: true, message: "Email sent successfully" }, { status: 200 });
   } catch (error) {
