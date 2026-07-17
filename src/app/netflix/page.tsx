@@ -3,21 +3,27 @@ import Link from "next/link";
 import { ChevronLeft, Play, Info, Star } from "lucide-react";
 
 async function getMovies() {
-    const apiKey = process.env.TMDB_API_KEY;
+    const readToken = process.env.TMDB_READ_TOKEN;
     
     // Fallback to static data if no API key is provided
-    if (!apiKey) {
+    if (!readToken) {
         return DATA.movies?.map(m => ({ ...m, isTVShow: (m.tags as readonly string[])?.includes("TV Show") || (m.tags as readonly string[])?.includes("Series") })) || [];
     }
 
     try {
         const listId = "8671549";
-        const res = await fetch(`https://api.themoviedb.org/3/list/${listId}?api_key=${apiKey}`, { next: { revalidate: 3600 } });
+        const res = await fetch(`https://api.themoviedb.org/4/list/${listId}`, { 
+            headers: {
+                'Authorization': `Bearer ${readToken}`,
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+            next: { revalidate: 3600 } 
+        });
         if (!res.ok) throw new Error("Failed to fetch TMDB");
         const data = await res.json();
         
         // Map TMDB structure to our app's structure
-        return (data.items || []).slice(0, 24).map((movie: any) => ({
+        return (data.results || []).slice(0, 24).map((movie: any) => ({
             title: movie.title || movie.name,
             description: movie.overview,
             imageUrl: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750?text=No+Image",
