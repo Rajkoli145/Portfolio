@@ -195,7 +195,7 @@ export const DATA = {
           icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
+      image: "/projects/freelancerflow.png",
       video: "",
     },
     {
