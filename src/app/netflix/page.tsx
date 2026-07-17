@@ -11,16 +11,17 @@ async function getMovies() {
     }
 
     try {
-        const res = await fetch(`https://api.themoviedb.org/3/trending/all/week?api_key=${apiKey}`, { next: { revalidate: 3600 } });
+        const listId = "8671549";
+        const res = await fetch(`https://api.themoviedb.org/3/list/${listId}?api_key=${apiKey}`, { next: { revalidate: 3600 } });
         if (!res.ok) throw new Error("Failed to fetch TMDB");
         const data = await res.json();
         
         // Map TMDB structure to our app's structure
-        return data.results.slice(0, 24).map((movie: any) => ({
+        return (data.items || []).slice(0, 24).map((movie: any) => ({
             title: movie.title || movie.name,
             description: movie.overview,
             imageUrl: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "https://via.placeholder.com/500x750?text=No+Image",
-            tags: ["Trending", movie.media_type === 'tv' ? "TV Show" : "Movie"],
+            tags: ["Favorite", movie.media_type === 'tv' ? "TV Show" : "Movie"],
             link: `https://www.themoviedb.org/${movie.media_type || 'movie'}/${movie.id}`,
             rating: movie.vote_average ? movie.vote_average.toFixed(1) : null,
             releaseDate: movie.release_date || movie.first_air_date,
