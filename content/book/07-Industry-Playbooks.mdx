@@ -1,0 +1,573 @@
+---
+title: "Chapter 7: Industry Playbooks — Vertical-Specific Research Guides"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"Horizontal research finds problems. Vertical research finds businesses. The difference is knowing which five words to type into a subreddit search that a generic founder would never think to type."*
+
+---
+
+## Why Generic Research Eventually Has to Get Specific
+
+Chapters 2 through 6 gave you channel-based techniques — Google Dorks, Reddit, Hacker News, GitHub Issues, Competitor Research. Each of those works across every industry, but that generality is also their limitation. A generic query like `"[TOPIC]" "so frustrating"` finds pain. It does not tell you the specific vocabulary, regulatory pressure, budget cycle, or buying process of any one industry — and those details are exactly what separates a founder who sounds like an outsider from one who sounds like they've done the work.
+
+An Industry Playbook is the translation layer between the general techniques you've already learned and a specific vertical. It answers five questions that generic research can't:
+
+1. What does this industry actually call the problem? (Vocabulary)
+2. Who has the pain, and who has the budget — and are they the same person? (Chapter 1, Failure Mode 3)
+3. What tools already exist, and where do they specifically fall short for this industry? (Chapter 6, applied narrowly)
+4. What regulatory, seasonal, or budget-cycle factors create urgency or block adoption?
+5. Where does this industry actually congregate online, beyond the generic subreddits already covered in Chapter 3?
+
+This chapter gives you the Industry Playbook Template — a repeatable structure for building your own playbook for any vertical — plus fully worked playbooks for twelve industries to use directly or as a model for building your own.
+
+---
+
+## The Industry Playbook Template
+
+Use this structure every time you go deep on a new vertical. It is deliberately more detailed than the Problem Statement Template from Chapter 1 — this is meant to be a standing reference document for an entire industry, not a single problem.
+
+```
+INDUSTRY PLAYBOOK: [Industry Name]
+
+1. WORKFLOW MAP
+   What does a typical day/week/month look like for the target role?
+   List the 5-8 major recurring tasks in sequence.
+
+2. PAIN INVENTORY
+   For each task in the workflow map, note:
+   - Is this task manual, semi-automated, or automated today?
+   - What tool (if any) is used?
+   - What's the known complaint pattern? (Ch. 1 pain categories)
+
+3. EXISTING TOOLS LANDSCAPE
+   List the 3-5 dominant tools/platforms serving this industry.
+   Note pricing model and target customer size for each.
+
+4. BUDGET AND BUYING PROCESS
+   Who has budget authority? (Ch. 1, Failure Mode 3 check)
+   What's the typical sales cycle length?
+   Is spending seasonal or tied to a fiscal/budget cycle?
+   Are there procurement or compliance approval steps?
+
+5. REGULATORY AND COMPLIANCE CONTEXT
+   What regulations apply to this industry?
+   Are there upcoming regulatory changes creating new urgency?
+   (Ch. 1, Category 6)
+
+6. WHERE THIS INDUSTRY CONGREGATES ONLINE
+   Subreddits, trade associations, conferences, LinkedIn groups,
+   Slack/Discord communities, trade publications.
+
+7. INDUSTRY-SPECIFIC VOCABULARY
+   List 10-15 terms practitioners use that a generic search
+   wouldn't surface (jargon, tool names, role titles, acronyms).
+
+8. SEED QUERY LIBRARY
+   5-10 starter Google Dorks combining this vocabulary with the
+   complaint/workaround phrases from Chapter 2.
+
+9. MVP HYPOTHESIS
+   Given everything above, what is the narrowest possible wedge
+   product that addresses the highest-tier pain point found?
+```
+
+---
+
+## Playbook: Healthcare
+
+### 1. Workflow Map (Practice Administrator / Medical Biller)
+Patient intake → insurance verification → coding → claim submission → denial management → payment posting → patient billing.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Prior authorization | Largely manual | Payer portals, fax | "Takes hours per patient," extreme Tier 4-5 pain |
+| Claims denial management | Semi-manual | EHR + spreadsheet | Denied claims tracked manually, resubmission delays |
+| Patient scheduling / no-shows | Manual reminders | EHR-integrated tools, inconsistent adoption | No-show tracking rarely automated well |
+
+### 3. Existing Tools
+Epic, Cerner, athenahealth (large/enterprise EHR); Kareo, DrChrono (SMB-focused); most complaints cluster around integration gaps between these systems and payer portals.
+
+### 4. Budget and Buying
+Budget authority: Practice manager or physician-owner for small practices; procurement committee for hospital systems. Sales cycles are long (3-12 months) for hospital systems, faster for independent practices. HIPAA compliance review is a mandatory gate.
+
+### 5. Regulatory Context
+HIPAA (data handling), CMS billing code updates (annual), state-level telehealth regulations (frequently changing).
+
+### 6. Where They Congregate
+r/medicalcoding, r/nursing, r/healthIT, r/PrivatePractice; AAPC (coding association) forums; HIMSS conference community.
+
+### 7. Vocabulary
+Prior auth, EOB (explanation of benefits), CPT codes, ICD-10, clearinghouse, superbill, credentialing, payer mix, denial rate, RCM (revenue cycle management).
+
+### 8. Seed Queries
+```
+subreddit:medicalcoding "prior authorization" "so frustrating"
+subreddit:PrivatePractice "denial rate" "spreadsheet"
+"RCM" "manual" "workaround" site:reddit.com
+"prior auth" "is there a tool that"
+```
+
+### 9. MVP Hypothesis
+A narrow prior-authorization status tracker for independent practices, integrating with 2-3 major payer portals before expanding.
+
+---
+
+## Playbook: Legal
+
+### 1. Workflow Map (Paralegal / Legal Ops)
+Intake → document collection → contract review/redlining → e-discovery → case management → billing/timekeeping.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Contract redlining | Manual, version-heavy | Word + email | "Takes forever," version control nightmare |
+| E-discovery | Semi-automated | Relativity, Everlaw (enterprise-priced) | Cost-prohibitive for small firms |
+| Time tracking/billing | Manual entry | Clio, spreadsheets | Under-billing due to forgotten entries |
+
+### 3. Existing Tools
+Clio, MyCase (SMB practice management); Relativity, Everlaw (enterprise e-discovery) — steep pricing gap between SMB and enterprise tiers is a notable market seam.
+
+### 4. Budget and Buying
+Budget authority: managing partner (small firm) or legal ops director (larger firm/in-house). Long sales cycles, heavy reliance on peer referral within the legal community.
+
+### 5. Regulatory Context
+State bar data-handling rules, client confidentiality requirements, e-discovery procedural rules (FRCP in the US).
+
+### 6. Where They Congregate
+r/paralegal, r/LawFirm, r/Lawyertalk; ABA (American Bar Association) sections; ILTA (legal tech association).
+
+### 7. Vocabulary
+Redline, privilege log, discovery, billable hour, matter, docketing, conflict check, retainer.
+
+### 8. Seed Queries
+```
+subreddit:paralegal "redlining" "manually" "still"
+subreddit:LawFirm "billable hours" "forgot to track"
+"e-discovery" "small firm" "too expensive"
+"contract review" "is there a tool"
+```
+
+### 9. MVP Hypothesis
+A lightweight, small-firm-priced contract redlining and version tracker, positioned explicitly below Relativity/Everlaw's enterprise pricing floor.
+
+---
+
+## Playbook: Finance / Accounting
+
+### 1. Workflow Map (Bookkeeper / SMB Controller)
+Transaction categorization → bank reconciliation → invoice/AP management → month-end close → financial reporting → tax prep handoff.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Invoice reconciliation | Manual | QuickBooks + spreadsheet | Recurring monthly workaround |
+| Month-end close | Semi-manual | QuickBooks, Xero | "Nightmare," multi-day process |
+| Multi-entity consolidation | Manual | Spreadsheets | No good tool below enterprise pricing |
+
+### 3. Existing Tools
+QuickBooks, Xero (SMB); NetSuite (mid-market/enterprise) — a familiar pricing/feature cliff exists between SMB and mid-market tiers.
+
+### 4. Budget and Buying
+Budget authority: owner (very small business) or controller/CFO (larger SMB). Budget cycles often align with fiscal year planning.
+
+### 5. Regulatory Context
+GAAP/IFRS reporting standards, sales tax nexus rules (varies by state/country), 1099 filing requirements.
+
+### 6. Where They Congregate
+r/Bookkeeping, r/Accounting, r/CFO, r/smallbusinessfinance; AICPA forums.
+
+### 7. Vocabulary
+Reconciliation, AP/AR, GL (general ledger), COA (chart of accounts), close cycle, accrual, nexus.
+
+### 8. Seed Queries
+```
+subreddit:Bookkeeping "month-end close" "nightmare"
+subreddit:Accounting "reconciliation" "spreadsheet" "still"
+"multi-entity" "consolidation" "manual" "QuickBooks"
+"is there a tool that" "bank reconciliation"
+```
+
+### 9. MVP Hypothesis
+A month-end close checklist/automation tool targeting the specific gap between QuickBooks/Xero and NetSuite for multi-entity SMBs.
+
+---
+
+## Playbook: Construction
+
+### 1. Workflow Map (General Contractor / Project Manager)
+Bid estimation → material takeoff → subcontractor coordination → job site progress tracking → change order management → invoicing.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Material takeoff | Manual | Spreadsheets, PlanSwift | Time-consuming, error-prone |
+| Subcontractor scheduling | Manual | Text messages, spreadsheets | Constant coordination overhead |
+| Change orders | Manual/paper-based | Email, paper forms | Payment delays, disputes |
+
+### 3. Existing Tools
+Procore, Buildertrend (mid-market/enterprise); many small contractors use no dedicated software at all — a large underserved segment.
+
+### 4. Budget and Buying
+Budget authority: owner-operator for small contractors, project executive for larger firms. Cash-flow-sensitive; adoption often tied to a specific painful project experience.
+
+### 5. Regulatory Context
+Local building codes and permitting (highly fragmented by jurisdiction), OSHA safety documentation requirements, lien law deadlines.
+
+### 6. Where They Congregate
+r/Contractor, r/Construction; local trade associations (highly regional — national subreddits undercount local dynamics); industry conferences (World of Concrete, etc.).
+
+### 7. Vocabulary
+Takeoff, punch list, change order, RFI (request for information), lien waiver, draw schedule, subcontractor.
+
+### 8. Seed Queries
+```
+subreddit:Contractor "change order" "manual" "nightmare"
+subreddit:Construction "material takeoff" "spreadsheet"
+"punch list" "is there an app"
+"subcontractor scheduling" "workaround"
+```
+
+### 9. MVP Hypothesis
+A simple, mobile-first change-order and punch-list tracker priced for solo/small contractors below Procore's enterprise floor.
+
+---
+
+## Playbook: Logistics / Supply Chain
+
+### 1. Workflow Map (Operations Manager)
+Inventory forecasting → order fulfillment routing → carrier selection → shipment tracking → returns processing → reporting.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Fulfillment routing | Manual override rules | Shopify native logic + spreadsheet | Chapter 1's own worked example — high Tier 4 pain |
+| Returns processing | Manual | Email, spreadsheets | Customer experience + cost impact |
+| Carrier rate shopping | Semi-manual | Direct carrier portals | Missed savings from not comparing rates |
+
+### 3. Existing Tools
+ShipStation, ShipBob (SMB-mid market); large enterprise WMS systems (SAP, Manhattan Associates) at the high end — significant capability gap between the two tiers.
+
+### 4. Budget and Buying
+Budget authority: operations director. Highly sensitive to demonstrable cost savings (shipping cost %, not just convenience).
+
+### 5. Regulatory Context
+International shipping/customs compliance, hazardous materials regulations (industry-specific), country-specific import/export rules.
+
+### 6. Where They Congregate
+r/logistics, r/FulfillmentByAmazon, r/ecommerce, r/Shopify; MHI (Material Handling Industry) trade groups.
+
+### 7. Vocabulary
+3PL, SKU, WMS, fulfillment routing, carrier rate shopping, chargeback, RMA (return merchandise authorization).
+
+### 8. Seed Queries
+```
+subreddit:ecommerce "fulfillment routing" "manual"
+subreddit:Shopify "shipping cost" "override" "spreadsheet"
+"3PL" "switched from" "alternative"
+"returns processing" "is there a tool"
+```
+
+### 9. MVP Hypothesis
+A rate-shopping and fulfillment-routing overlay for Shopify Plus merchants with 2+ warehouses (directly reusing Chapter 1's worked example).
+
+---
+
+## Playbook: HR / Recruiting
+
+### 1. Workflow Map (HR Manager / Recruiter)
+Job posting → applicant screening → interview scheduling → offer management → onboarding → compliance documentation.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Resume screening | Semi-manual | ATS + manual review | High volume, low-quality matches |
+| Interview scheduling | Manual back-and-forth | Email, Calendly | Time-consuming for multi-interviewer loops |
+| Onboarding paperwork | Manual/paper-based | Spreadsheets, email | Compliance risk from missed steps |
+
+### 3. Existing Tools
+Greenhouse, Lever (mid-market/enterprise ATS); BambooHR (SMB HRIS) — most complaints center on scheduling coordination and screening quality, not the ATS itself.
+
+### 4. Budget and Buying
+Budget authority: HR director or Head of People. Budget often tied to hiring volume/headcount growth plans.
+
+### 5. Regulatory Context
+EEOC compliance (US), I-9 verification, state-specific leave laws, GDPR (for EU hiring).
+
+### 6. Where They Congregate
+r/humanresources, r/recruiting; SHRM (Society for Human Resource Management) community.
+
+### 7. Vocabulary
+ATS, requisition, candidate pipeline, offer letter, onboarding checklist, EEOC, I-9.
+
+### 8. Seed Queries
+```
+subreddit:recruiting "interview scheduling" "nightmare"
+subreddit:humanresources "onboarding" "spreadsheet" "still"
+"ATS" "switched from" "alternative"
+"resume screening" "manual" "too much time"
+```
+
+### 9. MVP Hypothesis
+An interview-scheduling coordination layer purpose-built for multi-interviewer loops, sitting on top of existing ATS platforms rather than replacing them.
+
+---
+
+## Playbook: Marketing Agencies
+
+### 1. Workflow Map (Agency Account Manager)
+Client onboarding → campaign setup → performance tracking → client reporting → billing/retainer management → renewal.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Client reporting | Manual, per-client dashboards | Google Sheets, Data Studio | Time-consuming, error-prone, not real-time |
+| Campaign performance tracking | Semi-automated | Native ad platform dashboards | No cross-platform consolidated view |
+| Retainer/scope tracking | Manual | Spreadsheets | Scope creep goes unbilled |
+
+### 3. Existing Tools
+AgencyAnalytics, Databox (reporting-focused); most agencies still build custom Data Studio/Looker Studio dashboards manually.
+
+### 4. Budget and Buying
+Budget authority: agency owner or operations lead. Price-sensitive — agencies operate on thin margins and resist per-client software costs.
+
+### 5. Regulatory Context
+Minimal direct regulation; indirect exposure to ad platform policy changes (iOS privacy changes, cookie deprecation) that affect tracking capability.
+
+### 6. Where They Congregate
+r/marketing, r/agency, r/PPC, r/SEO; local/regional agency owner Slack and Discord communities (often invite-only).
+
+### 7. Vocabulary
+Retainer, scope creep, attribution, client churn, white-label, MQL/SQL, ROAS.
+
+### 8. Seed Queries
+```
+subreddit:agency "client reporting" "manual" "still"
+subreddit:PPC "cross-platform" "dashboard" "workaround"
+"white-label" "reporting tool" "alternative to"
+"scope creep" "tracking" "spreadsheet"
+```
+
+### 9. MVP Hypothesis
+A white-labeled, cross-platform client reporting tool priced per-agency (not per-client) to match agency margin sensitivity.
+
+---
+
+## Playbook: Real Estate
+
+### 1. Workflow Map (Property Manager / Agent)
+Lead intake → showing scheduling → lease/contract management → rent collection → maintenance request handling → renewal tracking.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Lease renewal tracking | Manual reminders | Spreadsheets | Missed renewals, revenue loss |
+| Maintenance requests | Semi-manual | Email, text, spreadsheets | Slow response, poor tenant experience |
+| Rent collection | Semi-automated | AppFolio, Buildium (mid-market) | Small landlords use manual/check-based collection |
+
+### 3. Existing Tools
+AppFolio, Buildium, Yardi (mid-market/enterprise property management); large gap for landlords managing fewer than ~10 units who find these tools overkill.
+
+### 4. Budget and Buying
+Budget authority: property owner (small) or property management company operations lead (larger portfolios).
+
+### 5. Regulatory Context
+Local landlord-tenant law (highly jurisdiction-specific), fair housing compliance, security deposit handling regulations.
+
+### 6. Where They Congregate
+r/realtors, r/PropertyManagement, r/Landlord; local real estate investor associations (often meetup-based, not online-indexed).
+
+### 7. Vocabulary
+Lease renewal, security deposit, tenant screening, NOI (net operating income), cap rate, turnover.
+
+### 8. Seed Queries
+```
+subreddit:PropertyManagement "lease renewal" "spreadsheet" "still"
+subreddit:realtors "maintenance requests" "manual"
+"small landlord" "rent collection" "alternative to"
+"tenant screening" "workaround"
+```
+
+### 9. MVP Hypothesis
+A lightweight lease-renewal and maintenance-tracking tool priced specifically for landlords managing under 10 units, below AppFolio's practical pricing floor.
+
+---
+
+## Playbook: Restaurants / Hospitality
+
+### 1. Workflow Map (Restaurant Owner / GM)
+Inventory ordering → staff scheduling → reservations/waitlist → POS/sales tracking → food cost analysis → compliance (health inspections).
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Staff scheduling | Manual | Spreadsheets, group texts | Constant last-minute changes, no-shows |
+| Inventory/food cost tracking | Manual | Spreadsheets | Waste goes untracked, thin margins get thinner |
+| Reservations/waitlist | Semi-automated | OpenTable, Resy (fee-heavy for small operators) | Booking fees eat into thin margins |
+
+### 3. Existing Tools
+Toast, Square (POS-centric, mid-market); 7shifts (scheduling-focused); most food-cost tracking still done manually even where POS tools exist.
+
+### 4. Budget and Buying
+Budget authority: owner/operator. Extremely price-sensitive — restaurant margins are famously thin (3-5% net typical).
+
+### 5. Regulatory Context
+Health department inspection requirements, labor law scheduling regulations ("predictive scheduling" laws in some cities), food safety certification tracking.
+
+### 6. Where They Congregate
+r/KitchenConfidential, r/restaurantowners, r/TalesFromYourServer; National Restaurant Association resources.
+
+### 7. Vocabulary
+Food cost %, 86'd, covers, prime cost, FOH/BOH (front/back of house), comp.
+
+### 8. Seed Queries
+```
+subreddit:restaurantowners "food cost" "spreadsheet" "manual"
+subreddit:KitchenConfidential "scheduling" "nightmare"
+"restaurant" "inventory tracking" "alternative to"
+"predictive scheduling" "compliance" "tool"
+```
+
+### 9. MVP Hypothesis
+A simple food-cost and waste-tracking tool integrating with existing POS data exports, priced low enough for single-location independents.
+
+---
+
+## Playbook: Manufacturing
+
+### 1. Workflow Map (Production Manager / Quality Lead)
+Production scheduling → materials/inventory management → quality control checks → equipment maintenance tracking → compliance reporting.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Production scheduling | Semi-manual | Spreadsheets, whiteboards | Doesn't adapt well to disruptions |
+| Quality control checklists | Manual/paper | Paper forms, spreadsheets | No historical trend analysis |
+| Equipment maintenance | Reactive | Spreadsheets, paper logs | Unplanned downtime, no predictive tracking |
+
+### 3. Existing Tools
+SAP, Epicor (enterprise ERP/MES); many small-to-mid manufacturers run entirely on spreadsheets — a large underserved tier below enterprise ERP pricing/complexity.
+
+### 4. Budget and Buying
+Budget authority: plant manager or operations director. Capital-expenditure-conscious; ROI must be demonstrable in reduced downtime or waste.
+
+### 5. Regulatory Context
+OSHA safety compliance, ISO quality certification requirements, industry-specific standards (FDA for food/pharma manufacturing).
+
+### 6. Where They Congregate
+r/manufacturing, r/6Sigma; SME (Society of Manufacturing Engineers) resources; trade shows (highly influential in this industry, more than online communities).
+
+### 7. Vocabulary
+MES (manufacturing execution system), OEE (overall equipment effectiveness), downtime, scrap rate, preventive maintenance, changeover.
+
+### 8. Seed Queries
+```
+subreddit:manufacturing "production scheduling" "spreadsheet" "still"
+subreddit:6Sigma "quality control" "paper" "manual"
+"OEE tracking" "small manufacturer" "alternative to"
+"preventive maintenance" "spreadsheet" "workaround"
+```
+
+### 9. MVP Hypothesis
+A lightweight OEE/downtime tracker for small-to-mid manufacturers priced well below full MES/ERP systems, focused on one factory floor rather than full enterprise deployment.
+
+---
+
+## Playbook: Education
+
+### 1. Workflow Map (Teacher / School Administrator)
+Lesson planning → attendance tracking → grading → parent communication → admissions/enrollment (institution level) → compliance reporting.
+
+### 2. Pain Inventory
+| Task | Current State | Common Tool | Complaint Pattern |
+|---|---|---|---|
+| Grading | Manual, time-heavy | Spreadsheets, LMS gradebooks | "So much time," off-hours work burden |
+| Parent communication | Manual, fragmented | Email, apps, paper notes | Inconsistent, easy to miss |
+| Attendance tracking | Semi-automated | LMS, paper backup | Reporting compliance burden |
+
+### 3. Existing Tools
+Google Classroom, Canvas (LMS); PowerSchool (SIS/administrative) — grading automation remains a persistent gap even within these platforms.
+
+### 4. Budget and Buying
+Budget authority: district-level procurement (public schools) or administrator (private schools/higher ed). Public school procurement cycles are slow and tied to annual budgets.
+
+### 5. Regulatory Context
+FERPA (student data privacy, US), state-specific curriculum/testing compliance reporting, accessibility requirements (ADA/Section 508).
+
+### 6. Where They Congregate
+r/Teachers, r/professors, r/AdmissionsMod; NEA (National Education Association) resources.
+
+### 7. Vocabulary
+LMS, SIS (student information system), IEP (individualized education plan), rubric, FERPA, gradebook.
+
+### 8. Seed Queries
+```
+subreddit:Teachers "grading" "so much time" "still"
+subreddit:professors "admissions" "tracking" "workaround"
+"parent communication" "app" "alternative to"
+"attendance tracking" "compliance" "manual"
+```
+
+### 9. MVP Hypothesis
+An AI-assisted grading and feedback tool for a specific subject/assignment type (e.g., short-answer humanities responses), positioned as an LMS add-on rather than a replacement.
+
+---
+
+## Building Your Own Playbook for a New Industry
+
+For any vertical not covered above, walk through the same nine sections. Two practical tips for doing this efficiently:
+
+```
+TIP 1 — Start with vocabulary, not queries.
+        Spend 30 minutes reading 5-10 threads/articles from the
+        target industry before writing a single search query.
+        You cannot write a good industry-specific dork until you
+        know the industry's own words for its problems.
+
+TIP 2 — Interview one practitioner before finalizing the playbook.
+        Even a single 20-minute conversation (Ch. 9, Customer
+        Interviews) will surface vocabulary and workflow details
+        that no amount of search-based research will find, because
+        much of this knowledge lives in practitioners' heads and
+        was never written down publicly.
+```
+
+---
+
+## Common Mistakes When Building Industry Playbooks
+
+### Mistake 1: Using Generic Vocabulary in Industry-Specific Searches
+Searching "manual process" instead of the industry's actual term (e.g., "prior authorization," "material takeoff," "reconciliation") dramatically undercounts real results. Vocabulary precision is the entire value of this chapter.
+
+### Mistake 2: Skipping the Budget and Buying Process Section
+A brilliant product for a role with no budget authority (Chapter 1, Failure Mode 3) is a common trap this section is designed to catch early, before you invest in building anything.
+
+### Mistake 3: Assuming National Communities Represent Local/Regional Industries
+Construction, real estate, and restaurants are heavily regionally fragmented. A national subreddit will systematically undercount real activity that happens in local trade associations, regional Facebook groups, and in-person events.
+
+### Mistake 4: Treating the Playbook as a One-Time Document
+Regulatory changes, new tool launches, and shifting budget cycles mean an industry playbook should be revisited every few months for any vertical you're seriously pursuing — not written once and filed away.
+
+### Mistake 5: Skipping the MVP Hypothesis Section
+Without forcing yourself to write a concrete MVP hypothesis, the playbook remains research for its own sake. Even a rough, likely-wrong first hypothesis gives you something concrete to test in Chapter 9 (Customer Interviews) and Chapter 10 (Validation).
+
+---
+
+## Chapter 7 Checklist
+
+Before moving to AI Agent Opportunities in the next chapter, confirm you have:
+
+- [ ] Selected 1-3 target industries based on your strongest findings from Chapters 2-6
+- [ ] Completed a full nine-section Industry Playbook for at least one target industry (using the templates above or building your own)
+- [ ] Compiled an industry-specific vocabulary list of at least 10 terms
+- [ ] Run the seed query library for your target industry across at least 2 platforms
+- [ ] Identified the budget authority and buying process for your target customer role
+- [ ] Written a concrete MVP Hypothesis to carry into Chapter 9's customer interviews
+
+---
+
+*→ Next: [08-AI-Agent-Playbook.md](08-AI-Agent-Playbook.md) — AI Opportunity Identification*
+
+*→ See also: [01-Finding-Problems.md](01-Finding-Problems.md) — The Pain Categories Underlying Every Playbook Section | [06-Competitor-Research.md](06-Competitor-Research.md) — Deeper Competitive Teardowns Per Industry | [09-Customer-Interviews.md](09-Customer-Interviews.md) — Validating Your MVP Hypothesis*

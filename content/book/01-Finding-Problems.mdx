@@ -1,0 +1,418 @@
+---
+title: "Chapter 1: Finding Problems"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"If I had asked people what they wanted, they would have said faster horses."*
+> — attributed to Henry Ford
+>
+> *The quote is probably apocryphal, but the lesson is real: customers are bad at describing solutions. They are excellent at describing pain — if you know how to listen.*
+
+---
+
+## Why This Chapter Comes First
+
+Every search technique in this handbook — Google Dorks, Reddit mining, Hacker News threads, GitHub Issues, industry playbooks — is a *tool*. Tools are only useful once you know what you are looking for.
+
+This chapter is not about tools. It is about target. Before you run a single search query, you need a mental model of what a real problem actually looks like, where problems hide, and how to tell a shallow complaint apart from a deep, monetizable pain point.
+
+Skip this chapter and you will spend hundreds of hours searching effectively for the wrong thing. Read it carefully and every subsequent chapter becomes dramatically more productive, because you will know exactly what signal you are filtering for.
+
+---
+
+## What a "Problem" Actually Means in This Handbook
+
+The word "problem" gets used loosely in startup culture. People say "I found a problem" when what they really found was a minor inconvenience, a personal preference, or a feature gap in an otherwise satisfactory product.
+
+In this handbook, a **problem** is defined narrowly and specifically:
+
+> **A problem is a gap between what someone needs to accomplish and their current ability to accomplish it, where that gap causes measurable cost — in time, money, risk, or opportunity — and where the person experiencing it would actively support, adopt, or pay for a solution if one existed.**
+
+Break that definition down:
+
+| Component | What It Means | What It Rules Out |
+|---|---|---|
+| Gap between need and ability | There is a specific outcome someone is trying to reach and current tools/processes fall short | Vague dissatisfaction with no specific blocked outcome |
+| Measurable cost | Time lost, money spent, risk incurred, or opportunity missed — something you could put a number on | Aesthetic complaints ("I don't love the UI") with no functional cost |
+| Active support for a solution | The person would change behavior, pay, or adopt something new | Passive complaining with no appetite for change |
+
+If your "problem" does not satisfy all three components, it is not yet a startup-grade problem. It might still be real, but it needs more investigation before you build anything around it.
+
+### The Problem Quality Ladder
+
+Not all problems are equally valuable to solve. Use this ladder to triage what you find:
+
+```
+TIER 5 — Mission Critical
+   "If this breaks, the business stops." 
+   (e.g., payment processing failure, compliance violation)
+        │
+TIER 4 — Operationally Painful
+   "This costs us real hours/dollars every single week."
+   (e.g., manual data reconciliation across systems)
+        │
+TIER 3 — Chronically Annoying
+   "We've built workarounds, but they're fragile and everyone hates them."
+   (e.g., spreadsheet-based tracking that breaks at scale)
+        │
+TIER 2 — Mildly Inconvenient
+   "It's not great, but it's tolerable."
+   (e.g., a clunky but infrequently used feature)
+        │
+TIER 1 — Cosmetic
+   "I'd prefer it looked/worked differently."
+   (e.g., UI polish, color schemes, minor UX friction)
+```
+
+**Startups should target Tier 3, 4, and 5 problems.** Tier 1 and 2 problems rarely generate enough urgency to drive adoption or payment. A huge amount of founder time is wasted chasing Tier 1 and 2 problems because they are the easiest to notice — they're everywhere, mildly annoying, and easy to complain about on social media. The valuable problems require more digging.
+
+---
+
+## Categories of Pain: Where Real Problems Hide
+
+Pain does not announce itself uniformly. It shows up in different forms depending on who is experiencing it and how they cope with it. Below are the eight primary categories of pain signal you should learn to recognize. Later chapters will show you exactly how to search for each one across specific platforms — this section teaches you to recognize them conceptually first.
+
+### 1. Explicit Complaints
+
+The most obvious signal. Someone states directly that something is broken, frustrating, slow, expensive, or confusing.
+
+**What it looks like:** "I hate how long it takes to reconcile invoices in QuickBooks." "Why is enterprise procurement software always this terrible?"
+
+**Where it concentrates:** Reddit threads, review sites (G2, Capterra, Trustpilot), Twitter/X complaints, support forums, app store reviews.
+
+**Caveat:** Explicit complaints are high-volume but often low-signal individually. One angry tweet is an anecdote. The value comes from aggregating many explicit complaints and looking for repeated, specific language.
+
+### 2. Manual Workarounds
+
+When people are forced to solve a problem themselves because no good tool exists, they build manual processes: spreadsheets, email chains, sticky notes, Slack channels dedicated to tracking something, personally-maintained databases.
+
+**What it looks like:** "We track all our vendor contracts in a shared Google Sheet that three people update." "I built a janky Zapier chain to get our CRM to talk to our support tool."
+
+**Why it matters more than complaints:** A workaround proves the person values the outcome enough to invest real effort solving it themselves. This is a far stronger signal than a complaint, because it demonstrates revealed preference, not just stated preference.
+
+**Where it concentrates:** Job postings (look for "manage spreadsheets," "manual data entry," "reconcile reports"), Reddit "how do you all handle X" threads, LinkedIn posts describing internal processes, customer interviews.
+
+### 3. Feature Requests and Roadmap Gaps
+
+When existing products almost solve a problem but are missing a specific capability, users request it directly — often repeatedly, often for years.
+
+**What it looks like:** A GitHub issue with hundreds of thumbs-up reactions requesting a feature that has been open for three years. A recurring "when will you add X" comment thread on a SaaS product's community forum.
+
+**Why it matters:** This is a pre-qualified market. These users already pay for (or want to pay for) a product in this category. They are telling you exactly what is missing.
+
+**Where it concentrates:** GitHub Issues (see Chapter 5), product community forums (Notion, Airtable, Linear, etc. all have public forums), feature request boards (Canny, UserVoice instances).
+
+### 4. Hiring Patterns
+
+When companies hire humans to do something that should theoretically be automatable, that is one of the strongest possible pain signals — it means the company has explicitly allocated budget (a salary) to solve the problem manually because no tool does it adequately.
+
+**What it looks like:** A job posting for "Data Entry Specialist — Insurance Claims" or "Manual QA Tester — Repetitive Regression Testing."
+
+**Why it matters:** Hiring is a direct, unambiguous willingness-to-pay signal. A $60K/year salary line item is far more convincing evidence of budget than any survey response.
+
+**Where it concentrates:** LinkedIn Jobs, Indeed, AngelList/Wellfound, niche industry job boards.
+
+### 5. Churn and Switching Behavior
+
+When customers abandon a product or actively switch vendors, the reason they give (publicly or in reviews) reveals exactly what the losing product failed to deliver.
+
+**What it looks like:** A G2 review titled "Why we switched from Salesforce to HubSpot." A Reddit post: "We just migrated off of [Tool] because [specific reason]."
+
+**Why it matters:** Churn reasons are some of the highest-quality problem statements available, because they come from someone who tried the existing solutions and found them insufficient — not someone speculating.
+
+**Where it concentrates:** Review sites with "switched from" filters, Reddit, comparison/alternative-seeking searches ("best alternative to X").
+
+### 6. Regulatory and Compliance Triggers
+
+New laws, regulations, or compliance requirements create sudden, forced demand. Companies that previously had no problem now have an urgent one, often with a hard deadline.
+
+**What it looks like:** GDPR created a wave of compliance tooling demand in 2018. State-level data privacy laws (CCPA, and successors) continue to do the same. Industry-specific regulation (healthcare, finance) regularly forces new compliance workflows.
+
+**Why it matters:** Regulatory-driven pain has built-in urgency and budget — companies cannot simply ignore a legal requirement. This is one of the few categories where you can find pain *before* it has fully matured, by tracking upcoming legislation.
+
+**Where it concentrates:** Government regulatory announcements, industry trade publications, compliance-focused LinkedIn discussions, law firm client alerts (often free and public).
+
+### 7. Technology Shifts and New Capabilities
+
+When the cost or capability of an underlying technology changes dramatically, problems that were previously unsolvable (or unsolvable affordably) suddenly become tractable.
+
+**What it looks like:** The drop in LLM API costs and improvement in reasoning capability between 2022 and 2026 has made automating tasks — like reviewing legal documents or triaging customer support tickets — viable at a price point that was previously impossible.
+
+**Why it matters:** This category does not require you to find new problems. It requires you to revisit *old, well-known* problems and ask: "Is this solvable now, in a way it wasn't 18 months ago?"
+
+**Where it concentrates:** AI/ML research publications, developer conference talks, changelogs for major model providers, Hacker News discussions about new capabilities.
+
+### 8. Demographic and Behavioral Shifts
+
+Population-level changes — aging demographics, remote work adoption, generational spending habits, urbanization patterns — create or destroy markets gradually but predictably.
+
+**What it looks like:** The shift to remote work after 2020 created sustained demand for asynchronous collaboration tools, virtual onboarding software, and distributed team management tools.
+
+**Why it matters:** These shifts are slow-moving and well-documented, which means you can identify them with desk research rather than guesswork, and you can act early relative to competitors who are still reacting to yesterday's market.
+
+**Where it concentrates:** Census and labor statistics, industry analyst reports (which you should treat skeptically for market sizing but usefully for trend direction — see the Market Research Trap in Chapter 0), Pew Research, McKinsey/BCG public reports.
+
+### Summary Table: Pain Categories at a Glance
+
+| Category | Signal Strength | Speed to Find | Best Search Channel |
+|---|---|---|---|
+| Explicit complaints | Medium (needs aggregation) | Fast | Reddit, reviews, Twitter/X |
+| Manual workarounds | High | Medium | Job postings, interviews, forums |
+| Feature requests | High | Fast | GitHub Issues, product forums |
+| Hiring patterns | Very High | Medium | LinkedIn Jobs, Indeed |
+| Churn/switching | Very High | Medium | Review sites, Reddit |
+| Regulatory triggers | High (time-sensitive) | Slow (requires monitoring) | Trade publications, legal alerts |
+| Technology shifts | Medium (requires judgment) | Slow (requires monitoring) | Research papers, HN, changelogs |
+| Demographic shifts | Medium (long time horizon) | Slow | Census data, analyst reports |
+
+---
+
+## The Observation Habit
+
+Before you systematize your search with the tools in later chapters, you should build a personal habit of observation. The best founders are constantly, almost unconsciously, scanning their environment for friction.
+
+### How to Train This Habit
+
+1. **Keep a friction log.** For one week, every time you or someone near you says (or thinks) "ugh, why is this so annoying," write it down — no matter how small. Do not filter at the point of capture; filter later.
+2. **Interrogate your own workarounds.** Look at your own life and work. What spreadsheets have you built? What manual processes do you repeat weekly? Each one is a candidate.
+3. **Listen for repeated complaints in conversation.** When friends, colleagues, or family describe a frustration at work, ask one follow-up question: "How do you deal with that today?" Their answer tells you whether this is Tier 1 (cosmetic) or Tier 3+ (chronic).
+4. **Read support tickets and reviews as primary sources, not as background noise.** Most people skim reviews to decide whether to buy something. Founders should read reviews to understand exactly what is missing.
+5. **Pay attention to the word "still."** "I still have to do this manually." "We're still using a spreadsheet for this." The word "still" is one of the highest-density pain signals in natural language — it implies the person expected this to have been solved by now and is surprised it hasn't been.
+
+### The Friction Log Template
+
+| Date | What I Observed | Who Experienced It | Tier (1-5) | Worth Researching? |
+|---|---|---|---|---|
+| | | | | |
+
+Use this consistently. Most entries will be Tier 1 or 2 and can be discarded. The few Tier 3+ entries are where you focus your search efforts using the techniques in Chapters 2 through 5.
+
+---
+
+## Distinguishing Symptoms From Root Causes
+
+One of the most common beginner mistakes is treating the first complaint you hear as the problem to solve, rather than as a *symptom* of a deeper root cause.
+
+### Example: Peeling Back the Layers
+
+**Surface complaint:** "Our customer support team is overwhelmed with tickets."
+
+This sounds like a problem you could solve with a better support ticketing tool. But keep asking "why":
+
+```
+Why is the support team overwhelmed?
+   → Because ticket volume tripled in the last year.
+
+Why did ticket volume triple?
+   → Because the product added new features without updating documentation.
+
+Why wasn't documentation updated?
+   → Because there's no process that requires docs updates 
+     before a feature ships.
+
+Why is there no such process?
+   → Because product and support teams use different tools 
+     and don't have visibility into each other's roadmaps.
+```
+
+The real root cause is not "we need a better ticketing tool." It is "product and support teams lack shared visibility into what's shipping and what documentation exists for it." That is a fundamentally different — and arguably more valuable — problem to solve. A better ticketing tool treats the symptom. A cross-functional visibility tool treats the cause.
+
+### The Five Whys Technique
+
+This technique, borrowed from manufacturing and Six Sigma methodology, is directly applicable to startup research. When you find a complaint or pain point, ask "why" five times in succession, each time digging one layer deeper into the causal chain.
+
+```
+1. Why? → [Surface answer]
+2. Why? → [Slightly deeper answer]
+3. Why? → [Structural answer]
+4. Why? → [Organizational/systemic answer]
+5. Why? → [Root cause]
+```
+
+You will not always need all five. Sometimes the root cause emerges at "why" number two. But discipline yourself to keep asking past the first answer — the first answer is rarely the most valuable one to build around.
+
+### Symptom vs. Root Cause: Quick Reference
+
+| Symptom (What People Say) | Possible Root Cause |
+|---|---|
+| "Our spreadsheet keeps breaking" | No single source of truth across teams |
+| "We can't find the right candidate" | Job descriptions don't match what hiring managers actually want |
+| "Customers keep churning" | Onboarding doesn't establish habitual usage before trial ends |
+| "Reports take too long to generate" | Data lives in five disconnected systems with no unified schema |
+| "Compliance reviews are a bottleneck" | No standardized checklist; every review starts from scratch |
+
+---
+
+## Problem Sourcing Channels: A Map
+
+Before diving into platform-specific techniques (covered in Chapters 2 through 5), it helps to see the full landscape of where problems can be sourced. Think of this as the master map; subsequent chapters are detailed guides to specific territories on it.
+
+```
+                         PROBLEM SOURCING MAP
+   ┌─────────────────────────────────────────────────────────┐
+   │                                                           │
+   │   PERSONAL EXPERIENCE        COMMUNITY DISCUSSION         │
+   │   ─────────────────          ────────────────────         │
+   │   Your own workflows         Reddit, Hacker News,          │
+   │   Past jobs                  Discord, Slack communities    │
+   │   Friends & family                                        │
+   │                                                            │
+   │   DEVELOPER SIGNAL            HIRING SIGNAL                │
+   │   ───────────────            ─────────────                │
+   │   GitHub Issues               Job postings                 │
+   │   Stack Overflow               (LinkedIn, Indeed)           │
+   │   Open source roadmaps                                     │
+   │                                                            │
+   │   COMMERCIAL SIGNAL            REGULATORY SIGNAL            │
+   │   ────────────────            ──────────────────           │
+   │   Reviews (G2, Capterra)       New laws & regulations       │
+   │   Churn/switching posts        Compliance deadlines         │
+   │                                                            │
+   │   EXPERT/INSIDER SIGNAL        TREND SIGNAL                 │
+   │   ────────────────────        ────────────                 │
+   │   Industry conferences          Technology cost curves      │
+   │   Trade publications            Demographic shifts          │
+   │   Analyst reports                                          │
+   │                                                            │
+   └─────────────────────────────────────────────────────────┘
+```
+
+Each quadrant requires a different search technique and produces a different *kind* of signal. Personal experience and community discussion tend to surface Tier 2-3 problems quickly but require validation. Hiring and commercial signals tend to surface Tier 4-5 problems with built-in willingness-to-pay evidence, but take longer to find. Regulatory and trend signals require more patience but offer first-mover advantage.
+
+A well-rounded research process touches all six quadrants, not just one. Founders who only read Reddit threads tend to find shallow, well-known problems that hundreds of other people have also seen (and likely already tried to solve). Founders who combine community signal with hiring data and regulatory tracking find less obvious, higher-quality opportunities.
+
+---
+
+## The Problem Statement Template
+
+Once you have identified a candidate problem, do not move directly to brainstorming solutions. First, write the problem down in a structured format. This forces clarity and exposes gaps in your understanding before you invest further time.
+
+### Template
+
+```
+PROBLEM STATEMENT
+
+Who experiences this problem?
+   [Specific role, company size, industry — be precise, 
+    not "businesses" but "10-50 person SaaS companies 
+    with a dedicated support team"]
+
+What are they trying to accomplish?
+   [The underlying goal, not the current broken process]
+
+What currently stands in their way?
+   [The specific gap, bottleneck, or missing capability]
+
+How do they cope with it today?
+   [Manual workaround, paid tool, ignoring it entirely]
+
+What is the cost of this problem?
+   [Time, money, risk, missed opportunity — quantify if possible]
+
+What evidence do you have that this is real?
+   [List sources: complaints, workarounds, job posts, etc.]
+
+What tier is this problem? (1-5)
+   [Use the Problem Quality Ladder above]
+
+What would have to be true for someone to pay to solve this?
+   [Budget authority, existing spend, urgency triggers]
+```
+
+### Worked Example
+
+```
+PROBLEM STATEMENT
+
+Who experiences this problem?
+   Operations managers at mid-sized e-commerce companies 
+   (50-500 employees) running on Shopify Plus with 
+   3+ fulfillment warehouses.
+
+What are they trying to accomplish?
+   Accurately predict which warehouse should fulfill 
+   each order to minimize shipping cost and delivery time.
+
+What currently stands in their way?
+   Shopify's native logic does not account for real-time 
+   warehouse capacity, carrier rate fluctuations, or 
+   partial-inventory splits across locations.
+
+How do they cope with it today?
+   Manual override rules maintained in spreadsheets, 
+   updated weekly by an ops analyst; frequently outdated 
+   by the time they're applied.
+
+What is the cost of this problem?
+   Estimated 8-12% excess shipping cost based on 
+   suboptimal warehouse selection; one ops analyst FTE 
+   ($65K/year) partially dedicated to maintaining 
+   override rules.
+
+What evidence do you have that this is real?
+   - 14 LinkedIn posts from e-commerce ops professionals 
+     describing this exact workaround
+   - 3 GitHub issues on open-source Shopify apps requesting 
+     "smart fulfillment routing"
+   - 2 job postings explicitly listing "fulfillment routing 
+     optimization" as a core responsibility
+
+What tier is this problem?
+   Tier 4 — Operationally Painful (recurring weekly cost, 
+   quantifiable financial impact, dedicated workaround)
+
+What would have to be true for someone to pay to solve this?
+   Budget exists (already paying an analyst partially 
+   for this); urgency exists (shipping cost is a 
+   visible line item under constant cost pressure); 
+   ROI is easy to demonstrate (clear cost reduction).
+```
+
+Notice how much sharper this problem becomes once forced into this structure, compared to the vague starting point of "ops people have trouble with warehouse routing." The structured version gives you everything you need to begin targeted research using the techniques in the following chapters — specific search terms, specific communities to investigate, specific job titles to look for.
+
+---
+
+## Common Traps When Searching for Problems
+
+### Trap 1: Searching for Problems You Already Have Solutions For
+
+If you catch yourself reading every problem through the lens of "could my idea solve this," you are not doing problem research — you are doing confirmation shopping. Force yourself to log problems without immediately attaching a solution. Solutions come later, in a separate exercise.
+
+### Trap 2: Mistaking Volume for Validity
+
+A thread with 500 upvotes feels like strong validation, but virality and pain severity are not the same thing. Some of the most-upvoted Reddit posts are entertaining complaints with no real willingness to pay behind them ("am I the only one who hates X" posts get a lot of agreement but little action). Cross-reference high-volume signals with at least one other category from the eight listed above (ideally a workaround, hiring pattern, or churn signal) before treating it as strong evidence.
+
+### Trap 3: Only Looking Where It's Comfortable
+
+Most aspiring founders default to searching Reddit and Twitter because they're familiar and fast. The richest, least-competed-over problems often live in less glamorous places: job postings, compliance filings, trade publication comment sections, vertical-specific Slack communities that require an invite. Discomfort in your search process is often a sign you're finding less-picked-over territory.
+
+### Trap 4: Treating Every Found Problem as Worth Pursuing
+
+Your friction log will accumulate dozens, eventually hundreds, of entries. Most are not worth pursuing. Use the Problem Quality Ladder and the Problem Statement Template ruthlessly to filter. A long list of Tier 1-2 problems is not progress; a short list of well-documented Tier 4-5 problems is.
+
+### Trap 5: Researching in an Echo Chamber
+
+If every person you talk to is in your immediate network (same school, same previous company, same friend group), you will systematically miss how widespread or narrow a problem actually is. Deliberately seek out people outside your existing network — different company sizes, different geographies, different seniority levels — before concluding a problem is broad enough to build a company around.
+
+---
+
+## Problem-Finding Checklist
+
+Before moving to the search-specific chapters that follow, confirm you have:
+
+- [ ] Read and internalized the definition of a "problem" used in this handbook
+- [ ] Started a friction log and logged at least 10 entries from your own observation
+- [ ] Reviewed the eight pain categories and identified which ones are most accessible given your background and network
+- [ ] Picked at least 2-3 candidate problems and written full Problem Statements using the template above
+- [ ] Applied the Five Whys technique to at least one candidate problem to check whether you're looking at a root cause or a symptom
+- [ ] Cross-referenced each candidate problem against at least two different pain categories (not just one source type)
+- [ ] Scored each candidate against the Problem Quality Ladder (Tier 1-5) and discarded anything below Tier 3
+
+Once you have 2-3 well-documented, Tier 3+ candidate problems, you are ready to move into the channel-specific search techniques in the following chapters — starting with Google Dorks, the most universal and flexible search tool in your research arsenal.
+
+---
+
+*→ Next: [02-Google-Dorks.md](02-Google-Dorks.md) — Building Your Search Query Library*
+
+*→ See also: [06-Competitor-Research.md](06-Competitor-Research.md) — Checking What Already Exists | [09-Customer-Interviews.md](09-Customer-Interviews.md) — Validating What You've Found | [11-Templates.md](11-Templates.md) — Copy-Paste Research Tools*

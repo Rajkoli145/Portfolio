@@ -1,0 +1,314 @@
+---
+title: "Chapter 4: Hacker News — Mining the Technical/Startup Community"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"Reddit tells you what practitioners complain about. Hacker News tells you what builders think is worth building — and, more importantly, what they've already tried and abandoned."*
+
+---
+
+## Why Hacker News Is a Different Kind of Signal
+
+Chapter 3 taught you to mine Reddit for practitioner pain — nurses, bookkeepers, contractors describing their day-to-day frustration. Hacker News (HN) is a different animal entirely, and treating it like "Reddit for tech people" will cause you to miss its real value.
+
+HN's population skews toward engineers, technical founders, senior ICs, and a meaningful number of people who have already built and sold companies. That changes what kind of signal you get:
+
+- **Fewer raw complaints, more considered analysis.** HN commenters tend to explain *why* something is broken structurally, not just that it's annoying.
+- **A built-in "has this been tried" filter.** Post a idea in a Show HN or Ask HN thread and within hours someone will tell you three companies that already attempted it and why they failed. This is free competitive intelligence you'd otherwise have to dig for.
+- **Early access to technology shift signals.** Chapter 1's Category 7 (Technology Shifts) is disproportionately visible on HN before anywhere else — new model releases, new frameworks, new cost curves get discussed here first, often by the people building with them in production.
+- **Hiring threads as a structured labor market snapshot.** The monthly "Who Is Hiring" thread is a uniquely clean, comparable, dated dataset of what companies are actually paying engineers to build and staff for, refreshed every month like clockwork.
+- **A ruthless honesty norm.** HN's culture punishes hype and rewards specificity. A Show HN post that gets picked apart in the comments is often more useful to you than one that gets praised, because the pickapart reveals exactly what's missing.
+
+The tradeoff: HN's population is smaller and more homogeneous than Reddit's. It is excellent for developer tools, technical infrastructure, and anything AI/automation-related. It is weaker for consumer pain, offline-industry pain (construction, restaurants, healthcare operations), and anything outside the tech/startup bubble. Use HN to sharpen and stress-test findings from other channels — not as your only source for a non-technical vertical.
+
+---
+
+## The Three Pillars of Hacker News Research
+
+HN's structure gives you three distinct, purpose-built research surfaces. Learn to use each one differently.
+
+| Pillar | What It Is | Frequency | Best For |
+|---|---|---|---|
+| **Show HN** | Founders showing a project they built | Continuous | Seeing what's already been tried, reading launch feedback, spotting gaps in existing attempts |
+| **Ask HN** | Direct questions to the community | Continuous | Surfacing unsolved problems, workaround discussions, "is there a tool for X" threads |
+| **Who Is Hiring** | Monthly hiring megathread | 1st of every month | Labor market signal — what companies are staffing for, salary ranges, tech stacks, pain-driven hires |
+
+---
+
+## Pillar 1: Mining Show HN
+
+Show HN posts are founders launching their product to the harshest, most technically literate audience on the internet. The post itself is marketing — the comments are where the real research value lives.
+
+### What to Extract From a Show HN Thread
+
+```
+1. THE GAP THE FOUNDER SAW
+   → Read the post description: what problem are they claiming to solve?
+   → This is a pre-validated hypothesis — someone else already believed
+     this problem was worth building for
+
+2. THE "WHY NOT JUST USE X" COMMENTS
+   → HN commenters reflexively list existing alternatives
+   → This is a free competitor list you didn't have to research yourself
+
+3. THE "THIS DOESN'T HANDLE Y" COMMENTS
+   → Specific technical or workflow gaps in the shown product
+   → These are unmet needs even within a product built to solve
+     this exact problem — extremely high-signal
+
+4. THE "I'VE BUILT SOMETHING SIMILAR AND GAVE UP BECAUSE Z" COMMENTS
+   → Failed-attempt intelligence — Z is often the real reason this
+     problem is hard, not just unaddressed
+   → Read Chapter 1's Failure Mode framework against these comments —
+     which failure mode killed the previous attempt?
+
+5. TRACTION SIGNALS IN REPLIES
+   → "I'd pay for this" / "we've been looking for exactly this" comments
+   → Rare, but when present, are strong willingness-to-pay evidence
+```
+
+### Show HN Query Library
+
+```
+site:news.ycombinator.com "Show HN" "[TOPIC]"
+site:news.ycombinator.com "Show HN" "[TOPIC]" "why not just use"
+site:news.ycombinator.com "Show HN" "[TOPIC]" "I built this because"
+site:news.ycombinator.com "Show HN" "[TOPIC]" "gave up"
+site:news.ycombinator.com "Show HN" "[TOPIC]" "doesn't handle"
+```
+
+### Show HN Research Log Template
+
+| Post Title | URL | Problem Claimed | Alternatives Mentioned in Comments | Gaps Identified | Failed-Attempt Reasons |
+|---|---|---|---|---|---|
+| | | | | | |
+
+---
+
+## Pillar 2: Mining Ask HN
+
+Ask HN threads are the closest HN equivalent to Reddit's practitioner complaints — but the audience skews toward technical founders and engineers, so the pain tends to be about tooling, workflow, and business operations rather than consumer frustration.
+
+### High-Value Ask HN Thread Patterns
+
+| Pattern | Example Thread Title | Why It's Valuable |
+|---|---|---|
+| Direct tool request | "Ask HN: Is there a tool for X?" | Explicit unmet need, often with zero good answers in the comments |
+| Workflow question | "Ask HN: How do you handle X at your company?" | Reveals current workarounds across many different companies at once |
+| Recommendation request | "Ask HN: What do you use for X?" | Same value as Reddit's Recurring Question Technique (Ch. 3) — run it here too |
+| State-of-the-art check | "Ask HN: What's the best way to do X in 2026?" | Surfaces current tech shift signals (Ch. 1, Category 7) |
+| Post-mortem / retrospective | "Ask HN: Why did X company fail?" | Deep, unusually candid failure analysis from people who were close to it |
+| Career/hiring pain | "Ask HN: How do you find good X?" | Hiring difficulty signals — a market gap in either talent or a tool that reduces the need for that talent |
+
+### Ask HN Query Library
+
+```
+site:news.ycombinator.com "Ask HN" "is there a tool"
+site:news.ycombinator.com "Ask HN" "how do you handle"
+site:news.ycombinator.com "Ask HN" "what do you use for"
+site:news.ycombinator.com "Ask HN" "[TOPIC]" "best way"
+site:news.ycombinator.com "Ask HN" "[TOPIC]" "still no good solution"
+site:news.ycombinator.com "Ask HN" "why is there no"
+```
+
+### Reading Ask HN Threads: What to Prioritize
+
+```
+FIRST — Read the original question closely
+        Apply the Problem Statement Template (Ch. 1) directly
+
+SECOND — Sort comments by "new" if the thread is recent, since HN's
+         default sort favors early comments that got early upvotes,
+         which can bury more specific/recent replies
+
+THIRD — Look for comments with substantial reply chains — disagreement
+        under a comment is where nuance and unmet needs surface,
+        same principle as the Layered Extraction Method (Ch. 3)
+
+FOURTH — Note any comment beginning with "I built..." — this is
+         someone who felt the pain strongly enough to solve it
+         themselves. Even side-project-scale solutions are strong
+         signal under Chapter 1's evidence hierarchy
+```
+
+---
+
+## Pillar 3: Mining "Who Is Hiring"
+
+The monthly "Who Is Hiring" thread (posted by HN's official account on the 1st of each month) is one of the cleanest structured datasets in this entire handbook. Every comment follows a loose but consistent format: company, role, tech stack, location, sometimes salary.
+
+### Why This Thread Is Uniquely Valuable
+
+- **It's dated.** Unlike a scattered LinkedIn search, you get a clean monthly snapshot you can compare month over month to spot emerging demand.
+- **It's self-selected for technical seriousness.** Companies posting here are almost always real, funded, and specific about what they need — spam and low-quality postings are rare compared to general job boards.
+- **It reveals what technology stack is being bet on right now.** Aggregate the tech stacks mentioned and you get a real-time picture of what tools are gaining or losing adoption.
+- **It reveals what pain companies are willing to pay a full-time salary to solve.** A company hiring specifically for "AI agent integration" or "workflow automation engineer" is telling you directly what Chapter 1 calls a Hiring Pattern signal (Category 4) — except concentrated into one searchable thread instead of scattered across job boards.
+
+### How to Mine a Who Is Hiring Thread
+
+```
+STEP 1 — Find the current month's thread: 
+         site:news.ycombinator.com "Who is hiring" [MONTH] [YEAR]
+
+STEP 2 — Use Ctrl+F / in-browser search for your target keyword
+         (e.g., "compliance," "manual," "reporting," "AI agent")
+
+STEP 3 — Log every posting that mentions a manual process, a pain
+         point, or an automation need in the role description
+
+STEP 4 — Cross-reference role titles against the previous 3-6 months
+         of threads to see if a role category is trending up
+
+STEP 5 — Note salary ranges where given — this is direct budget
+         evidence for the problem category the role addresses
+```
+
+### Who Is Hiring Query Library
+
+```
+site:news.ycombinator.com "Who is hiring" "[TECH/ROLE]"
+site:news.ycombinator.com "Who is hiring" "AI agent"
+site:news.ycombinator.com "Who is hiring" "workflow automation"
+site:news.ycombinator.com "Who is hiring" "compliance" salary
+site:news.ycombinator.com "Who is hiring" "manual" -intern
+```
+
+### Who Is Hiring Log Template
+
+| Month | Company | Role | Stack Mentioned | Pain/Automation Language | Salary (if given) |
+|---|---|---|---|---|---|
+| | | | | | |
+
+---
+
+## The Full Hacker News Query Library
+
+### General Pain Discovery
+```
+site:news.ycombinator.com "[TOPIC]" "so frustrating"
+site:news.ycombinator.com "[TOPIC]" "there's no good"
+site:news.ycombinator.com "[TOPIC]" "still doing this manually"
+site:news.ycombinator.com "[TOPIC]" "why hasn't anyone built"
+```
+
+### Failed Attempt Intelligence
+```
+site:news.ycombinator.com "[TOPIC]" "we shut down"
+site:news.ycombinator.com "[TOPIC]" "postmortem"
+site:news.ycombinator.com "[TOPIC]" "lessons learned" "failed"
+site:news.ycombinator.com "[TOPIC]" "why we pivoted away from"
+```
+
+### Technology Shift Signals
+```
+site:news.ycombinator.com "[TOPIC]" "now possible with"
+site:news.ycombinator.com "[TOPIC]" "used to require" "now"
+site:news.ycombinator.com "[TOPIC]" "LLM" "automate"
+site:news.ycombinator.com "[TOPIC]" "cost has dropped"
+```
+
+### Competitive Landscape
+```
+site:news.ycombinator.com "[TOPIC]" "why not just use"
+site:news.ycombinator.com "[TOPIC]" "alternative to"
+site:news.ycombinator.com "[TOPIC]" vs
+```
+
+### Hiring / Budget Signal
+```
+site:news.ycombinator.com "Who is hiring" "[TOPIC]"
+site:news.ycombinator.com "[TOPIC]" "we're hiring" "$"
+```
+
+---
+
+## Reading Hacker News Discussion Culture Correctly
+
+HN comment sections have unwritten norms. Understanding them will make your reading faster and more accurate.
+
+| Comment Pattern | What It Usually Means |
+|---|---|
+| Top comment is pure skepticism | Normal HN behavior, not necessarily a bad signal — read past it |
+| "This is basically X" | Someone naming a direct competitor — log it |
+| Heavily downvoted, still visible | Often an unpopular but useful counterpoint — don't skip these (same principle as Chapter 3's buried comments) |
+| Long technical rebuttal | Usually from someone with real domain expertise — weight these heavily |
+| "cool but who is the customer" | A distribution/business-model critique — log it as a potential Chapter 1 Failure Mode 3 or 4 signal |
+| Multiple "same, we built our own internal tool" replies | Very strong Manual Workaround signal (Ch. 1, Category 2), corroborated across companies |
+
+---
+
+## Cross-Referencing HN Against Reddit
+
+Because HN and Reddit have different populations, a problem that shows up independently in both is a much stronger signal than one that only shows up in one. Use this comparison to prioritize.
+
+| Finding Pattern | Interpretation |
+|---|---|
+| Strong on Reddit, absent on HN | Likely non-technical/consumer pain — HN's audience doesn't touch this workflow |
+| Strong on HN, absent on Reddit | Likely a technical/developer-specific pain — may be too niche for general practitioner subreddits, or the practitioner subreddit hasn't been found yet |
+| Strong on both | High-confidence signal — pursue this first |
+| Weak on both | Either not a real problem yet, or requires a more specialized/less-indexed community (Discord, Slack, trade publications) |
+
+---
+
+## A Repeatable Hacker News Research Session
+
+```
+STEP 1 — Pick ONE candidate topic (carried over from Reddit research
+         or a fresh friction log entry)
+STEP 2 — Run 3 Show HN queries, log gaps and failed-attempt comments
+STEP 3 — Run 3 Ask HN queries, log unmet needs and workaround mentions
+STEP 4 — Search the current + previous 2 months of Who Is Hiring
+         threads for related roles/keywords
+STEP 5 — Cross-reference findings against any Reddit research already
+         done on the same topic (see table above)
+STEP 6 — Log every Tier 3+ finding in the HN Research Log
+STEP 7 — If the topic shows strong signal on both Reddit and HN,
+         move immediately to Chapter 5 (GitHub Issues) for
+         developer-specific pain, or Chapter 1's Problem Statement
+         Template if you have enough evidence already
+```
+
+### Hacker News Research Log Template
+
+| Thread Type (Show/Ask/Hiring) | Title | URL | Pain Category (Ch. 1) | Tier (1-5) | Key Comment (paraphrased) | Competitors Named |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+
+---
+
+## Common Mistakes When Mining Hacker News
+
+### Mistake 1: Treating HN Like a General Consumer Research Source
+HN's population is technical and startup-adjacent. For consumer or offline-industry pain, HN will give you thin or misleading signal. Use it to sharpen technical/developer/AI-tooling findings, and lean on Reddit and industry-specific channels (Chapter 3, Chapter 7) for everything else.
+
+### Mistake 2: Reading Only the Front Page
+The HN front page is algorithmically curated for broad appeal. Your research queries should search HN's full archive directly, not just skim what's currently trending — most of your best finds will be threads that never made the front page.
+
+### Mistake 3: Ignoring Failed Show HN Launches
+A Show HN post that got 3 upvotes and no comments is not "no signal" — it might mean the problem is real but the execution or distribution was wrong. Read the post itself even when the discussion is thin, and evaluate the problem independent of the launch's reception (see Chapter 1, Failure Modes 1-6, to diagnose why it may have failed).
+
+### Mistake 4: Not Comparing Multiple Months of Who Is Hiring
+A single month's hiring thread is a snapshot. The trend across 3-6 months is the actual signal — is a role category growing, shrinking, or staying flat?
+
+### Mistake 5: Skipping the Skeptical Top Comment
+HN's culture rewards contrarian, skeptical first comments. New researchers often read this as "the idea is bad" and move on. Read past it — the real signal is often in the sub-thread underneath, where more considered responses appear.
+
+---
+
+## Chapter 4 Checklist
+
+Before moving to GitHub Issues mining in the next chapter, confirm you have:
+
+- [ ] Run at least 3 Show HN queries on a candidate topic and logged gaps + failed-attempt reasons
+- [ ] Run at least 3 Ask HN queries and logged unmet needs + workaround mentions
+- [ ] Searched at least 3 months of Who Is Hiring threads for relevant roles/keywords
+- [ ] Cross-referenced HN findings against any existing Reddit research using the comparison table
+- [ ] Logged every Tier 3+ finding in the Hacker News Research Log
+- [ ] Identified at least one competitor or failed-attempt company from Show HN comments to carry into Chapter 6 (Competitor Research)
+
+---
+
+*→ Next: [05-GitHub-Issues.md](05-GitHub-Issues.md) — Mining Developer Pain*
+
+*→ See also: [03-Reddit-Research.md](03-Reddit-Research.md) — Practitioner Pain and the Recurring Question Technique | [06-Competitor-Research.md](06-Competitor-Research.md) — Following Up on Named Competitors | [01-Finding-Problems.md](01-Finding-Problems.md) — The Failure Modes You'll Diagnose in Failed Attempts*

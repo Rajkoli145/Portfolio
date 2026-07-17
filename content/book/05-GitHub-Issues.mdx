@@ -1,0 +1,344 @@
+---
+title: "Chapter 5: GitHub Issues — Mining Developer Pain"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"An open GitHub issue with 300 thumbs-up reactions and no fix after three years is not a bug report. It's a market research report that nobody charged you for."*
+
+---
+
+## Why GitHub Issues Are a Distinct Research Channel
+
+Chapters 3 and 4 covered Reddit and Hacker News — both are *discussion* platforms, where people describe pain in prose, often vaguely, sometimes just to vent. GitHub Issues are structurally different, and that difference makes them one of the highest-precision sources in this entire handbook.
+
+A GitHub issue is not a complaint. It is a **feature request or bug report filed against a specific, named piece of software, by someone who is already a user of that software, describing a specific capability gap.** That single fact changes everything about the quality of the signal:
+
+- **The customer is already qualified.** They didn't just think about the category — they installed the tool, adopted it into their workflow, and hit a wall. This is a warmer lead than anything you'll find on Reddit or HN.
+- **The gap is already scoped.** Issues describe a specific missing capability, not a vague frustration. You get the Problem Statement Template (Chapter 1) largely pre-filled for you.
+- **Reactions are a clean, comparable votes signal.** Unlike Reddit upvotes (which reward entertainment value), GitHub reactions on an issue are almost always literal "I also want this" votes from real users of the tool.
+- **Labels do pre-filtering for you.** Maintainers tag issues as `feature-request`, `enhancement`, `wontfix`, `help-wanted` — this lets you filter directly for exactly the category of signal you want.
+- **Staleness itself is a signal.** An issue open for 2+ years with continued comments and reactions tells you the maintainer either can't or won't build this — which is your opening.
+- **It works for both open-source AND commercial products.** Many commercial SaaS products maintain public GitHub repos for their SDKs, CLIs, or open-source cores, even if the core product is closed-source. Their issue trackers still reveal real product gaps.
+
+The limitation: GitHub Issues skew almost entirely toward developer tools, infrastructure, APIs, and technical products. For non-technical verticals (healthcare operations, restaurant management, legal workflows), you will find far less here — but when a non-technical company's SaaS product does have a public GitHub repo (an SDK, integration library, or open-source component), it's worth checking regardless of industry.
+
+---
+
+## Anatomy of a GitHub Issue
+
+| Element | What It Tells You |
+|---|---|
+| Title | The compressed complaint or request — fast-scan layer, same role as a Reddit post title |
+| Body | Full context: use case, what they tried, why the gap matters |
+| Labels | Maintainer's own categorization — `bug`, `enhancement`, `feature-request`, `wontfix`, `help-wanted`, `good-first-issue` |
+| Reactions (👍/👎/❤️/🚀) | Vote count from other users who hit the same gap — the single best quantitative signal on this platform |
+| Comment thread | Where people share workarounds, alternative tools, and "+1, also need this" corroboration |
+| Linked PRs | Shows whether anyone (community or maintainer) has attempted a fix, and whether it was merged or abandoned |
+| Open/closed state | Closed-as-fixed = solved; closed-as-wontfix = permanent gap = opportunity; open and stale = unresolved and possibly abandoned |
+| Age | How long the gap has persisted unaddressed |
+| Milestone/Project assignment | Whether the maintainer has actually planned to address it, or it's just sitting there |
+
+---
+
+## GitHub's Native Search Syntax
+
+GitHub's search supports its own qualifiers, distinct from Google's. Use GitHub's native search (github.com/search) for anything requiring label/state filtering — Google Dorks are better for broad discovery across many repos at once.
+
+| Qualifier | What It Does | Example |
+|---|---|---|
+| `is:issue` | Restrict to issues (not PRs) | `is:issue is:open` |
+| `is:open` / `is:closed` | Filter by state | `is:open label:"feature request"` |
+| `label:` | Filter by label | `label:enhancement` |
+| `repo:` | Search within one repo | `repo:facebook/react` |
+| `org:` | Search within one organization's repos | `org:stripe` |
+| `sort:reactions-desc` | Sort by reaction count | Finds the most-wanted requests first |
+| `comments:>N` | Filter by comment count threshold | `comments:>20` |
+| `created:` | Date filter | `created:>2024-01-01` |
+| `no:milestone` | Issues not assigned to a milestone | Often indicates neglected requests |
+| `in:title` | Restrict keyword match to title | `"export to PDF" in:title` |
+| `in:body` | Restrict keyword match to body | `"workaround" in:body` |
+
+### The Core GitHub Search Formula
+
+```
+is:issue is:open label:"[LABEL]" "[KEYWORD]" sort:reactions-desc
+```
+
+**Example:**
+```
+is:issue is:open label:"feature request" "bulk export" sort:reactions-desc
+```
+This finds every open feature request across all of GitHub mentioning "bulk export," ranked by how many users want it most — a ready-made prioritized backlog of unmet needs.
+
+---
+
+## The High-Value Label Taxonomy
+
+Different projects use different label names, but most cluster around these categories. Search for all variants — maintainers are inconsistent.
+
+| Intent | Common Label Variants |
+|---|---|
+| Feature request | `feature-request`, `feature`, `enhancement`, `type:feature` |
+| Confirmed gap, low priority | `wontfix`, `backlog`, `nice-to-have` |
+| Actively wanted, unclaimed | `help-wanted`, `up-for-grabs`, `good-first-issue` |
+| Bug affecting workflow | `bug`, `type:bug`, `regression` |
+| Needs community input | `needs-triage`, `discussion`, `question` |
+| Confirmed but stalled | `confirmed`, `accepted`, `no:milestone` |
+
+**Research tip:** `wontfix` is one of the most underrated labels in this handbook. It means the maintainer has explicitly declined to build the requested capability — often for good reasons (out of scope, too complex to maintain, conflicts with their roadmap) — but the underlying need is still real and still unaddressed. A well-reacted `wontfix` issue is a maintainer handing you a validated market gap and telling you, in writing, that they don't plan to compete with you for it.
+
+---
+
+## The GitHub Issues Query Library
+
+### Feature Request Discovery
+```
+is:issue is:open label:"feature request" "[TOPIC]" sort:reactions-desc
+is:issue is:open label:enhancement "[TOPIC]"
+site:github.com "[TOPIC]" "feature request" "would love"
+site:github.com "[TOPIC]" "any plans to add"
+```
+
+### Wontfix / Declined Gap Mining
+```
+is:issue is:closed label:wontfix "[TOPIC]" sort:reactions-desc
+is:issue label:wontfix "[TOPIC]" comments:>10
+site:github.com "[TOPIC]" "closed as wontfix" "still need this"
+```
+
+### Workaround Extraction
+```
+is:issue "[TOPIC]" "workaround" in:body
+is:issue "[TOPIC]" "here's how I solved it"
+is:issue "[TOPIC]" "in the meantime" "you can"
+```
+
+### Stale/Abandoned High-Demand Issues
+```
+is:issue is:open "[TOPIC]" comments:>30 sort:reactions-desc
+is:issue is:open "[TOPIC]" no:milestone created:<2023-01-01
+```
+
+### Organization-Wide Sweep (for a specific competitor or tool)
+```
+org:[COMPETITOR_ORG] is:issue label:"feature request" sort:reactions-desc
+org:[COMPETITOR_ORG] is:issue label:wontfix sort:reactions-desc
+```
+
+### Cross-Repo Category Sweep
+```
+is:issue is:open "[CATEGORY]" "integration" label:enhancement
+is:issue is:open "[CATEGORY]" "API" "missing"
+is:issue is:open "[CATEGORY]" "export" "CSV" OR "PDF"
+```
+
+---
+
+## Query Library by Developer/Technical Category
+
+GitHub is the right channel specifically for developer-facing and technical-infrastructure pain. Use these seed categories to sweep broadly before narrowing to a specific competitor's repo.
+
+### Developer Tools / DX
+```
+is:issue is:open "CLI" "[TOPIC]" label:enhancement
+is:issue is:open "SDK" "[TOPIC]" "missing"
+is:issue is:open "documentation" "[TOPIC]" "unclear"
+```
+
+### API / Integration Platforms
+```
+is:issue is:open "webhook" "[TOPIC]" label:"feature request"
+is:issue is:open "rate limit" "[TOPIC]" "workaround"
+is:issue is:open "API" "[TOPIC]" "pagination" OR "bulk"
+```
+
+### Data / Analytics Tools
+```
+is:issue is:open "export" "[TOPIC]" label:enhancement
+is:issue is:open "dashboard" "[TOPIC]" "custom" "missing"
+is:issue is:open "[TOPIC]" "real-time" "not supported"
+```
+
+### DevOps / Infrastructure
+```
+is:issue is:open "CI/CD" "[TOPIC]" "workaround"
+is:issue is:open "deployment" "[TOPIC]" label:"feature request"
+is:issue is:open "monitoring" "[TOPIC]" "alert" "missing"
+```
+
+### AI/ML Tooling
+```
+is:issue is:open "fine-tuning" "[TOPIC]" label:enhancement
+is:issue is:open "inference" "[TOPIC]" "latency" "workaround"
+is:issue is:open "prompt" "[TOPIC]" "missing feature"
+```
+
+### Security / Compliance Tools
+```
+is:issue is:open "audit log" "[TOPIC]" label:"feature request"
+is:issue is:open "SSO" "[TOPIC]" "not supported"
+is:issue is:open "compliance" "[TOPIC]" "missing"
+```
+
+### Open-Source SaaS Cores (commercial products with OSS components)
+```
+org:[COMPANY] is:issue is:open label:"feature request" sort:reactions-desc
+org:[COMPANY] is:issue label:wontfix "enterprise" sort:reactions-desc
+```
+
+---
+
+## The Issue Triage Decision Tree
+
+Not every high-reaction issue is a startup opportunity. Run every strong candidate through this decision tree before logging it as validated evidence.
+
+```
+Is the issue open or closed?
+│
+├── OPEN, high reactions, low maintainer engagement
+│   → STRONG SIGNAL: maintainer likely won't build this soon.
+│     Log as high-priority candidate.
+│
+├── OPEN, high reactions, maintainer says "planned for next release"
+│   → WEAK SIGNAL: about to be solved by the incumbent.
+│     Deprioritize unless you can ship faster than they can.
+│
+├── CLOSED as "wontfix", high reactions
+│   → STRONG SIGNAL: explicit, permanent gap. Maintainer has
+│     told you directly they won't compete with you here.
+│
+├── CLOSED as "fixed" or "completed"
+│   → NO SIGNAL: already solved. Move on, but note the solution
+│     approach for competitive intelligence.
+│
+├── OPEN, low reactions, but detailed technical body
+│   → UNCERTAIN: might be a niche need or an early signal nobody
+│     has found yet. Check issue age — if recent, watch it over time.
+│
+└── OPEN, high comment count but mixed/contradictory requests
+    → NEEDS SEGMENTATION: multiple different needs got merged into
+      one thread. Read carefully — there may be 2-3 distinct
+      opportunities bundled into what looks like one issue.
+```
+
+---
+
+## From Issue to Problem Statement: A Worked Example
+
+Applying Chapter 1's Problem Statement Template directly to a GitHub issue finding:
+
+```
+PROBLEM STATEMENT
+
+Who experiences this problem?
+   Backend engineers at mid-sized SaaS companies using [Open Source
+   Tool X] for internal API monitoring, specifically teams with
+   more than 5 services in production.
+
+What are they trying to accomplish?
+   Get a consolidated view of API error rates across multiple
+   microservices without manually checking each service's
+   individual dashboard.
+
+What currently stands in their way?
+   [Tool X]'s dashboard only supports single-service views;
+   a GitHub issue requesting multi-service aggregation has been
+   open for 2 years with 340 reactions and was explicitly labeled
+   "wontfix" by maintainers citing architectural constraints.
+
+How do they cope with it today?
+   Users report building custom Grafana dashboards that pull from
+   [Tool X]'s API individually per service — a workaround mentioned
+   in at least 15 issue comments.
+
+What is the cost of this problem?
+   Estimated setup time of 1-2 days per team to build the custom
+   Grafana workaround, plus ongoing maintenance burden as services
+   are added or removed.
+
+What evidence do you have that this is real?
+   - GitHub issue open 2 years, 340 reactions, labeled wontfix
+   - 15+ comments describing the same custom Grafana workaround
+   - 3 comments explicitly stating "we switched to [Competitor Y]
+     partly because of this"
+
+What tier is this problem?
+   Tier 4 — Operationally Painful (recurring setup/maintenance cost,
+   explicit switching behavior observed, maintainer has declined to fix)
+
+What would have to be true for someone to pay to solve this?
+   Budget exists (teams already investing engineering time in
+   Grafana workarounds); urgency exists (referenced in switching
+   decisions); clear ROI (a purpose-built multi-service view
+   replaces days of internal engineering work).
+```
+
+Notice how much of this template GitHub filled in for you automatically, compared to the Reddit and HN examples in earlier chapters — this is the structural advantage of issue-tracker research.
+
+---
+
+## A Repeatable GitHub Issues Research Session
+
+```
+STEP 1 — Pick ONE candidate topic or a specific competitor/tool
+STEP 2 — Run 3 feature-request queries, sorted by reactions
+STEP 3 — Run 2 wontfix queries, sorted by reactions
+STEP 4 — Run 1 workaround-extraction query
+STEP 5 — Apply the Issue Triage Decision Tree to every result with
+         20+ reactions or 15+ comments
+STEP 6 — For each STRONG SIGNAL issue, draft a full Problem Statement
+         (Chapter 1) using the worked example above as a template
+STEP 7 — Check linked PRs — has anyone attempted a fix? Was it
+         merged, rejected, or abandoned? Log the outcome.
+STEP 8 — Log every finding in the GitHub Issues Research Log
+STEP 9 — Note every competitor tool mentioned in "why not just use X"
+         style comments — carry these into Chapter 6
+```
+
+### GitHub Issues Research Log Template
+
+| Repo | Issue Title | URL | Label | Reactions | Age (open since) | State | Workaround Mentioned | Tier (1-5) |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+
+---
+
+## Common Mistakes When Mining GitHub Issues
+
+### Mistake 1: Only Checking One Repo
+The real value of this channel comes from cross-repo sweeps using GitHub's global search (`is:issue is:open "[TOPIC]"` with no `repo:` qualifier). Checking only your one known competitor's repo misses the aggregate pattern across an entire category.
+
+### Mistake 2: Ignoring Closed "Wontfix" Issues
+New researchers filter to `is:open` by default and skip closed issues entirely. As covered above, `wontfix` issues are often the strongest signal on the entire platform — don't exclude them.
+
+### Mistake 3: Treating Low Reaction Count as No Signal
+Some of the best niche opportunities live in issues with only 5-10 reactions on a smaller, more specialized tool with a smaller total user base. Reaction count is relative to the repo's overall size and popularity — a 10-reaction issue on a niche 2,000-star repo can be proportionally stronger signal than a 50-reaction issue on a 200,000-star repo.
+
+### Mistake 4: Not Reading Linked Pull Requests
+If someone submitted a PR attempting to fix the issue and it was rejected, the maintainer's rejection reason is often the single most valuable piece of competitive intelligence in the whole thread — it tells you exactly why the incumbent can't or won't solve this themselves (architecture constraints, scope decisions, maintainer bandwidth).
+
+### Mistake 5: Assuming GitHub Coverage Means Technical-Only Opportunities
+While GitHub Issues skew technical, the underlying business problem is often not technical at all — a monitoring dashboard gap (as in the worked example) reflects an operational reporting problem that could be solved as a full standalone product, not just a plugin or open-source contribution.
+
+### Mistake 6: Not Segmenting Bundled Issues
+Popular issues often accumulate "+1, and also I need X" comments that describe several distinct, related-but-different needs. Read the full comment thread before concluding you've found one opportunity — you may have found three.
+
+---
+
+## Chapter 5 Checklist
+
+Before moving to Competitor Research in the next chapter, confirm you have:
+
+- [ ] Run at least 3 feature-request queries and 2 wontfix queries on a candidate topic, sorted by reactions
+- [ ] Applied the Issue Triage Decision Tree to every high-reaction or high-comment result
+- [ ] Drafted at least one full Problem Statement (Ch. 1) directly from a GitHub issue finding
+- [ ] Checked linked PRs on at least 2 strong-signal issues to understand why the gap remains unaddressed
+- [ ] Logged every finding in the GitHub Issues Research Log
+- [ ] Compiled a list of competitor tools/repos mentioned across your findings to carry into Chapter 6
+
+---
+
+*→ Next: [06-Competitor-Research.md](06-Competitor-Research.md) — Market Landscape Analysis*
+
+*→ See also: [04-Hacker-News.md](04-Hacker-News.md) — Failed-Attempt Intelligence From Show HN | [01-Finding-Problems.md](01-Finding-Problems.md) — The Problem Statement Template Used Above | [08-AI-Agent-Playbook.md](08-AI-Agent-Playbook.md) — Automation Opportunities Often Surfaced in Developer-Workflow Issues*

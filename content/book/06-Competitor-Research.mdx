@@ -1,0 +1,357 @@
+---
+title: "Chapter 6: Competitor Research — Market Landscape Analysis"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"You are not researching competitors to avoid them. You are researching them to find the exact seam in the market where they are structurally unable to follow you."*
+
+---
+
+## Why Competitor Research Comes After Pain Discovery, Not Before
+
+Most founders do competitor research backwards. They have an idea, they Google it, they find five competitors, and they either panic and abandon the idea ("it's already been done") or they ignore the competitors entirely and build anyway ("we'll just be better").
+
+Both reactions are wrong, and both come from doing competitor research at the wrong stage.
+
+By this point in the handbook, you have not started with an idea. You started with pain — sourced through Google Dorks (Chapter 2), Reddit (Chapter 3), Hacker News (Chapter 4), and GitHub Issues (Chapter 5). You already have evidence that real people experience a real problem. Competitor research at this stage answers a completely different question than the panicked founder above is asking. You are not asking "has this been done?" You are asking:
+
+> **"Given that this pain is real, why hasn't it been fully solved yet — and where exactly does the gap live?"**
+
+Every market with real, evidenced pain (Tier 3+ on the Problem Quality Ladder from Chapter 1) already has competitors. That is not bad news. It is confirmation that the pain is monetizable. The absence of any competitors is usually a red flag, not a green light — it often means the market is too small, too early, or the pain isn't actually strong enough to have attracted anyone yet.
+
+Your job in this chapter is not to find out *whether* competitors exist. It's to map them precisely enough to find the specific segment, workflow, or customer type they are structurally weak at serving.
+
+---
+
+## The Four Types of Competitors
+
+Founders often only think about their most obvious "same category" competitor and miss three other categories that are just as important to map.
+
+| Type | Definition | Example |
+|---|---|---|
+| **Direct Competitor** | Same solution category, same target customer | Two invoice-reconciliation SaaS tools both selling to SMB finance teams |
+| **Indirect Competitor** | Different solution category, same underlying job-to-be-done | A generic spreadsheet template solving the same reconciliation job as a purpose-built tool |
+| **Status Quo Competitor** | The manual workaround itself | The in-house spreadsheet + human labor that Chapter 1 calls a "Manual Workaround" signal |
+| **Adjacent Platform Competitor** | An existing platform that could add this as a feature | A larger accounting suite that could ship this as a built-in module and eliminate the need for a standalone tool |
+
+**Why this matters:** most competitive analyses only map Direct Competitors and stop there. But your most dangerous competitor is often the Status Quo — free, familiar, and already embedded — not another funded startup. And your biggest long-term risk is often the Adjacent Platform Competitor, who can bundle your entire category as a free feature the moment your market proves itself.
+
+---
+
+## The Competitor Mapping Framework
+
+Use this structure to build a complete picture before judging whether a market is winnable.
+
+```
+STEP 1 — List every Direct Competitor (use the query library below)
+STEP 2 — List every Indirect Competitor (ask: "what job is the
+         customer really hiring a solution to do, and what else
+         could do that job?")
+STEP 3 — Document the Status Quo Competitor explicitly (the
+         workaround itself — pull this directly from your Chapter
+         1-5 research logs)
+STEP 4 — Identify plausible Adjacent Platform Competitors (ask:
+         "what larger platform already touches this workflow and
+         could bundle a version of this?")
+STEP 5 — For each competitor, run the Competitor Teardown (below)
+STEP 6 — Score the market using the Competitive Gap Score framework
+STEP 7 — Identify your beachhead segment — the specific slice of
+         the market where the gap is widest
+```
+
+---
+
+## The Competitor Teardown Template
+
+Run this on every Direct Competitor and any serious Indirect Competitor.
+
+```
+COMPETITOR TEARDOWN
+
+Company name:
+Founded / funding stage:
+Target customer (be specific — company size, industry, role):
+
+PRICING
+   Entry price:
+   Enterprise price (if disclosed):
+   Pricing model (per-seat, usage-based, flat, tiered):
+
+FEATURE SET
+   Core features:
+   Notable gaps (from GitHub Issues, reviews, forums — Ch. 2-5):
+   Recently shipped features (check changelog):
+
+CUSTOMER SENTIMENT
+   Average review rating (G2, Capterra, Trustpilot):
+   Most common complaint theme:
+   Most common praise theme:
+   "Switched from" mentions (who switches TO them, and FROM them):
+
+GO-TO-MARKET
+   Primary acquisition channel (SEO, paid ads, sales-led, PLG):
+   Sales motion (self-serve, sales-assisted, enterprise sales team):
+
+STRUCTURAL WEAKNESS
+   What segment do they serve poorly?
+   What would it cost them (org design, tech debt, positioning)
+   to fix that weakness?
+   Why haven't they fixed it already?
+```
+
+The final section — **Structural Weakness** — is the most important part of the entire teardown, and the part most founders skip. Finding a feature gap is easy. Understanding *why the competitor can't simply close that gap next quarter* is what tells you whether it's a defensible opening or a temporary one.
+
+---
+
+## Structural Weakness: The Real Question to Answer
+
+A feature gap you find in a competitor's product is not, by itself, a business opportunity. If they could ship the fix in a two-week sprint, they probably will the moment your traction gives them a reason to. The gaps worth building a company around are the ones a competitor is **structurally** unable to close quickly. Use this table to diagnose why a gap persists.
+
+| Root Cause of the Gap | Why It's Hard for Them to Fix | How Durable Is Your Opening |
+|---|---|---|
+| Legacy architecture | Core system wasn't designed for this use case; fixing requires a rewrite | High durability — years, not months |
+| Target customer mismatch | Their sales motion, pricing, and support model are built for enterprise; your gap is an SMB need (or vice versa) | High durability — requires an org-wide GTM change, not just a feature |
+| Business model conflict | Solving the gap would cannibalize a higher-margin existing feature or add-on | High durability — economically irrational for them to fix |
+| Explicit "wontfix" (Ch. 5) | Maintainer/company has publicly declined, citing scope or resourcing | Medium-high — durable unless priorities shift |
+| Compliance/liability avoidance | The gap involves regulatory risk they've chosen not to take on (e.g., healthcare data, financial advice) | High durability if the risk profile doesn't change |
+| Simple prioritization | It's just not on this quarter's roadmap | Low durability — could ship any time, especially if you gain traction |
+| Genuinely didn't know about the need | Small vocal user segment, not yet surfaced to leadership | Low-medium — durable only until they notice |
+
+**Rule of thumb:** the more organizational and structural the reason behind a gap, the more durable your opportunity. A gap caused by "we just haven't gotten to it yet" is not a moat — it's a head start, and a short one.
+
+---
+
+## The Competitive Gap Score Framework
+
+A simple, repeatable way to score how winnable a competitive landscape actually is, once you've mapped it.
+
+Score each factor from 1 (bad for you) to 5 (great for you):
+
+| Factor | 1 (Weak Opportunity) | 5 (Strong Opportunity) |
+|---|---|---|
+| **Incumbent concentration** | One dominant player with 70%+ market share | Fragmented market, no player with more than ~20% share |
+| **Gap durability** | Gap is a quick fix, likely to be closed fast | Gap is structural (architecture, business model, GTM mismatch) |
+| **Customer sentiment** | Incumbents are well-loved, low churn | Incumbents have visible, recurring complaint themes |
+| **Switching evidence** | No "switched from X" posts found anywhere | Multiple documented switching events (Ch. 1-5 research) |
+| **Status quo strength** | Workaround is free, simple, "good enough" for most users | Workaround is costly, fragile, or breaks at scale |
+| **Distribution accessibility** | Incumbents own the only viable channel (e.g., one marketplace) | Multiple viable channels exist, none monopolized |
+
+**Scoring guide:**
+- **26-30**: Highly winnable market — pursue aggressively
+- **18-25**: Winnable with a sharp beachhead strategy — proceed with a narrow initial segment
+- **10-17**: Difficult — only proceed with a genuinely novel angle (new technology, new distribution, new business model)
+- **Below 10**: Reconsider — the incumbent(s) likely have too strong a hold; look for a different beachhead or a different problem entirely
+
+---
+
+## Finding the Beachhead: Segment-Level Gap Analysis
+
+Even in a market with strong incumbents, there is almost always a customer segment the incumbents actively underserve — usually because serving them well isn't worth the incumbent's time at their current scale. This is your beachhead.
+
+### Common Beachhead Patterns
+
+| Pattern | Description | Example |
+|---|---|---|
+| **Too small for them** | Incumbent's sales/support cost structure only makes sense above a certain account size | An enterprise CRM ignoring solo-operator or 2-5 person teams |
+| **Too niche for them** | Incumbent serves a broad horizontal market and won't build vertical-specific features | A generic project management tool that will never build construction-specific punch-list features |
+| **Too new for them** | Incumbent's architecture predates a new technology or workflow shift (Ch. 1, Category 7) | A pre-LLM tool that would require a full rebuild to add AI-native features |
+| **Too geographically specific** | Incumbent is optimized for one region/regulatory environment | A US-focused payroll tool ignoring a specific country's tax complexity |
+| **Too price-sensitive for them** | Incumbent's pricing floor excludes a viable-but-smaller customer segment | An enterprise tool with a $50K/year minimum ignoring a $5K/year-viable segment |
+
+### Beachhead Selection Checklist
+
+- [ ] The segment is underserved by all mapped Direct Competitors
+- [ ] The segment is large enough to sustain an early business (revisit Chapter 1's Failure Mode 4 — market size test)
+- [ ] The segment has a clear, reachable distribution channel (a specific subreddit, industry association, job board, or community — see Chapters 3-5)
+- [ ] The segment's pain is Tier 3+ on the Problem Quality Ladder (Chapter 1)
+- [ ] You have a credible reason the incumbent won't simply move downmarket/into this niche within 12-18 months
+
+---
+
+## The Full Competitor Research Query Library
+
+Reuse the platform and operator techniques from Chapters 2-5, now pointed specifically at competitive intelligence.
+
+### Google
+```
+"[COMPETITOR]" "alternative to" -site:[competitor domain]
+"[COMPETITOR]" "vs" review
+"[COMPETITOR]" "switched from" OR "switched to"
+"[COMPETITOR]" "pricing" complaint
+"[COMPETITOR]" "missing feature"
+site:g2.com "[COMPETITOR]" reviews
+site:capterra.com "[COMPETITOR]" alternatives
+```
+
+### Reddit
+```
+site:reddit.com "[COMPETITOR]" "alternative"
+site:reddit.com "[COMPETITOR]" "switched from"
+site:reddit.com "[COMPETITOR]" "vs" "[COMPETITOR 2]"
+site:reddit.com "[COMPETITOR]" "wish it had"
+site:reddit.com "[COMPETITOR]" "customer support" complaint
+```
+
+### GitHub
+```
+org:[COMPETITOR_ORG] is:issue label:"feature request" sort:reactions-desc
+org:[COMPETITOR_ORG] is:issue label:wontfix sort:reactions-desc
+is:issue "[COMPETITOR]" "why not just use" in:body
+```
+
+### Hacker News
+```
+site:news.ycombinator.com "[COMPETITOR]" "why not just use"
+site:news.ycombinator.com "[COMPETITOR]" "alternative"
+site:news.ycombinator.com "Show HN" "[COMPETITOR]" competitor
+```
+
+### Product Hunt
+```
+site:producthunt.com "[COMPETITOR]" alternative
+site:producthunt.com "alternative to [COMPETITOR]"
+```
+
+### X / Twitter
+```
+site:twitter.com "[COMPETITOR]" "switched from"
+site:x.com "[COMPETITOR]" complaint
+```
+
+### LinkedIn
+```
+site:linkedin.com/posts "[COMPETITOR]" "we moved to"
+site:linkedin.com/posts "[COMPETITOR]" review OR complaint
+```
+
+### Discord / Slack (public archives)
+```
+"[COMPETITOR]" "discord.gg" complaint
+"[COMPETITOR]" community "frustrated"
+```
+
+### Stack Overflow
+```
+site:stackoverflow.com "[COMPETITOR]" "limitation"
+site:stackoverflow.com "[COMPETITOR]" "workaround"
+```
+
+### YouTube
+```
+site:youtube.com "[COMPETITOR]" review
+site:youtube.com "[COMPETITOR] vs"
+site:youtube.com "[COMPETITOR]" "honest review"
+```
+
+### Quora
+```
+site:quora.com "[COMPETITOR]" "vs"
+site:quora.com "is [COMPETITOR] worth it"
+```
+
+### Facebook Groups
+```
+site:facebook.com/groups "[COMPETITOR]" complaint
+```
+
+### Review Platforms (Direct)
+```
+site:g2.com/products/[competitor]/reviews
+site:capterra.com/p/[competitor]/reviews
+site:trustpilot.com/review/[competitor-domain]
+```
+
+---
+
+## Reading Review Sites Systematically
+
+G2, Capterra, and Trustpilot reviews are structured data, not just prose — treat them that way.
+
+### The Review-Mining Workflow
+
+```
+STEP 1 — Sort reviews by rating, ascending (lowest first)
+         Low-rated reviews contain the most specific complaints
+
+STEP 2 — Filter by company size / industry if the platform allows it
+         (G2 and Capterra both support this) — this segments
+         feedback by the exact customer type you care about
+
+STEP 3 — Read the "What do you dislike?" field specifically —
+         most review platforms separate likes from dislikes;
+         go straight to dislikes
+
+STEP 4 — Search reviews for "switched from" and "switched to" —
+         these reveal both what pulled customers away from a
+         competitor and what pulled them toward one
+
+STEP 5 — Cross-reference recurring dislike themes against your
+         GitHub Issues findings (Chapter 5) — a complaint that
+         shows up in both reviews AND issue trackers is very
+         high-confidence evidence
+```
+
+### Review Analysis Log Template
+
+| Competitor | Platform | Rating | Segment (company size/industry) | Top Dislike Theme | Switch-From/To Mentioned |
+|---|---|---|---|---|---|
+| | | | | | |
+
+---
+
+## Competitor Comparison Matrix Template
+
+Once you've torn down 3-5 competitors, lay them side by side. This single table often makes the beachhead obvious in a way that reading individual teardowns doesn't.
+
+| | Competitor A | Competitor B | Competitor C | Status Quo (workaround) | Your Opportunity |
+|---|---|---|---|---|---|
+| Target customer size | | | | | |
+| Entry price | | | | | |
+| Core strength | | | | | |
+| Core weakness | | | | | |
+| Top complaint theme | | | | | |
+| Underserved segment | | | | | |
+| Gap durability (1-5) | | | | | |
+
+---
+
+## Common Mistakes in Competitor Research
+
+### Mistake 1: Only Comparing Feature Lists
+A feature comparison spreadsheet tells you what's missing, not why it's missing or whether the incumbent could ship it next month. Always pair feature gaps with the Structural Weakness analysis above.
+
+### Mistake 2: Ignoring the Status Quo Competitor
+Founders obsess over funded startup competitors and forget that the free spreadsheet-and-labor workaround (Chapter 1, Category 2) is, in most early-stage markets, the actual dominant "competitor" by market share. If you don't understand why people tolerate the workaround, you won't understand why they'd switch to you either.
+
+### Mistake 3: Treating "No Competitors" as Good News
+As discussed above, a total absence of any competitor — direct, indirect, or adjacent — is far more often a sign of a market that's too small, too early, or not actually painful enough, rather than a sign of a hidden gem nobody has found. Investigate why no one else is there before treating it as an advantage.
+
+### Mistake 4: Analyzing Competitors Only at the Company Level
+Segment-level analysis (the Beachhead section above) is where the real opportunity usually hides. A competitor can be an excellent, well-loved product overall while still being terrible for one specific segment — and that segment can be your entire initial market.
+
+### Mistake 5: Not Revisiting Competitor Research Over Time
+Competitive landscapes shift. A gap that exists today may close in six months if a competitor raises funding or ships a roadmap item. Treat the Competitor Teardown as a living document you revisit, not a one-time report — especially for any competitor you're actively tracking through Chapter 11's Templates.
+
+### Mistake 6: Confusing "Different" With "Structurally Defensible"
+A slightly different UI or a slightly cheaper price point is not a durable gap (see Chapter 0's "Slightly Better" Trap). Make sure every gap you plan to build around passes the Structural Weakness test — if a competitor could copy it in a sprint, it isn't a strategy, it's a temporary lead.
+
+---
+
+## Chapter 6 Checklist
+
+Before moving to Industry Playbooks in the next chapter, confirm you have:
+
+- [ ] Mapped all four competitor types (Direct, Indirect, Status Quo, Adjacent Platform) for your candidate problem
+- [ ] Completed a full Competitor Teardown for at least 3 Direct Competitors
+- [ ] Diagnosed the root cause of at least one competitor's key gap using the Structural Weakness table
+- [ ] Scored the market using the Competitive Gap Score framework
+- [ ] Identified at least one specific beachhead segment and validated it against the Beachhead Selection Checklist
+- [ ] Built a Competitor Comparison Matrix across your top 3-5 competitors
+- [ ] Cross-referenced review-site complaints against your GitHub Issues findings (Chapter 5) for corroboration
+
+---
+
+*→ Next: [07-Industry-Playbooks.md](07-Industry-Playbooks.md) — Vertical-Specific Research Guides*
+
+*→ See also: [05-GitHub-Issues.md](05-GitHub-Issues.md) — Sourcing Competitor Gaps From Issue Trackers | [10-Validation.md](10-Validation.md) — Scoring Your Overall Opportunity | [11-Templates.md](11-Templates.md) — The Competitor Tracker Template*

@@ -1,0 +1,514 @@
+---
+title: "Chapter 2: Google Dorks — Building Your Search Query Library"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"The web already contains the answer to 'what should I build?' The problem isn't a lack of data. It's that nobody searches it systematically."*
+
+---
+
+## Why This Chapter Comes Second
+
+Chapter 1 gave you the *target*: a definition of what a real problem looks like, the eight pain categories, and the Problem Statement Template. This chapter gives you the first *weapon* — the search operator syntax that lets you scan the entire public web for those pain signals in minutes instead of months.
+
+Google Dorking (also called "advanced search operators") is not a hacking trick. It is simply the disciplined use of search operators — `site:`, `intitle:`, `intext:`, `filetype:`, quotation marks, exclusions, and date ranges — to cut through billions of indexed pages and surface exactly the sentences real people typed when they were frustrated, stuck, or building a workaround.
+
+Every later chapter (Reddit, Hacker News, GitHub Issues, Industry Playbooks) is really just this chapter's technique applied to a specific platform. Master the syntax here once, and you can reuse it everywhere.
+
+---
+
+## How Search Operators Actually Work
+
+A search engine treats your query as a set of constraints. Plain keywords are loose constraints — Google will guess at intent, correct your spelling, and expand synonyms. Operators remove the guessing. They tell the engine exactly where to look and what to require.
+
+### Core Operator Reference
+
+| Operator | What It Does | Example | Use Case |
+|---|---|---|---|
+| `site:` | Restricts results to one domain or subdomain | `site:reddit.com` | Search inside a specific community platform |
+| `intitle:` | Requires the word to appear in the page title | `intitle:"alternative to"` | Find comparison/switching pages |
+| `allintitle:` | Requires *all* words in the title | `allintitle:free trial expired` | Narrower title matching |
+| `intext:` | Requires the word to appear in the body text | `intext:"we built a spreadsheet"` | Find workaround mentions |
+| `inurl:` | Requires the word in the URL path | `inurl:complaints` | Find complaint boards, forums |
+| `"exact phrase"` | Forces exact-match phrase search | `"I hate doing this manually"` | Find verbatim complaint language |
+| `-exclude` | Removes a word from results | `crm -salesforce` | Cut out the dominant incumbent |
+| `OR` | Either term (must be capitalized) | `"pain point" OR "biggest problem"` | Cover multiple phrasings at once |
+| `filetype:` | Restricts to a file format | `filetype:pdf "market report"` | Find leaked reports, RFPs, whitepapers |
+| `*` | Wildcard, any word | `"there's no good tool for *"` | Catch a whole family of complaints |
+| `before:` / `after:` | Date-bounds results (YYYY-MM-DD) | `after:2025-01-01` | Force recency, avoid stale threads |
+| `AROUND(n)` | Words within n words of each other | `"spreadsheet" AROUND(5) "manually"` | Loosely connect two concepts |
+| `related:` | Finds similar sites | `related:g2.com` | Discover adjacent review platforms |
+| `cache:` | Shows Google's cached version | `cache:example.com` | View a page that's since changed |
+
+You will use `site:`, `intitle:`, `intext:`, exact phrases, `-exclude`, and `OR` constantly. The rest are situational but worth knowing.
+
+### The Query Construction Formula
+
+Every high-quality dork you build should answer three questions before you type anything:
+
+```
+1. WHERE do I expect this pain to be discussed?
+   → site: (a platform) or nothing (open web)
+
+2. WHAT language would someone use to express this pain?
+   → exact phrases, OR groups of synonyms
+
+3. WHAT would dilute my results with noise?
+   → -exclude terms (brand names, unrelated senses of a word, spam sites)
+```
+
+**Formula:**
+```
+site:[platform] "[complaint phrase]" [OR "[synonym phrase]"] -[noise word] after:[date]
+```
+
+**Worked example:**
+```
+site:reddit.com "is there a tool that" "invoice reconciliation" -template after:2025-01-01
+```
+This searches Reddit only, requires the phrase "is there a tool that" (a strong buying-intent phrase), requires the topic "invoice reconciliation," excludes results that are just people sharing spreadsheet templates (noise), and forces results from the last window of time so you're reading current pain, not a five-year-old thread.
+
+---
+
+## The Complaint Language Library
+
+Search engines match language, not intent. If you only search for the word "problem," you will miss 90% of real complaints, because almost nobody actually types the word "problem." They type around it. This library is the raw material for the `[complaint phrase]` slot in the formula above.
+
+### Tier A — High-Intent Phrases (strongest signal, use these first)
+
+| Phrase | Why It's Strong |
+|---|---|
+| `"is there a tool that"` | Explicit buying intent |
+| `"is there software that"` | Explicit buying intent |
+| `"does anyone know a way to"` | Active problem-solving, not passive venting |
+| `"looking for an alternative to"` | Active switching intent |
+| `"we built a spreadsheet to"` | Confirmed manual workaround (see Ch. 1, Category 2) |
+| `"I wrote a script to"` | Confirmed technical workaround |
+| `"how do you all handle"` | Community-wide pain, not individual |
+| `"what do you use instead of"` | Active dissatisfaction with a named tool |
+| `"we ended up switching from"` | Confirmed churn event |
+| `"I quit using X because"` | Confirmed churn with stated reason |
+| `"still doing this manually"` | The word "still" — see Ch. 1's Observation Habit |
+| `"there's no good tool for"` | Explicit gap in the market |
+| `"I wish someone would build"` | Direct feature/product request |
+| `"anyone else struggling with"` | Community pain-check |
+| `"budget for a tool that"` | Confirmed willingness to pay |
+
+### Tier B — General Complaint Phrases (use for volume, then filter)
+
+| Phrase | Notes |
+|---|---|
+| `"I hate"` | High volume, low individual signal — aggregate it |
+| `"so frustrating"` | Same |
+| `"drives me crazy"` | Same |
+| `"waste of time"` | Often paired with a specific task — good for Five Whys |
+| `"nightmare to"` | Strong emotional language, often Tier 4-5 pain |
+| `"why is it so hard to"` | Frequently precedes a root-cause complaint |
+| `"biggest pain point"` | Directly usable, but rarer in casual speech |
+| `"can't believe there isn't"` | Market gap phrasing |
+| `"takes forever to"` | Time-cost signal |
+| `"every single time I"` | Recurrence signal — repeated pain beats one-off pain |
+
+### Tier C — Workaround & Budget Signals
+
+| Phrase | Category (Ch. 1) |
+|---|---|
+| `"we use a shared spreadsheet"` | Manual Workaround |
+| `"tracked in a google sheet"` | Manual Workaround |
+| `"Zapier chain"` / `"Zapier hack"` | Manual Workaround |
+| `"hired someone to"` | Hiring Pattern |
+| `"we pay [X] a month for"` | Willingness to Pay |
+| `"our analyst spends"` | Hiring Pattern / cost quantification |
+| `"manually copy and paste"` | Manual Workaround |
+| `"someone on our team has to"` | Manual Workaround |
+
+Build your own running list as you research. Every industry adds its own dialect — healthcare people say "chart," logistics people say "manifest," legal people say "redline." Chapter 7 (Industry Playbooks) will help you localize this vocabulary per vertical.
+
+---
+
+## Query Library by Pain Category
+
+These map directly to the eight pain categories from Chapter 1. Swap in your topic wherever you see `[TOPIC]`.
+
+### 1. Explicit Complaints
+
+```
+"[TOPIC]" "so frustrating"
+"[TOPIC]" "I hate" -site:pinterest.com
+intitle:"[TOPIC]" intitle:"broken"
+"[TOPIC]" "waste of time" site:reddit.com
+"[TOPIC]" "nightmare" -movie -game
+```
+
+### 2. Manual Workarounds
+
+```
+"[TOPIC]" "we built a spreadsheet"
+"[TOPIC]" "tracked in a google sheet"
+"[TOPIC]" "manually" AROUND(5) "every week"
+"[TOPIC]" "Zapier" "workaround"
+"[TOPIC]" "I wrote a script"
+```
+
+### 3. Feature Requests / Roadmap Gaps
+
+```
+site:github.com "[TOPIC]" "feature request"
+site:github.com "[TOPIC]" label:enhancement
+"[TOPIC]" "when will you add" site:reddit.com
+"[TOPIC]" "upvote if you want this"
+intitle:"[TOPIC]" "roadmap" "requested"
+```
+
+### 4. Hiring Patterns
+
+```
+site:linkedin.com/jobs "[TOPIC]" "manual"
+"[TOPIC] specialist" "data entry"
+"[TOPIC]" "manual QA" intitle:hiring
+site:indeed.com "[TOPIC]" "spreadsheet" "responsibilities"
+```
+
+### 5. Churn / Switching Behavior
+
+```
+"switched from" "[TOPIC]" -advertisement
+"we migrated off" "[TOPIC]"
+"best alternative to [TOPIC]" site:reddit.com
+"why we left [TOPIC]"
+intitle:"[TOPIC] alternatives" site:g2.com
+```
+
+### 6. Regulatory / Compliance Triggers
+
+```
+"[TOPIC]" "new regulation" "compliance deadline"
+"[TOPIC]" filetype:pdf "compliance requirements" after:2025-01-01
+"[TOPIC]" "law firm client alert" "[REGULATION NAME]"
+"[TOPIC]" "must comply by"
+```
+
+### 7. Technology Shift Signals
+
+```
+"[TOPIC]" "now possible with AI"
+"[TOPIC]" "used to be impossible" "now"
+"[TOPIC]" site:news.ycombinator.com "LLM"
+"[TOPIC]" "cost has dropped"
+```
+
+### 8. Demographic / Behavioral Shifts
+
+```
+"[TOPIC]" filetype:pdf site:pewresearch.org
+"[TOPIC]" "remote work" trend report
+"[TOPIC]" census data industry growth
+```
+
+---
+
+## Platform-Specific Dork Blocks
+
+Google can search inside almost any indexed platform using `site:`. This is the fastest way to run a first pass across many communities before diving deep into platform-native tools (which later chapters cover in detail).
+
+### Reddit
+```
+site:reddit.com "[TOPIC]" "I hate"
+site:reddit.com "[TOPIC]" "is there a tool"
+site:reddit.com "[TOPIC]" "how do you all"
+site:reddit.com intitle:"[TOPIC]" self:yes
+```
+
+### Hacker News
+```
+site:news.ycombinator.com "[TOPIC]"
+site:news.ycombinator.com "Ask HN" "[TOPIC]"
+site:news.ycombinator.com "Show HN" "[TOPIC]"
+```
+
+### GitHub
+```
+site:github.com "[TOPIC]" "feature request"
+site:github.com "[TOPIC]" "workaround"
+site:github.com issues "[TOPIC]" "still open"
+```
+
+### Product Hunt
+```
+site:producthunt.com "[TOPIC]"
+site:producthunt.com "[TOPIC]" "alternative to"
+```
+
+### X / Twitter
+```
+site:twitter.com "[TOPIC]" "so frustrating"
+site:x.com "[TOPIC]" "is there a tool"
+```
+
+### LinkedIn
+```
+site:linkedin.com/posts "[TOPIC]" "manual process"
+site:linkedin.com/jobs "[TOPIC]" "spreadsheet"
+```
+
+### Discord (public archives only — most Discord is unindexed)
+```
+site:disboard.org "[TOPIC]"
+"[TOPIC]" "discord.gg" community
+```
+
+### Slack (public Slack communities with indexed archives)
+```
+"[TOPIC]" "slack.com" community invite
+```
+
+### Stack Overflow
+```
+site:stackoverflow.com "[TOPIC]" "is there a way to"
+site:stackoverflow.com "[TOPIC]" "workaround"
+```
+
+### YouTube (comments and descriptions index poorly, but titles work well)
+```
+site:youtube.com "[TOPIC]" "how to fix"
+site:youtube.com "[TOPIC]" "tutorial" "workaround"
+```
+
+### Quora
+```
+site:quora.com "[TOPIC]" "best way to"
+site:quora.com "is there a tool for [TOPIC]"
+```
+
+### Facebook Groups (limited indexing, but works for public groups)
+```
+site:facebook.com/groups "[TOPIC]"
+```
+
+### Review Sites
+```
+site:g2.com "[TOPIC]" "switched from"
+site:capterra.com "[TOPIC]" "missing feature"
+site:trustpilot.com "[TOPIC]" "wish it had"
+```
+
+---
+
+## Query Library by Industry
+
+Combine any platform block above with these industry seed terms in the `[TOPIC]` slot, or run them standalone for a first pass. This is not exhaustive — it's a starter set per vertical. Chapter 7 (Industry Playbooks) goes much deeper per industry; this is the fast reconnaissance layer.
+
+### Healthcare
+```
+"prior authorization" "so frustrating"
+"patient scheduling" "manual" "spreadsheet"
+"EHR" "workaround" site:reddit.com
+"medical billing" "denied claims" "manually"
+"clinic" "no-show" "tracking" "spreadsheet"
+```
+
+### Legal
+```
+"contract review" "takes forever"
+"redline" "manually" "still"
+"legal ops" "spreadsheet" "tracking"
+"e-discovery" "workaround"
+"paralegal" "manual" "data entry" site:linkedin.com/jobs
+```
+
+### Finance / Accounting
+```
+"invoice reconciliation" "manually"
+"month-end close" "spreadsheet" "nightmare"
+"expense reports" "so frustrating"
+"accounts payable" "manual" "data entry"
+"bookkeeping" "switched from" "alternative"
+```
+
+### Construction
+```
+"material takeoff" "manual" "spreadsheet"
+"bid estimation" "takes forever"
+"subcontractor" "tracking" "spreadsheet"
+"job site" "reporting" "manual"
+```
+
+### Logistics / Supply Chain
+```
+"warehouse routing" "manual" "override"
+"fulfillment" "spreadsheet" "workaround"
+"freight" "tracking" "so frustrating"
+"inventory reconciliation" "manual"
+```
+
+### E-Commerce
+```
+"Shopify" "workaround" "manual"
+"inventory sync" "nightmare"
+"returns processing" "manual" "spreadsheet"
+"[TOPIC]" "Shopify Plus" "still" "manually"
+```
+
+### HR / Recruiting
+```
+"applicant tracking" "switched from"
+"onboarding" "manual" "spreadsheet"
+"payroll" "so frustrating" "workaround"
+"HR" "spreadsheet" "tracking" "still"
+```
+
+### Marketing Agencies
+```
+"reporting" "client" "manual" "spreadsheet"
+"campaign tracking" "nightmare"
+"agency" "workaround" "still doing manually"
+```
+
+### Real Estate
+```
+"property management" "spreadsheet" "tracking"
+"lease renewals" "manual" "reminder"
+"real estate" "workaround" "still using"
+```
+
+### Restaurants / Hospitality
+```
+"scheduling" "restaurant" "spreadsheet"
+"inventory" "restaurant" "manual" "waste"
+"reservations" "workaround" "nightmare"
+```
+
+### Manufacturing
+```
+"production scheduling" "spreadsheet"
+"quality control" "manual" "checklist"
+"manufacturing" "reporting" "still using excel"
+```
+
+### Education
+```
+"grading" "manual" "so much time"
+"school" "attendance" "spreadsheet"
+"admissions" "tracking" "workaround"
+```
+
+---
+
+## Advanced Dork Combinations
+
+Once you're comfortable with single-formula dorks, chain multiple constraints for sharper results.
+
+### Combo 1: Recency + Platform + High-Intent Phrase
+```
+site:reddit.com "is there a tool that" "[TOPIC]" after:2025-06-01
+```
+Forces results to be recent, so you're seeing current market state, not a stale thread that was resolved years ago.
+
+### Combo 2: Exclude the Incumbent
+```
+"[TOPIC]" "alternative to" -salesforce -hubspot
+```
+Useful when a dominant player floods results with their own marketing pages. Excluding forces you into organic complaint/comparison content.
+
+### Combo 3: Filetype Search for Leaked Internal Documents
+```
+"[TOPIC]" filetype:pdf "internal use only"
+"[TOPIC]" filetype:xlsx "template"
+```
+Occasionally surfaces internal process documents, RFPs, or vendor comparison spreadsheets that got indexed by accident. Useful for understanding how companies currently structure a workflow.
+
+### Combo 4: Job Posting Cost Signal
+```
+site:linkedin.com/jobs "[TOPIC]" "$" "manual" -remote
+```
+Finds job postings that mention salary figures alongside manual-process language — direct evidence of budget allocated to a problem (Category 4 from Chapter 1).
+
+### Combo 5: Wildcard Sweep
+```
+"there's no good tool for *"
+"I wish there was software that *"
+```
+The wildcard catches an entire family of complaints you couldn't otherwise anticipate. Run this with no topic at all as a pure discovery sweep — it's one of the highest-yield "cold start" dorks when you don't yet have a topic and are still in Chapter 1's Observation Habit phase.
+
+---
+
+## A Repeatable Dork Session Workflow
+
+Running dorks randomly produces noise. Running them as a structured session produces a research log you can act on. Follow this process every time.
+
+```
+STEP 1 — Pick ONE candidate topic (from your friction log, Ch. 1)
+STEP 2 — Run 5 Tier A phrase dorks across 3 platforms (15 searches)
+STEP 3 — Run 3 Tier B phrase dorks for volume (3 searches)
+STEP 4 — Run 1 workaround dork + 1 hiring dork (2 searches)
+STEP 5 — Log every result that matches Tier 3+ on the Problem Quality Ladder
+STEP 6 — Stop and count: do you have 5+ independent sources for this pain?
+STEP 7 — If yes → move to Problem Statement Template (Ch. 1)
+STEP 8 — If no → discard or set aside, move to next candidate topic
+```
+
+A full session takes 30–45 minutes and should never run more than ~20 searches per topic. If you're not finding signal by search 15, the topic is probably weak — move on rather than forcing it.
+
+### Dork Session Log Template
+
+| Query Used | Platform | Result URL | Pain Category | Tier (1-5) | Notes |
+|---|---|---|---|---|---|
+| | | | | | |
+
+Keep this log per topic. It becomes the evidence section of your Problem Statement (Chapter 1) and feeds directly into the Startup Idea Database (Chapter 12).
+
+---
+
+## Filtering Signal From Noise
+
+Dorking produces volume fast. Most of that volume is noise. Apply these filters before logging anything as evidence.
+
+| Filter | Question to Ask | Discard If... |
+|---|---|---|
+| Recency | Is this from the last 12–18 months? | Thread is 3+ years old with no recent activity |
+| Specificity | Does the person name a specific task, not a vague feeling? | Complaint is generic venting with no detail |
+| Repetition | Have you seen this exact complaint elsewhere? | This is the only instance you've found |
+| Source quality | Is this a real user, or marketing/spam/bot content? | Comment reads like an ad or SEO content farm |
+| Emotional intensity | Does the language match Tier 3+ (Ch. 1)? | Language is mild ("kind of annoying") |
+| Action evidence | Did they do something about it (workaround, switch, hire)? | Pure complaint with zero follow-through |
+
+A result that passes all six filters is strong evidence. A result that passes only recency and specificity is weak evidence — log it, but don't treat it as validation on its own.
+
+---
+
+## Common Mistakes When Dorking
+
+### Mistake 1: Searching Too Broad, Too Early
+Running `"[TOPIC]" complaint` with no operators returns millions of loosely related pages. Always start with at least one `site:` or exact-phrase constraint.
+
+### Mistake 2: Only Using Tier B Phrases
+Tier B phrases ("I hate," "so frustrating") are high-volume but low-individual-signal. If your entire dork library is Tier B, you'll drown in venting and miss the higher-quality Tier A buying-intent language.
+
+### Mistake 3: Ignoring Date Filters
+Old threads about a problem that's since been solved by a new tool will waste your time. Always sanity-check `after:` dates for competitive or fast-moving categories.
+
+### Mistake 4: Not Excluding Incumbents
+Searching `"[TOPIC]" alternative` without excluding the market leader often returns that leader's own comparison/marketing pages instead of organic user complaints.
+
+### Mistake 5: Treating One Dork Session as Complete Research
+Google Dorks are a first pass, not a final answer. They tell you *where* to look deeper — inside a specific subreddit (Chapter 3), a specific GitHub repo's issues (Chapter 5), or a specific job board segment. Always follow strong dork signal into the native platform for full context.
+
+---
+
+## Chapter 2 Checklist
+
+Before moving to platform-specific mining in the following chapters, confirm you have:
+
+- [ ] Memorized or bookmarked the Core Operator Reference table
+- [ ] Built a personal Complaint Language Library (start from Tier A/B/C above, add your own findings)
+- [ ] Run at least one full Dork Session Workflow (Steps 1–8) on a real candidate topic
+- [ ] Logged results in the Dork Session Log Template
+- [ ] Applied the Filtering Signal From Noise table to every logged result
+- [ ] Identified which 2–3 platforms (Reddit, GitHub, LinkedIn, etc.) produced your strongest signal, so you know where to focus in the next chapters
+
+---
+
+*→ Next: [03-Reddit-Research.md](03-Reddit-Research.md) — Community-Specific Mining*
+
+*→ See also: [01-Finding-Problems.md](01-Finding-Problems.md) — The Pain Categories These Queries Target | [07-Industry-Playbooks.md](07-Industry-Playbooks.md) — Deeper Per-Industry Query Libraries | [11-Templates.md](11-Templates.md) — Copy-Paste Research Tools*

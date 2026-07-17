@@ -1,0 +1,390 @@
+---
+title: "Chapter 3: Reddit Research — Community-Specific Mining"
+publishedAt: "2026-07-17"
+summary: "Chapter from the Startup Research Handbook."
+---
+
+> *"Reddit is the closest thing the internet has to a permanent, searchable focus group that nobody knew they were participating in."*
+
+---
+
+## Why Reddit Deserves Its Own Chapter
+
+Google Dorks (Chapter 2) taught you the search syntax. This chapter teaches you how to point that syntax — and Reddit's own native search — at the single richest source of unfiltered, anonymous, specific complaint language on the open web.
+
+Reddit is structurally different from every other platform in this handbook, and that difference is what makes it valuable:
+
+- **Pseudonymity removes social filtering.** People complain more honestly under a throwaway username than they would under their real LinkedIn profile.
+- **Subreddits are pre-segmented by audience.** You don't have to guess who you're listening to — r/sysadmin is IT professionals, r/Bookkeeping is bookkeepers, r/Contractor is contractors. The targeting is already done for you.
+- **Threads accumulate corroboration.** A complaint with 40 upvotes and 60 comments saying "same" is not one data point — it's a small survey with a built-in sample size.
+- **Recurring threads reveal patterns over time.** The same question gets asked every few months in the same subreddit ("what CRM do you use for X?"). That repetition is itself a signal — if the answer were solved, people would stop asking.
+
+The risk is that Reddit is also the *easiest* place to research, which means it's the most competed-over. Chapter 1 warned about "Trap 3: Only Looking Where It's Comfortable." Use Reddit as your fastest, highest-volume channel — but never your only one.
+
+---
+
+## How Reddit's Structure Maps to Startup Research
+
+Before running a single query, understand the anatomy of the platform, because each layer produces a different kind of signal.
+
+| Reddit Layer | What It Is | Research Value |
+|---|---|---|
+| Subreddit | A topic-specific community | Pre-segmented audience — tells you *who* you're listening to |
+| Post title | The headline of a thread | Fastest scan layer — complaint phrases concentrate here |
+| Post body | The full text of the original post | Deepest single-source detail — often a full problem narrative |
+| Top comment | The highest-voted reply | Community consensus — usually the most representative answer |
+| Comment thread | Replies to a comment | Where corroboration ("same here") and workarounds get shared |
+| Flair | Post category tag set by mods | Lets you filter by type — e.g., r/smallbusiness uses flairs like "Question," "Vent" |
+| Awards / upvotes | Community engagement signal | Volume indicator — but remember Chapter 1's Trap 2 (volume ≠ validity) |
+| Cross-posts | Same content shared to multiple subreddits | Signals a pain that spans more than one audience |
+
+---
+
+## Reddit's Native Search Operators
+
+Reddit's own search bar (and old.reddit.com search, which is often more reliable) supports its own operator syntax, separate from Google's. Learn both — they surface different results because Reddit's internal search index and Google's index of Reddit are not identical.
+
+| Operator | What It Does | Example |
+|---|---|---|
+| `subreddit:` | Restrict to one subreddit | `subreddit:sysadmin backup software` |
+| `title:` | Search only post titles | `title:"is there a tool"` |
+| `selftext:` | Search only post bodies | `selftext:"spreadsheet"` |
+| `author:` | Search a specific user's posts | `author:username` |
+| `flair:` | Filter by flair tag | `flair:"Question"` |
+| `site:` | Restrict to link posts from a domain | `site:g2.com` |
+| `nsfw:no` | Exclude NSFW content | `nsfw:no` |
+| `self:yes` | Text posts only (no link posts) | `self:yes` |
+
+**Practical tip:** Reddit's native search often under-returns older content. For anything more than ~6 months old, a `site:reddit.com` Google Dork (Chapter 2) will usually outperform Reddit's own search bar.
+
+### The Combined Formula
+
+```
+site:reddit.com subreddit:[TARGET_SUBREDDIT] "[COMPLAINT PHRASE]" -[NOISE WORD]
+```
+
+**Example:**
+```
+site:reddit.com subreddit:Bookkeeping "is there a tool that" -template
+```
+
+---
+
+## Subreddit Targeting: How to Find the Right Communities
+
+Most founders know 3–5 subreddits by memory (r/Entrepreneur, r/SaaS, r/startups) and stop there. Those are the *worst* subreddits for problem-finding, because they're full of other founders selling to each other, not the actual end customers experiencing the pain. Go where your **target customer** hangs out, not where other founders hang out.
+
+### The Subreddit Discovery Workflow
+
+```
+STEP 1 — Search Reddit itself for your target role/industry
+         e.g., search "bookkeeper" in Reddit's community search
+
+STEP 2 — Check the sidebar of any relevant subreddit you find
+         Most subreddits list "related communities" 
+
+STEP 3 — Search site:reddit.com "[industry] subreddit" on Google
+
+STEP 4 — Check r/ListOfSubreddits and niche subreddit directories
+
+STEP 5 — Look at cross-posts — if a post you found got cross-posted,
+         the destination subreddit is also relevant
+
+STEP 6 — Log every subreddit found with member count and activity level
+```
+
+### Subreddit Quality Checklist
+
+Before investing research time in a subreddit, verify:
+
+- [ ] Active in the last 30 days (check the "new" tab, not just "hot")
+- [ ] Has real discussion threads, not just memes/links
+- [ ] Members are practitioners, not just other researchers/marketers
+- [ ] Has at least 1,000 members (smaller = thin signal, but check niche subs case-by-case — some 500-member subs are extremely high-signal if hyper-specific)
+- [ ] Mods allow "vent" or "question" style posts (some subreddits ban this)
+
+---
+
+## Subreddit Library by Industry
+
+This is a starting map, not an exhaustive list. Treat every entry as a seed — each of these will lead you to 3–5 more adjacent subreddits once you're inside them.
+
+### Software / IT / Developer Tools
+| Subreddit | Audience |
+|---|---|
+| r/sysadmin | IT/systems administrators |
+| r/devops | DevOps engineers |
+| r/ExperiencedDevs | Senior software engineers |
+| r/webdev | Web developers |
+| r/QualityAssurance | QA/testing professionals |
+| r/cybersecurity | Security professionals |
+| r/dataengineering | Data engineers |
+
+### Small Business / Operations
+| Subreddit | Audience |
+|---|---|
+| r/smallbusiness | Small business owners |
+| r/Entrepreneur | Founders (use cautiously — see caveat above) |
+| r/ecommerce | E-commerce operators |
+| r/FulfillmentByAmazon | Amazon sellers |
+| r/Shopify | Shopify store owners |
+| r/logistics | Supply chain/logistics professionals |
+
+### Finance / Accounting
+| Subreddit | Audience |
+|---|---|
+| r/Bookkeeping | Bookkeepers |
+| r/Accounting | Accountants |
+| r/CFO | Finance leadership |
+| r/personalfinance | Consumer finance (for consumer fintech ideas) |
+| r/smallbusinessfinance | SMB finance operators |
+
+### Legal
+| Subreddit | Audience |
+|---|---|
+| r/paralegal | Paralegals |
+| r/LawFirm | Law firm operations |
+| r/Lawyertalk | Practicing attorneys |
+
+### Healthcare
+| Subreddit | Audience |
+|---|---|
+| r/medicalcoding | Medical coders/billers |
+| r/nursing | Nurses |
+| r/healthIT | Health IT professionals |
+| r/PrivatePractice | Independent healthcare practices |
+
+### HR / Recruiting
+| Subreddit | Audience |
+|---|---|
+| r/humanresources | HR professionals |
+| r/recruiting | Recruiters |
+| r/ATS (varies) | Applicant tracking system users |
+
+### Construction / Real Estate
+| Subreddit | Audience |
+|---|---|
+| r/Contractor | General contractors |
+| r/Construction | Construction industry |
+| r/realtors | Real estate agents |
+| r/PropertyManagement | Property managers |
+
+### Marketing / Agencies
+| Subreddit | Audience |
+|---|---|
+| r/marketing | Marketers |
+| r/agency | Agency operators |
+| r/PPC | Paid ad specialists |
+| r/SEO | SEO professionals |
+
+### Restaurants / Hospitality
+| Subreddit | Audience |
+|---|---|
+| r/KitchenConfidential | Restaurant workers |
+| r/restaurantowners | Restaurant owners |
+| r/TalesFromYourServer | Front-of-house staff |
+
+### Education
+| Subreddit | Audience |
+|---|---|
+| r/Teachers | K-12 teachers |
+| r/professors | Higher-ed faculty |
+| r/AdmissionsMod | College admissions |
+
+### Manufacturing
+| Subreddit | Audience |
+|---|---|
+| r/manufacturing | Manufacturing professionals |
+| r/6Sigma | Process/quality improvement |
+
+---
+
+## The Reddit Query Library
+
+Combine any subreddit above with these query patterns. All of these work both in Reddit's native search bar (drop the `site:reddit.com`) and as Google Dorks (keep it).
+
+### Complaint Extraction
+```
+subreddit:[SUB] "so frustrating"
+subreddit:[SUB] "I hate"
+subreddit:[SUB] "why is it so hard to"
+subreddit:[SUB] "nightmare"
+subreddit:[SUB] "waste of time"
+```
+
+### High-Intent / Buying Signal
+```
+subreddit:[SUB] "is there a tool that"
+subreddit:[SUB] "is there software that"
+subreddit:[SUB] "looking for a way to"
+subreddit:[SUB] "does anyone know an app"
+subreddit:[SUB] "recommend a tool for"
+```
+
+### Workaround Extraction
+```
+subreddit:[SUB] "we use a spreadsheet"
+subreddit:[SUB] "I built a" workaround
+subreddit:[SUB] "manually" "every"
+subreddit:[SUB] "still doing this by hand"
+```
+
+### Churn / Switching
+```
+subreddit:[SUB] "switched from"
+subreddit:[SUB] "alternative to"
+subreddit:[SUB] "why I stopped using"
+subreddit:[SUB] "cancelled my subscription to"
+```
+
+### Recurring Question Pattern (high value — see below)
+```
+subreddit:[SUB] "what do you use for"
+subreddit:[SUB] "how do you all handle"
+subreddit:[SUB] "best software for"
+```
+
+---
+
+## The Recurring Question Technique
+
+This is Reddit's single highest-leverage research technique, and it's underused because it requires patience rather than clever search syntax.
+
+**The insight:** if a question like *"what tool do you all use for X?"* gets asked in the same subreddit every few weeks or months, with dozens of different answers each time and no clear consensus winner, that is one of the strongest signals in this entire handbook. It means:
+
+1. The problem is common enough that new people keep hitting it
+2. No existing tool has won enough mindshare to make the question stop being asked
+3. The answers themselves are a live, crowdsourced competitor analysis
+
+### How to Run This Technique
+
+```
+STEP 1 — Pick a target subreddit
+STEP 2 — Search: subreddit:[SUB] "what do you use for"
+STEP 3 — Sort by "new," not "top" — you want to see the pattern over time
+STEP 4 — Open every instance of the question from the last 12 months
+STEP 5 — Log every tool name mentioned in the answers
+STEP 6 — Count mentions — build a frequency table
+STEP 7 — Read the complaints attached to each mentioned tool
+         ("I use X but it's clunky for Y" is a feature gap, not just a name)
+STEP 8 — If no single tool has >40% share of mentions, this is a fragmented,
+         winnable market
+```
+
+### Recurring Question Log Template
+
+| Date of Post | Question Asked | Tools Mentioned | Complaint Attached to Each | Consensus Winner? |
+|---|---|---|---|---|
+| | | | | |
+
+---
+
+## Reading a Thread Properly: The Layered Extraction Method
+
+Do not just read the post title and top comment. Most of the value in a Reddit thread is buried three or four comments deep, in the replies to the top comment.
+
+```
+LAYER 1 — Post title
+          → Gives you the surface complaint (fast scan)
+
+LAYER 2 — Post body
+          → Gives you the full context: who, what task, what's blocking them
+          → Apply the Problem Statement Template (Ch. 1) directly to this text
+
+LAYER 3 — Top comment
+          → Usually the most upvoted "solution" or shared experience
+          → Tells you what the community currently considers the best answer
+
+LAYER 4 — Replies to the top comment
+          → This is where disagreement lives
+          → "That doesn't work for me because..." is gold — it's an
+            unmet need even within the "solved" answer
+
+LAYER 5 — Buried low-vote comments
+          → Often contains the most honest, specific complaints
+          → People with unpopular workarounds or minority experiences
+            post here — don't skip past low-score comments
+```
+
+**Rule of thumb:** if you only read Layers 1–3, you'll find what everyone else researching this topic has already found. Layers 4 and 5 are where the differentiated insight lives.
+
+---
+
+## Distinguishing Real Pain From Reddit Noise
+
+Reddit rewards entertaining complaints, not necessarily important ones. A venting post with 2,000 upvotes might just be well-written outrage-bait with zero underlying business opportunity. Apply this filter before logging a Reddit find as evidence.
+
+| Signal | Real Pain Indicator | Noise Indicator |
+|---|---|---|
+| Specificity | Names a specific task, tool, or workflow | Vague ("this industry sucks") |
+| Comment quality | Replies add detail, share their own version | Replies are just jokes/reactions |
+| Repetition | You've seen this same complaint in other threads | Isolated, one-off post |
+| Emotional register | Frustration tied to a cost (time, money, risk) | Frustration is just for entertainment/karma |
+| Follow-through | OP or commenters mention a workaround or attempted fix | Pure venting with no action taken |
+| Subreddit fit | Posted in a practitioner subreddit | Posted in a general "rant" subreddit (r/mildlyinfuriating, etc.) |
+
+---
+
+## A Repeatable Reddit Research Session
+
+```
+STEP 1 — Pick ONE target subreddit from your library
+STEP 2 — Run 5 queries: 2 complaint, 2 high-intent, 1 workaround
+STEP 3 — Sort each by "Top — Past Year" AND "New" (run both, don't skip New)
+STEP 4 — Open the top 10 results from each sort
+STEP 5 — Apply the Layered Extraction Method to each thread
+STEP 6 — Run the Recurring Question Technique once per subreddit
+STEP 7 — Log every Tier 3+ finding (Ch. 1 Problem Quality Ladder) in the
+         Reddit Research Log below
+STEP 8 — After 3-4 subreddits in the same industry, look for overlap —
+         the same complaint appearing across multiple communities is
+         your strongest possible signal
+```
+
+### Reddit Research Log Template
+
+| Subreddit | Thread Title | URL | Pain Category (Ch. 1) | Tier (1-5) | Quote (paraphrased) | Workaround Mentioned? |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+
+---
+
+## Common Mistakes When Mining Reddit
+
+### Mistake 1: Only Searching Founder-Facing Subreddits
+r/startups and r/SaaS are full of people selling *to* founders, not the end customers you're trying to understand. Go to the practitioner subreddits instead — the accountants, nurses, contractors, and ops managers who actually live the problem daily.
+
+### Mistake 2: Sorting Only by "Top"
+"Top of all time" surfaces old, often-resolved complaints. Always cross-check "New" and "Top — Past Year" to see what's currently active.
+
+### Mistake 3: Stopping at the Top Comment
+As covered in the Layered Extraction Method — the most valuable, differentiated insight is usually three or four replies deep, not in the highest-voted comment everyone else already read.
+
+### Mistake 4: Treating Upvotes as Validation
+A highly upvoted post proves the complaint is *relatable*, not that people would pay to fix it. Cross-reference with a workaround, hiring signal, or willingness-to-pay mention before treating it as strong evidence (see Chapter 1, Trap 2).
+
+### Mistake 5: Ignoring Small Subreddits
+A 3,000-member hyper-specific subreddit (e.g., a subreddit for one niche profession) is often higher signal than a 500,000-member general one, because the audience is pre-qualified and the discussion is denser with practitioner-specific detail.
+
+### Mistake 6: Not Returning to the Same Subreddit Over Time
+Reddit research isn't a one-time sweep. Recurring questions (the technique above) only reveal themselves if you check a subreddit repeatedly over weeks or months. Bookmark your target subreddits and revisit them as part of your ongoing research cadence, not just once.
+
+---
+
+## Chapter 3 Checklist
+
+Before moving to Hacker News mining in the next chapter, confirm you have:
+
+- [ ] Built a personal subreddit library of at least 10 practitioner-facing communities relevant to your target customer
+- [ ] Verified each subreddit against the Subreddit Quality Checklist
+- [ ] Run at least one full Reddit Research Session (Steps 1–8) end to end
+- [ ] Applied the Layered Extraction Method to at least 10 threads, not just titles/top comments
+- [ ] Run the Recurring Question Technique on at least one subreddit and logged tool mentions
+- [ ] Filtered every finding against the Real Pain vs. Noise table before logging it as evidence
+- [ ] Cross-referenced any strong Reddit finding against at least one other pain category or source type (Chapter 1)
+
+---
+
+*→ Next: [04-Hacker-News.md](04-Hacker-News.md) — Mining the Technical/Startup Community*
+
+*→ See also: [02-Google-Dorks.md](02-Google-Dorks.md) — The Search Syntax This Chapter Builds On | [01-Finding-Problems.md](01-Finding-Problems.md) — The Pain Categories You're Filtering For | [11-Templates.md](11-Templates.md) — Copy-Paste Research Tools*
