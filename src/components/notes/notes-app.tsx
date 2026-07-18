@@ -16,6 +16,64 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { toast } from "sonner";
+
+interface AuthDialogProps {
+    children: React.ReactNode;
+    title: string;
+    description: string;
+    cringeMsg: string;
+}
+
+const FakeAuthDialog = ({ children, title, description, cringeMsg }: AuthDialogProps) => {
+    const [password, setPassword] = useState("");
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            if (password.toLowerCase() === "friday") {
+                toast.success("Password Accepted!", {
+                    description: "But wait... this is a statically generated site. You still have to edit the code in VSCode to save anything! 😂",
+                });
+                setPassword("");
+            } else if (password.toLowerCase() === "pingu") {
+                toast.error("Absolutely Not.", {
+                    description: "I said friday NOT pingu! 🐧🚫",
+                });
+            } else {
+                toast.error("Access Denied", {
+                    description: "Nice try, Hackerman. That's not the password.",
+                });
+            }
+        }
+    };
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>{title}</DialogTitle>
+                    <DialogDescription>
+                        {description}
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="flex flex-col gap-4 py-4">
+                    <p className="text-sm">{cringeMsg}</p>
+                    <input 
+                        type="password" 
+                        placeholder="Enter the secret password and press Enter..." 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="w-full bg-muted border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+};
 
 export function NotesApp() {
     const [searchQuery, setSearchQuery] = useState("");
@@ -30,31 +88,6 @@ export function NotesApp() {
 
     const activeNote = NOTES.find(n => n.id === activeNoteId);
 
-    const FakeAuthDialog = ({ children }: { children: React.ReactNode }) => (
-        <Dialog>
-            <DialogTrigger asChild>
-                {children}
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                    <DialogTitle>Hold up, Hackerman 🛑</DialogTitle>
-                    <DialogDescription>
-                        Did you really think I'd leave my portfolio completely unprotected so anyone could delete my notes? 😭
-                    </DialogDescription>
-                </DialogHeader>
-                <div className="flex flex-col gap-4 py-4">
-                    <p className="text-sm">Nice try though! This is just a read-only demo to show off my frontend skills. If you want to hire me to build actual secure applications, you know where to find my email!</p>
-                    <input 
-                        type="password" 
-                        placeholder="Enter admin password anyway..." 
-                        className="w-full bg-muted border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
-                        disabled
-                    />
-                </div>
-            </DialogContent>
-        </Dialog>
-    );
-
     return (
         <div className="flex h-full min-h-[80vh] max-h-[90vh] w-full max-w-6xl mx-auto border border-border rounded-2xl overflow-hidden bg-background shadow-2xl relative z-10">
             
@@ -68,7 +101,11 @@ export function NotesApp() {
                             <ChevronLeft className="w-5 h-5" />
                             Home
                         </Link>
-                        <FakeAuthDialog>
+                        <FakeAuthDialog 
+                            title="Hold up, Hemingway ✍️" 
+                            description="Thinking about writing a new note?"
+                            cringeMsg="This portfolio isn't a free-for-all public bathroom wall. Only the master can write here."
+                        >
                             <button className="text-primary hover:opacity-80 transition-opacity p-2">
                                 <SquarePen className="w-5 h-5" />
                             </button>
@@ -139,13 +176,25 @@ export function NotesApp() {
                     </div>
                     
                     <div className="flex items-center gap-4 text-primary">
-                        <FakeAuthDialog>
+                        <FakeAuthDialog
+                            title="Want to leak my secrets? 🤫"
+                            description="Trying to share my private engineering notes with the world?"
+                            cringeMsg="You'll need the admin password to export this alpha. I don't just hand out my knowledge for free."
+                        >
                             <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Share className="w-4 h-4" /></button>
                         </FakeAuthDialog>
-                        <FakeAuthDialog>
+                        <FakeAuthDialog
+                            title="Whoa there, Thanos 🫰"
+                            description="Did you really just try to delete my hard work?"
+                            cringeMsg="Half my notes aren't disappearing today. If you want to destroy things, you need the master password."
+                        >
                             <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Trash2 className="w-4 h-4" /></button>
                         </FakeAuthDialog>
-                        <FakeAuthDialog>
+                        <FakeAuthDialog
+                            title="Trying to forge my history? 🕵️‍♂️"
+                            description="You clicked edit. You want to rewrite my notes?"
+                            cringeMsg="Only the author can edit history. Enter the password or step away from the keyboard."
+                        >
                             <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><SquarePen className="w-4 h-4" /></button>
                         </FakeAuthDialog>
                     </div>
@@ -161,7 +210,7 @@ export function NotesApp() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
                                 transition={{ duration: 0.2 }}
-                                className="max-w-3xl mx-auto p-8 md:p-12"
+                                className="max-w-3xl mx-auto p-8 md:p-12 pb-24"
                             >
                                 <p className="text-sm text-muted-foreground text-center mb-8">{activeNote.date}</p>
                                 <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-primary">
