@@ -2,7 +2,7 @@
 
 import { motion } from "motion/react";
 import { GitCommit, GitPullRequest, GitMerge, Star, Code, Activity, MessageSquare } from "lucide-react";
-import { formatDistanceToNow } from "date-utils";
+import { formatDistanceToNow } from "date-fns";
 
 function formatEvent(event: any) {
     switch (event.type) {
