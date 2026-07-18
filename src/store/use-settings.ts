@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type AccentColor = 'blue' | 'purple' | 'green' | 'orange' | 'pink';
+type AccentColor = 'blue' | 'purple' | 'green' | 'orange' | 'pink' | 'black';
 type BackgroundType = 'grid' | 'dots' | 'gradient' | 'none';
 
 interface SettingsState {

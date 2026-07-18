@@ -9,7 +9,8 @@ const ACCENT_COLORS = [
     { id: "purple", name: "Royal Purple", hex: "hsl(300, 70%, 50%)" },
     { id: "green", name: "Emerald", hex: "hsl(150, 70%, 40%)" },
     { id: "orange", name: "Sunset", hex: "hsl(45, 90%, 50%)" },
-    { id: "pink", name: "Rose", hex: "hsl(340, 80%, 60%)" }
+    { id: "pink", name: "Rose", hex: "hsl(340, 80%, 60%)" },
+    { id: "black", name: "Monochrome", hex: "hsl(0, 0%, 15%)" }
 ] as const;
 
 export function AccentPane() {
