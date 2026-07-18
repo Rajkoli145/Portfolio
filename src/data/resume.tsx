@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { HomeIcon, NotebookIcon, Clapperboard } from "lucide-react";
+import { HomeIcon, NotebookIcon, Clapperboard, Settings } from "lucide-react";
 import { ReactLight } from "@/components/ui/svgs/reactLight";
 import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
@@ -68,6 +68,7 @@ export const DATA = {
     { href: "/spotify", icon: Icons.spotify, label: "Spotify" },
     { href: "/netflix", icon: Icons.netflix, label: "Movies" },
     { href: "/github", icon: Icons.github, label: "GitHub" },
+    { href: "/settings", icon: Settings, label: "Settings" },
   ],
   contact: {
     email: "koliraj911@gmail.com",

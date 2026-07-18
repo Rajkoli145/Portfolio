@@ -1,3 +1,4 @@
+import { SettingsProvider } from "@/components/settings-provider";
 import { Toaster } from "sonner";
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -73,20 +74,9 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="light">
           <TooltipProvider delayDuration={0}>
-            <div className="absolute inset-0 top-0 left-0 right-0 h-[100px] overflow-hidden z-0">
-              <FlickeringGrid
-                className="h-full w-full"
-                squareSize={2}
-                gridGap={2}
-                style={{
-                  maskImage: "linear-gradient(to bottom, black, transparent)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
-                }}
-              />
-            </div>
-            <div className="relative z-10 w-full min-h-screen">
+            <SettingsProvider>
               {children}
-            </div>
+            </SettingsProvider>
             <Navbar />
             <Toaster position="bottom-right" />
           </TooltipProvider>
