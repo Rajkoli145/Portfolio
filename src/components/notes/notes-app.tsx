@@ -8,6 +8,15 @@ import { Search, SquarePen, Trash2, Share, ChevronLeft } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import Link from "next/link";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
 export function NotesApp() {
     const [searchQuery, setSearchQuery] = useState("");
     const [activeNoteId, setActiveNoteId] = useState<string | null>(NOTES[0]?.id || null);
@@ -21,8 +30,33 @@ export function NotesApp() {
 
     const activeNote = NOTES.find(n => n.id === activeNoteId);
 
+    const FakeAuthDialog = ({ children }: { children: React.ReactNode }) => (
+        <Dialog>
+            <DialogTrigger asChild>
+                {children}
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                    <DialogTitle>Hold up, Hackerman 🛑</DialogTitle>
+                    <DialogDescription>
+                        Did you really think I'd leave my portfolio completely unprotected so anyone could delete my notes? 😭
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="flex flex-col gap-4 py-4">
+                    <p className="text-sm">Nice try though! This is just a read-only demo to show off my frontend skills. If you want to hire me to build actual secure applications, you know where to find my email!</p>
+                    <input 
+                        type="password" 
+                        placeholder="Enter admin password anyway..." 
+                        className="w-full bg-muted border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
+                        disabled
+                    />
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
+
     return (
-        <div className="flex h-full min-h-[80vh] w-full max-w-6xl mx-auto border border-border rounded-2xl overflow-hidden bg-background shadow-2xl relative z-10">
+        <div className="flex h-full min-h-[80vh] max-h-[90vh] w-full max-w-6xl mx-auto border border-border rounded-2xl overflow-hidden bg-background shadow-2xl relative z-10">
             
             {/* Sidebar List */}
             <div className={`flex-col w-full md:w-80 border-r border-border bg-muted/30 md:flex ${activeNoteId ? "hidden" : "flex"}`}>
@@ -34,9 +68,11 @@ export function NotesApp() {
                             <ChevronLeft className="w-5 h-5" />
                             Home
                         </Link>
-                        <button className="text-primary hover:opacity-80 transition-opacity p-2">
-                            <SquarePen className="w-5 h-5" />
-                        </button>
+                        <FakeAuthDialog>
+                            <button className="text-primary hover:opacity-80 transition-opacity p-2">
+                                <SquarePen className="w-5 h-5" />
+                            </button>
+                        </FakeAuthDialog>
                     </div>
                     
                     <h1 className="text-3xl font-bold px-1">Notes</h1>
@@ -103,9 +139,15 @@ export function NotesApp() {
                     </div>
                     
                     <div className="flex items-center gap-4 text-primary">
-                        <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Share className="w-4 h-4" /></button>
-                        <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Trash2 className="w-4 h-4" /></button>
-                        <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><SquarePen className="w-4 h-4" /></button>
+                        <FakeAuthDialog>
+                            <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Share className="w-4 h-4" /></button>
+                        </FakeAuthDialog>
+                        <FakeAuthDialog>
+                            <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Trash2 className="w-4 h-4" /></button>
+                        </FakeAuthDialog>
+                        <FakeAuthDialog>
+                            <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><SquarePen className="w-4 h-4" /></button>
+                        </FakeAuthDialog>
                     </div>
                 </div>
 
