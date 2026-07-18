@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { HomeIcon, NotebookIcon, Clapperboard, Settings } from "lucide-react";
+import { HomeIcon, NotebookIcon, Clapperboard, Settings, NotepadText } from "lucide-react";
 import { ReactLight } from "@/components/ui/svgs/reactLight";
 import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
@@ -65,6 +65,7 @@ export const DATA = {
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
     { href: "/book", icon: NotebookIcon, label: "Book" },
+    { href: "/notes", icon: NotepadText, label: "Notes" },
     { href: "/spotify", icon: Icons.spotify, label: "Spotify" },
     { href: "/netflix", icon: Icons.netflix, label: "Movies" },
     { href: "/github", icon: Icons.github, label: "GitHub" },

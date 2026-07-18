@@ -50,8 +50,11 @@ files.forEach(file => {
         content = content.replace(/^#\s+(.+)$/m, '').trim();
     }
     
+    // Fix MDX JSX parsing errors (e.g., <10 being parsed as a React component)
+    content = content.replace(/<(\d)/g, '&lt;$1');
+    
     const frontmatter = `---
-title: "${title.replace(/"/g, '\\"')}"
+title: "${title.replace(/["']/g, '')}"
 publishedAt: "${new Date().toISOString().split('T')[0]}"
 summary: "Chapter from the Startup Research Handbook."
 ---
