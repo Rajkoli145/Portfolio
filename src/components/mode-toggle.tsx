@@ -12,48 +12,7 @@ export function ModeToggle({ className }: { className?: string }) {
     const isDark = document.documentElement.classList.contains("dark");
     const nextTheme = isDark ? "light" : "dark";
 
-    if (!document.startViewTransition) {
-      setTheme(nextTheme);
-      return;
-    }
-
-    const x = event.clientX;
-    const y = event.clientY;
-    const endRadius = Math.hypot(
-      Math.max(x, innerWidth - x),
-      Math.max(y, innerHeight - y)
-    );
-
-    const transition = document.startViewTransition(() => {
-      // Force immediate DOM update for Next.js since it might batch state updates
-      if (nextTheme === "dark") {
-        document.documentElement.classList.add("dark");
-        document.documentElement.style.colorScheme = "dark";
-      } else {
-        document.documentElement.classList.remove("dark");
-        document.documentElement.style.colorScheme = "light";
-      }
-      setTheme(nextTheme);
-    });
-
-    transition.ready.then(() => {
-      const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ];
-      document.documentElement.animate(
-        {
-          clipPath: isDark ? [...clipPath].reverse() : clipPath,
-        },
-        {
-          duration: 500,
-          easing: "ease-in-out",
-          pseudoElement: isDark
-            ? "::view-transition-old(root)"
-            : "::view-transition-new(root)",
-        }
-      );
-    });
+    setTheme(nextTheme);
   };
 
   return (
