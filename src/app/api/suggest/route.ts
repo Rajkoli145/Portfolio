@@ -2,7 +2,9 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const getResendClient = () => {
+  return new Resend(process.env.RESEND_API_KEY || "re_dummy");
+};
 
 const suggestSchema = z.object({
   noteTitle: z.string().min(1, "Note title is required"),
@@ -26,6 +28,7 @@ export async function POST(req: Request) {
     const { noteTitle, name, email, suggestion } = result.data;
     const senderName = name && name.trim().length > 0 ? name : "Anonymous Visitor";
     const replyToEmail = email && email.trim().length > 0 ? email : undefined;
+    const resend = getResendClient();
 
     const { data, error } = await resend.emails.send({
       from: "Portfolio Suggestion <onboarding@resend.dev>",
