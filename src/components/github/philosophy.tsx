@@ -36,7 +36,7 @@ export function Philosophy() {
                         transition={{ duration: 0.8, ease: "easeInOut" }}
                         className="text-2xl md:text-4xl lg:text-5xl font-semibold tracking-tight text-foreground text-balance"
                     >
-                        "{statements[index]}"
+                        &quot;{statements[index]}&quot;
                     </motion.h3>
                 </AnimatePresence>
             </div>

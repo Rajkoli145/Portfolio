@@ -83,7 +83,7 @@ export function SuggestionModal({ noteTitle }: SuggestionModalProps) {
                             Have a suggestion?
                         </DialogTitle>
                         <DialogDescription>
-                            Spotted a typo? Have a new idea or resource? Send it my way. If it's good, I'll add it to the note!
+                            Spotted a typo? Have a new idea or resource? Send it my way. If it&apos;s good, I&apos;ll add it to the note!
                         </DialogDescription>
                     </DialogHeader>
 

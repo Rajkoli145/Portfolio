@@ -29,10 +29,10 @@ export default function ContactPage() {
                     <BlurFade delay={BLUR_FADE_DELAY}>
                         <div className="flex flex-col gap-4">
                             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                                Let's Build Something <span className="text-primary">Great</span> Together.
+                                Let&apos;s Build Something <span className="text-primary">Great</span> Together.
                             </h1>
                             <p className="text-muted-foreground text-lg md:text-xl max-w-3xl text-balance">
-                                Whether it's a startup idea, internship opportunity, freelance project, collaboration, or just a conversation—I'd love to hear from you.
+                                Whether it&apos;s a startup idea, internship opportunity, freelance project, collaboration, or just a conversation—I&apos;d love to hear from you.
                             </p>
                         </div>
                     </BlurFade>

@@ -77,7 +77,7 @@ const FakeAuthDialog = ({ children, title, description, cringeMsg }: AuthDialogP
                         className="w-full bg-muted border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <div className="mt-2 text-xs text-muted-foreground bg-muted/50 p-2 rounded-md border border-border/50 text-center font-mono">
-                        📝 Sticky Note: "Don't forget, the password is <span className="font-bold text-primary">raj123</span>"
+                        📝 Sticky Note: &quot;Don&apos;t forget, the password is <span className="font-bold text-primary">raj123</span>&quot;
                     </div>
                 </div>
             </DialogContent>

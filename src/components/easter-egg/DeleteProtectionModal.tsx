@@ -92,13 +92,13 @@ export function DeleteProtectionModal({ isOpen, onClose }: DeleteProtectionModal
                                             🫰 Hold on there, Thanos.
                                         </h2>
                                         <p className="text-sm text-muted-foreground mt-1">
-                                            Half my projects aren't disappearing today.
+                                            Half my projects aren&apos;t disappearing today.
                                         </p>
                                     </div>
 
                                     <div className="text-sm text-foreground/80 space-y-3 leading-relaxed py-2">
-                                        <p>I noticed you're trying to delete one of my projects.</p>
-                                        <p>After reviewing your request... I've decided that's a terrible idea.</p>
+                                        <p>I noticed you&apos;re trying to delete one of my projects.</p>
+                                        <p>After reviewing your request... I&apos;ve decided that&apos;s a terrible idea.</p>
                                         <div className="bg-muted/50 p-4 rounded-xl space-y-2 border border-border/50">
                                             <p className="font-medium text-xs uppercase text-muted-foreground tracking-wider mb-3">AI Decision Matrix</p>
                                             <ul className="space-y-2 text-xs">
