@@ -17,6 +17,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { DeleteProtectionModal } from "@/components/easter-egg/DeleteProtectionModal";
 
 interface AuthDialogProps {
     children: React.ReactNode;
@@ -83,9 +84,9 @@ const FakeAuthDialog = ({ children, title, description, cringeMsg }: AuthDialogP
 };
 
 export function NotesApp() {
-
     const [searchQuery, setSearchQuery] = useState("");
     const [activeNoteId, setActiveNoteId] = useState<string | null>(NOTES[0]?.id || null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const filteredNotes = useMemo(() => {
         return NOTES.filter(n => 
@@ -191,13 +192,14 @@ export function NotesApp() {
                         >
                             <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Share className="w-4 h-4" /></button>
                         </FakeAuthDialog>
-                        <FakeAuthDialog
-                            title="Whoa there, Thanos 🫰"
-                            description="Did you really just try to delete my hard work?"
-                            cringeMsg="Half my notes aren't disappearing today. If you want to destroy things, you need the master password."
+                        
+                        <button 
+                            onClick={() => setIsDeleteModalOpen(true)}
+                            className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted text-red-500/80 hover:text-red-500 hover:bg-red-500/10"
                         >
-                            <button className="hover:opacity-80 transition-opacity p-2 rounded-md hover:bg-muted"><Trash2 className="w-4 h-4" /></button>
-                        </FakeAuthDialog>
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+
                         <FakeAuthDialog
                             title="Trying to forge my history? 🕵️‍♂️"
                             description="You clicked edit. You want to rewrite my notes?"
@@ -235,6 +237,11 @@ export function NotesApp() {
                     </AnimatePresence>
                 </div>
             </div>
+
+            <DeleteProtectionModal 
+                isOpen={isDeleteModalOpen} 
+                onClose={() => setIsDeleteModalOpen(false)} 
+            />
         </div>
     );
 }
