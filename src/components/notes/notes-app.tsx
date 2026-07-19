@@ -19,6 +19,8 @@ import {
 import { toast } from "sonner";
 import { DeleteProtectionModal } from "@/components/easter-egg/DeleteProtectionModal";
 
+import { SuggestionModal } from "@/components/notes/SuggestionModal";
+
 interface AuthDialogProps {
     children: React.ReactNode;
     title: string;
@@ -228,6 +230,10 @@ export function NotesApp() {
                                         {activeNote.content}
                                     </ReactMarkdown>
                                 </article>
+                                
+                                <div className="mt-16 flex justify-center border-t border-border/50 pt-8">
+                                    <SuggestionModal noteTitle={activeNote.title} />
+                                </div>
                             </motion.div>
                         ) : (
                             <div className="h-full flex items-center justify-center text-muted-foreground">
