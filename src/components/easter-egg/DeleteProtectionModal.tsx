@@ -127,21 +127,13 @@ export function DeleteProtectionModal({ isOpen, onClose }: DeleteProtectionModal
                                     />
                                 </div>
 
-                                <div className="mt-8 flex flex-col-reverse sm:flex-row gap-3">
+                                <div className="mt-8 flex justify-end">
                                     <button
                                         onClick={onClose}
-                                        className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors flex-1"
+                                        className="px-6 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors"
                                     >
                                         Never Mind
                                     </button>
-                                    <motion.button
-                                        whileHover={{ y: -1 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={handleConvinceMe}
-                                        className="px-4 py-2.5 text-sm font-medium text-primary-foreground bg-primary rounded-xl shadow-sm hover:shadow transition-all flex-1"
-                                    >
-                                        "{currentExcuse}"
-                                    </motion.button>
                                 </div>
                             </motion.div>
                         )}
