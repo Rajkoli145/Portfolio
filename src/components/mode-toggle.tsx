@@ -12,40 +12,52 @@ export function ModeToggle({ className }: { className?: string }) {
     const isDark = document.documentElement.classList.contains("dark");
     const nextTheme = isDark ? "light" : "dark";
 
+    if (!document.startViewTransition) {
+      setTheme(nextTheme);
+      return;
+    }
+
     const x = event.clientX;
     const y = event.clientY;
-
-    const circle = document.createElement("div");
-    circle.style.position = "fixed";
-    circle.style.left = `${x}px`;
-    circle.style.top = `${y}px`;
-    circle.style.width = "0px";
-    circle.style.height = "0px";
-    circle.style.borderRadius = "50%";
-    circle.style.backgroundColor = isDark ? "#ffffff" : "#0a0a0a";
-    circle.style.transform = "translate(-50%, -50%)";
-    circle.style.zIndex = "99999";
-    circle.style.transition = "width 0.6s cubic-bezier(0.22, 1, 0.36, 1), height 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease-out";
-    circle.style.pointerEvents = "none";
-    document.body.appendChild(circle);
-
     const endRadius = Math.hypot(
       Math.max(x, innerWidth - x),
       Math.max(y, innerHeight - y)
     );
 
-    requestAnimationFrame(() => {
-      circle.style.width = `${endRadius * 2}px`;
-      circle.style.height = `${endRadius * 2}px`;
+    const transition = document.startViewTransition(() => {
+      // Force immediate DOM update for View Transition capture
+      if (nextTheme === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.style.colorScheme = "dark";
+      } else {
+        document.documentElement.classList.remove("dark");
+        document.documentElement.style.colorScheme = "light";
+      }
     });
 
-    setTimeout(() => {
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+      document.documentElement.animate(
+        {
+          clipPath: isDark ? [...clipPath].reverse() : clipPath,
+        },
+        {
+          duration: 500,
+          easing: "ease-in-out",
+          pseudoElement: isDark
+            ? "::view-transition-old(root)"
+            : "::view-transition-new(root)",
+        }
+      );
+    });
+
+    // Update next-themes state after transition is done to prevent hydration mismatch
+    transition.finished.finally(() => {
       setTheme(nextTheme);
-      circle.style.opacity = "0";
-      setTimeout(() => {
-        circle.remove();
-      }, 400);
-    }, 400);
+    });
   };
 
   return (
