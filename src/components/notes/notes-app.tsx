@@ -32,9 +32,13 @@ const FakeAuthDialog = ({ children, title, description, cringeMsg }: AuthDialogP
         if (e.key === "Enter") {
             if (password.toLowerCase() === "friday") {
                 toast.success("Password Accepted!", {
-                    description: "But wait... this is a statically generated site. You still have to edit the code in VSCode to save anything! 😂",
+                    description: "Okay, you're the real Raj. But wait... this is a statically generated site so you can't save anything! 😂",
                 });
                 setPassword("");
+            } else if (password.toLowerCase() === "raj123") {
+                toast.error("Gullible much?", {
+                    description: "Did you really think I'd just write the real password on the screen? 🎣 That's bait.",
+                });
             } else if (password.toLowerCase() === "pingu") {
                 toast.error("Absolutely Not.", {
                     description: "I said friday NOT pingu! 🐧🚫",
@@ -69,6 +73,9 @@ const FakeAuthDialog = ({ children, title, description, cringeMsg }: AuthDialogP
                         onKeyDown={handleKeyDown}
                         className="w-full bg-muted border border-border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                     />
+                    <div className="mt-2 text-xs text-muted-foreground bg-muted/50 p-2 rounded-md border border-border/50 text-center font-mono">
+                        📝 Sticky Note: "Don't forget, the password is <span className="font-bold text-primary">raj123</span>"
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>
@@ -76,6 +83,7 @@ const FakeAuthDialog = ({ children, title, description, cringeMsg }: AuthDialogP
 };
 
 export function NotesApp() {
+
     const [searchQuery, setSearchQuery] = useState("");
     const [activeNoteId, setActiveNoteId] = useState<string | null>(NOTES[0]?.id || null);
 
