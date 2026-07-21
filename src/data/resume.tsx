@@ -15,9 +15,9 @@ export const DATA = {
   location: "India",
   locationLink: "https://www.google.com/maps/place/India",
   description:
-    "Full stack developer who enjoys building systems that actually work under pressure.",
+    "Software engineer focused on backend systems, AI agent infrastructure, and developer tooling.",
   summary:
-    "Full stack developer who enjoys building systems that actually work under pressure — REST APIs, Linux automation, CLI tooling, and backend pipelines. Recently got into AI model benchmarking and terminal bench task design, building hard CLI tasks for tools like T-Bench and Harbor that test real agent capability gaps. Comfortable jumping into unfamiliar codebases and shipping quickly.",
+    "Software engineer focused on backend systems, AI agent infrastructure, and developer tooling. Experienced in building full-stack applications, REST APIs, Linux automation, CLI tools, and production-ready workflows. Active open-source contributor in AI agent evaluation and terminal benchmarking. Currently authoring The Agent Systems Handbook, a research-driven guide covering modern AI agent architectures, memory, planning, evaluation, and autonomous software systems.",
   avatarUrl: "/me.png",
   spotifyPlaylistUrl: "https://open.spotify.com/playlist/77SfoFRDHeoiRXeOxWYMBZ",
   movies: [
