@@ -14,7 +14,7 @@ interface SettingsState {
 export const useSettings = create<SettingsState>()(
     persist(
         (set) => ({
-            accentColor: 'blue',
+            accentColor: 'black',
             backgroundType: 'grid',
             setAccentColor: (color) => set({ accentColor: color }),
             setBackgroundType: (type) => set({ backgroundType: type }),
