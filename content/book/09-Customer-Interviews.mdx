@@ -1,9 +1,295 @@
 ---
-title: "Customer Interviews"
-publishedAt: "2026-07-17"
+title: "Chapter 9: Customer Interviews — Research Conversation Design"
+publishedAt: "2026-07-22"
 summary: "Chapter from the Startup Research Handbook."
 ---
 
--   Walk me through your workflow.
--   What's hardest?
--   What have you tried?
+> *"Every technique in Chapters 2 through 8 tells you what people wrote down. This chapter is the only one that lets you ask why — and 'why' is where the real answer always lives."*
+
+---
+
+## Why Interviews Come After Everything Else
+
+By this point, you have run search-based research across five channels (Google Dorks, Reddit, Hacker News, GitHub Issues, Competitor Research), built at least one Industry Playbook, and possibly scored an AI agent opportunity. You are walking into your first customer interview already informed — which is exactly the right order of operations.
+
+An uninformed interview wastes the interviewee's time and yours: you'll spend the conversation explaining basic industry concepts back to someone who lives them every day, instead of digging into the specific gaps your desk research already surfaced. A well-prepared interview goes straight to the frontier of what you don't yet know.
+
+But interviews are not just a confirmation step. They are the only research channel in this handbook that lets you ask a genuine follow-up question in real time. Every other chapter gives you *what people already wrote*. This chapter gives you the ability to ask *why*, dig past the first answer (Chapter 1's Principle 4), and hear things nobody has bothered to type into a Reddit thread or a GitHub issue.
+
+---
+
+## The Two Interview Types — And Why Order Matters
+
+Founders often run one generic interview and expect it to do everything: validate the problem, validate the solution, and validate pricing, all in one 20-minute call. This produces mushy, unreliable data. Separate your interviews by purpose and run them in the right order.
+
+| Interview Type | Purpose | When to Run It | What "Success" Looks Like |
+|---|---|---|---|
+| **Problem Interview** | Confirm the pain exists, understand it deeply, in the interviewee's own words | First — before you have any solution to show | Interviewee describes the pain unprompted, in detail, without you leading them there |
+| **Solution Interview** | Test whether your proposed approach actually addresses the validated pain | Second — only after 10+ problem interviews confirm the pain is real | Interviewee reacts to a concept/prototype with specific, actionable feedback (not just polite enthusiasm) |
+| **Pricing Interview** | Understand willingness to pay, budget authority, and the buying process | Third — only after solution interest is confirmed | Interviewee names a number, budget line, or approval process — not just "sounds reasonable" |
+
+**The critical rule: never run these out of order.** Pitching a solution during what should be a problem interview is the single most common way founders unconsciously introduce confirmation bias (Chapter 0's Mistake 1) into their own research.
+
+---
+
+## Designing a Problem Interview Script
+
+### Core Structure
+
+```
+1. OPENING (2 min) — Build rapport, explain you're researching, not selling
+2. WORKFLOW WALKTHROUGH (10 min) — Have them narrate their actual process
+3. PAIN DRILLING (10-15 min) — Five Whys on whatever friction surfaces
+4. WORKAROUND EXPLORATION (5 min) — What have they tried already?
+5. CLOSING (2 min) — Ask for referrals, thank them, no pitch
+```
+
+### The Opening Script
+
+```
+"Thanks for taking the time. I'm researching how [role] handle
+[general area] — I'm not selling anything, I'm just trying to
+understand how this actually works day to day. Would it be okay
+if I ask you to walk me through a typical [day/week/process]?"
+```
+
+Note what this opening deliberately does NOT do: it does not mention your idea, your company, or any solution. Chapter 0 already established why — you are not there to validate, you are there to understand (Principle 1: You Are a Detective, Not a Salesperson).
+
+### Core Question Bank
+
+**Workflow Walkthrough Questions** (open-ended, sequence-revealing):
+- "Walk me through what happens from [start of process] to [end of process]."
+- "What does a typical Tuesday look like for you?"
+- "Where does this process start, and who hands it to you?"
+
+**Pain Drilling Questions** (Chapter 1's Five Whys technique applied live):
+- "What's the hardest part of that?"
+- "Why is that hard?"
+- "What happens when that goes wrong?"
+- "How often does that happen?"
+- "Tell me more." *(Chapter 0's Principle 3 — the three most powerful words in an interview)*
+
+**Workaround Questions**:
+- "What have you tried to fix that?"
+- "What do you use today to deal with it?"
+- "If that tool/process disappeared tomorrow, what would you do?"
+
+**Cost Quantification Questions**:
+- "About how much time does that take you in a typical week?"
+- "Has that ever cost you money, or nearly cost you a customer/deal/deadline?"
+
+**Closing Questions**:
+- "Is there anyone else you think I should talk to about this?"
+- "Is there anything I should have asked but didn't?"
+
+---
+
+## The Leading Question Trap: Before and After
+
+This is the single most common way founders unconsciously ruin their own interview data. Every leading question invites a socially agreeable answer rather than a true one.
+
+| Leading (Avoid) | Neutral (Use) |
+|---|---|
+| "Don't you find X really frustrating?" | "How do you feel about X?" |
+| "Wouldn't it be great if there was a tool for X?" | "Have you looked for a tool for X? What did you find?" |
+| "You'd probably pay for something that fixed this, right?" | "How are you currently dealing with this, if at all?" |
+| "This must take up a ton of your time?" | "About how much time does this take you?" |
+| "Isn't [Competitor] just terrible at this?" | "What do you currently use for this, and how's it working?" |
+
+**The test:** if your question contains the answer you're hoping to hear, it's leading. If your question could just as easily be answered "no, actually it's fine," it's neutral — and neutral questions are the only ones that produce trustworthy data.
+
+---
+
+## Designing a Solution Interview Script
+
+Only run this after 10+ problem interviews have confirmed the pain independently (see the Validation Minimum checklist in Chapter 0). The structure changes because now you have something concrete to show, but the discipline against leading questions matters even more here.
+
+```
+1. RECAP (2 min) — Confirm you understood their problem correctly
+   from prior research/conversation
+2. SHOW, DON'T EXPLAIN (5 min) — Show a prototype, mockup, or
+   description; let them react before you explain your reasoning
+3. REACTION CAPTURE (10 min) — Ask what's confusing, what's missing,
+   what they'd change — before defending any design decision
+4. COMPARISON (5 min) — How does this compare to what they use today?
+5. INTENT CHECK (3 min) — Would they actually use this? Under what
+   conditions?
+```
+
+### Solution Interview Question Bank
+
+- "What's your first reaction to this?"
+- "What would you expect this to do that it doesn't seem to do?"
+- "How does this compare to [their current workaround/tool]?"
+- "What would need to be true for you to actually switch to this?"
+- "What's missing?"
+
+**Critical discipline:** resist the urge to explain or defend your design when they react negatively. Chapter 0's Principle 2 (Discomfort Is Signal) applies directly here — a confused or lukewarm reaction is data, not an objection to argue past.
+
+---
+
+## Designing a Pricing Interview Script
+
+Pricing conversations are the most prone to false-positive signal in the entire research process, because people are naturally polite about hypothetical money. Chapter 0's Validation table already drew this exact line: "I'd probably pay for something like that" does not count as validation; a letter of intent, deposit, or specific number does.
+
+### Pricing Interview Question Bank
+
+- "What do you currently spend on [category/workaround], if anything?"
+- "Who would need to approve a purchase like this at your organization?"
+- "What's the typical process for approving a new tool — is there a budget line for this already?"
+- "If this existed today at [specific price], would you buy it, or would you need to see something else first?"
+- "What would make this an easy 'yes' versus a hard 'maybe'?"
+
+**Never ask:** "Would you pay for this?" in isolation. It invites a hypothetical, polite "sure." Always anchor to a specific number, a specific budget process, or a specific next step (trial, deposit, intro to the actual budget-holder).
+
+---
+
+## The Interview Analysis Framework
+
+A raw transcript is not analysis. Run every interview through this structure within 24 hours, while memory is fresh.
+
+```
+STEP 1 — Transcribe or take detailed notes immediately after
+         (recall degrades fast — do this the same day)
+
+STEP 2 — Extract every specific pain statement verbatim
+         (their words, not your paraphrase)
+
+STEP 3 — Classify each pain statement against Chapter 1's eight
+         pain categories
+
+STEP 4 — Score the interview against the Problem Quality Ladder
+         (Chapter 1) — what tier is the pain they described?
+
+STEP 5 — Note anything that contradicted your existing hypothesis
+         (Chapter 0, Principle 2 — discomfort is signal, log it
+         rather than dismissing it)
+
+STEP 6 — Log the interview in the Interview Analysis Log below
+```
+
+### Interview Analysis Log Template
+
+| Interviewee (role/company size) | Interview Type | Pain Category | Tier (1-5) | Key Quote (paraphrased) | Contradicts Hypothesis? | Follow-Up Needed |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+
+---
+
+## Recognizing and Correcting Your Own Confirmation Bias
+
+This is worth a dedicated section because it is, per Chapter 0, the single most common mistake in idea generation — and interviews are where it does the most damage, because you're generating the data yourself in real time.
+
+### Self-Check Questions to Ask After Every Interview
+
+- [ ] Did I ask any leading questions? (Review against the Leading Question Trap table above)
+- [ ] Did I interrupt or redirect when they said something that didn't fit my hypothesis?
+- [ ] Did I explain my idea before they described the problem in their own words?
+- [ ] Would a skeptical colleague, reading my notes, agree this counts as validation — or would they say I heard what I wanted to hear?
+- [ ] Am I weighting this interview more heavily because the person was enthusiastic, rather than because of what they specifically said?
+
+### The Second-Reader Technique
+
+Have someone else — a co-founder, advisor, or even a friend outside your field — read your interview notes without hearing your framing first, and ask them: "What did this person actually say?" If their summary differs meaningfully from yours, that gap is very likely confirmation bias at work.
+
+---
+
+## Sourcing Interview Candidates
+
+Your research from Chapters 2-7 already tells you where your target interviewees are. Use this table to convert research channels into interview recruitment tactics.
+
+| Source Channel (Ch. 2-7) | Recruitment Tactic |
+|---|---|
+| Reddit thread you found | Reply respectfully, or DM the poster explaining you're doing non-commercial research |
+| GitHub issue commenter | Comment on the issue, or find their public contact info if listed |
+| LinkedIn post | Comment, then follow up with a connection request and a short, specific ask |
+| Job posting (hiring signal) | Reach out to the hiring manager or someone in that role at a similar company |
+| Industry subreddit/community | Post a respectful research request (check subreddit rules first — many ban this) |
+| Your own network | Ask directly, but deliberately seek people outside your immediate circle too (Chapter 1, Trap 5 — Echo Chamber) |
+| Industry association/conference | Attend, or request intros through mutual connections |
+
+### Interview Recruitment Message Template
+
+```
+Subject: Quick question about [specific workflow], not selling anything
+
+Hi [Name],
+
+I saw your [post/comment/thread] about [specific topic] and wanted
+to reach out — I'm researching how [role] handle [general area] and
+would love to hear about your experience if you have 15-20 minutes.
+
+This isn't a sales call — I'm not launching anything yet, just trying
+to understand the problem space properly before I do.
+
+Would you be open to a quick call this week or next?
+
+Thanks,
+[Your name]
+```
+
+---
+
+## Sample Size and Diversity Guidelines
+
+| Question | Guideline |
+|---|---|
+| How many interviews before drawing conclusions? | Minimum 10-15 for an initial signal; 20+ before major commitments (per Chapter 0's Validation Minimum) |
+| How many different companies? | At least 8-10 distinct companies, not just multiple people at the same one |
+| How many different company sizes? | Cover at least 2-3 size bands (e.g., &lt;10, 10-50, 50+ employees) to avoid Chapter 1's "Assuming Your Experience Is Universal" trap |
+| How many outside your existing network? | At least half — actively counteract the echo chamber (Chapter 1, Trap 5) |
+| How many who said "no, not really a problem"? | Actively seek and log these — negative responses are as valuable as positive ones for calibrating true prevalence |
+
+---
+
+## Interview Red Flags: When You're Hearing What You Want to Hear
+
+| Red Flag | Why It's a Problem |
+|---|---|
+| Every single interviewee loves the idea | Statistically unlikely if you're asking honestly — check for leading questions |
+| You feel a strong urge to explain/defend during the call | Sign you're pitching, not researching |
+| Notes are full of your own commentary, thin on their exact words | You may be summarizing what you expected rather than what was said |
+| You're only interviewing people from your own network | Echo chamber risk (Ch. 1, Trap 5) |
+| Nobody has said "no" or "not really" yet | Either you have a very strong signal, or your questions are leading — verify with the Second-Reader Technique |
+
+---
+
+## Common Mistakes in Customer Interviews
+
+### Mistake 1: Pitching Instead of Asking
+The single most common failure. If you catch yourself explaining your idea in a Problem Interview, stop — you've turned research into a sales call, and the data from this point forward is compromised.
+
+### Mistake 2: Accepting the First Answer
+Chapter 1's Principle 4 (The First Answer Is Rarely the Real Answer) applies with full force here. If someone says "scheduling is annoying," that is the surface. Dig with "why" until you reach a specific, quantifiable root cause.
+
+### Mistake 3: Skipping Negative Interviews
+Founders often stop reaching out once they've heard enough positive signal. Deliberately seek out people who might say the problem doesn't apply to them — their reasoning tells you where your target customer definition needs to narrow.
+
+### Mistake 4: Combining Interview Types
+Testing pricing in what was supposed to be a problem-discovery call muddies both signals. Keep the three interview types (Problem, Solution, Pricing) separate and sequential.
+
+### Mistake 5: Over-Weighting Enthusiasm
+An interviewee who says "this is amazing, I'd use it tomorrow" with no specific detail is weaker evidence than one who gives you three specific complaints and one hesitation, even if the second conversation felt less flattering.
+
+### Mistake 6: Not Analyzing Within 24 Hours
+Interview recall degrades quickly. Details, tone, and hesitations fade from memory within a day or two — always process notes the same day you conduct the interview.
+
+---
+
+## Chapter 9 Checklist
+
+Before moving to Validation in the next chapter, confirm you have:
+
+- [ ] Run at least 10-15 Problem Interviews using the neutral question bank above
+- [ ] Checked every interview script against the Leading Question Trap table before using it
+- [ ] Interviewed people from at least 8-10 distinct companies across 2-3 size bands
+- [ ] Sourced at least half your interviewees from outside your existing network
+- [ ] Analyzed every interview within 24 hours using the Interview Analysis Framework
+- [ ] Applied the Second-Reader Technique to at least a sample of your notes
+- [ ] Logged and taken seriously at least one interview where someone said the problem didn't apply to them
+
+---
+
+*→ Next: [10-Validation.md](10-Validation.md) — Pain Scoring and De-Risking*
+
+*→ See also: [01-Finding-Problems.md](01-Finding-Problems.md) — The Five Whys Technique and Evidence Hierarchy | [07-Industry-Playbooks.md](07-Industry-Playbooks.md) — Industry Vocabulary to Use When Recruiting | [11-Templates.md](11-Templates.md) — The Interview Sheet Template*
