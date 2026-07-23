@@ -5,6 +5,8 @@ import type { Metadata } from "next";
 import { Lock, BookOpen, CheckCircle2, Sparkles, KeyRound } from "lucide-react";
 import { isHandbookUnlocked } from "@/lib/handbook-auth";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Books & Handbooks",
   description: "A collection of research handbooks, engineering guides, and ongoing monographs.",

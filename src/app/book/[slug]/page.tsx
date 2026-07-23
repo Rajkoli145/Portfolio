@@ -6,6 +6,8 @@ import { MDXContent } from "@content-collections/mdx/react";
 import { isHandbookUnlocked } from "@/lib/handbook-auth";
 import { HandbookLockScreen } from "@/components/handbook-lock-screen";
 
+export const dynamic = "force-dynamic";
+
 export async function generateStaticParams() {
   return allChapters.map((chapter) => ({
     slug: chapter._meta.path.replace(/\.mdx$/, ""),
