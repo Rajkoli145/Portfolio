@@ -35,7 +35,9 @@ repos.forEach(repo => {
 
     // 2. Clone repository
     try {
-        execSync(`git clone ${repo.url} ${repo.tmpDir}`, { stdio: 'ignore' });
+        const token = process.env.GITHUB_TOKEN;
+        const cloneUrl = token ? repo.url.replace('https://', `https://${token}@`) : repo.url;
+        execSync(`git clone ${cloneUrl} ${repo.tmpDir}`, { stdio: 'ignore' });
     } catch (error) {
         console.error(`❌ Failed to clone ${repo.name} (${repo.url}).`);
         return;
