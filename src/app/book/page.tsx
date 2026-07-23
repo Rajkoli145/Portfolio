@@ -1,8 +1,9 @@
 import BlurFade from "@/components/magicui/blur-fade";
-import { allChapters } from "content-collections";
+import { allChapters, allAgentChapters } from "content-collections";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Lock, BookOpen, CheckCircle2, Sparkles } from "lucide-react";
+import { Lock, BookOpen, CheckCircle2, Sparkles, KeyRound } from "lucide-react";
+import { isHandbookUnlocked } from "@/lib/handbook-auth";
 
 export const metadata: Metadata = {
   title: "Books & Handbooks",
@@ -11,12 +12,24 @@ export const metadata: Metadata = {
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function BookPage() {
-  const sortedChapters = [...allChapters].sort((a, b) => {
-    // Sort by file name which starts with numbers (00, 01, 02)
+export default async function BookPage(props: {
+  searchParams?: Promise<{ secret?: string }>;
+}) {
+  const resolvedSearchParams = props.searchParams ? await props.searchParams : undefined;
+  const { unlocked, reason } = await isHandbookUnlocked(resolvedSearchParams?.secret);
+
+  const sortedStartupChapters = [...allChapters].sort((a, b) => {
     const getNum = (path: string) => {
-        const match = path.match(/^(\d+)/);
-        return match ? parseInt(match[1]) : 999;
+      const match = path.match(/^(\d+)/);
+      return match ? parseInt(match[1]) : 999;
+    };
+    return getNum(a._meta.path) - getNum(b._meta.path);
+  });
+
+  const sortedAgentChapters = [...allAgentChapters].sort((a, b) => {
+    const getNum = (path: string) => {
+      const match = path.match(/^(\d+)/);
+      return match ? parseInt(match[1]) : 999;
     };
     return getNum(a._meta.path) - getNum(b._meta.path);
   });
@@ -37,13 +50,20 @@ export default function BookPage() {
             <p className="text-lg text-muted-foreground max-w-[620px]">
               A collection of living handbooks, research monographs, and practical guides on startup research and autonomous AI agent systems.
             </p>
+
+            {unlocked && (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-medium">
+                <CheckCircle2 className="size-3.5" />
+                <span>Unlocked Access ({reason === "localhost" ? "Localhost" : reason === "ip" ? "Whitelisted IP" : "Passcode Verified"})</span>
+              </div>
+            )}
           </div>
         </BlurFade>
 
         {/* Handbooks Container */}
         <div className="flex flex-col gap-12">
           
-          {/* Book 1: Startup Research Handbook (Unlocked) */}
+          {/* Book 1: Startup Research Handbook */}
           <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
             <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm relative overflow-hidden">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 pb-6 border-b">
@@ -70,7 +90,7 @@ export default function BookPage() {
                   Table of Contents
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {sortedChapters.map((chapter, id) => (
+                  {sortedStartupChapters.map((chapter, id) => (
                     <Link
                       key={chapter._meta.path}
                       href={`/book/${chapter._meta.path.replace(/\.mdx$/, "")}`}
@@ -89,7 +109,7 @@ export default function BookPage() {
             </div>
           </BlurFade>
 
-          {/* Book 2: Autonomous Organization Handbook (Locked) */}
+          {/* Book 2: Autonomous Organization Handbook */}
           <BlurFade delay={BLUR_FADE_DELAY * 2}>
             <div className="rounded-2xl border border-amber-500/30 bg-card p-6 sm:p-8 shadow-sm relative overflow-hidden">
               {/* Subtle top accent gradient */}
@@ -99,14 +119,18 @@ export default function BookPage() {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                      <Lock className="size-3" />
-                      Locked • Writing in Progress
+                      <Sparkles className="size-3" />
+                      Active Research ({sortedAgentChapters.length} Released)
                     </span>
-                    <span className="text-xs text-muted-foreground">50 Chapters Planned</span>
+                    {!unlocked && (
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-500 border border-red-500/20">
+                        <Lock className="size-3" />
+                        Restricted Access
+                      </span>
+                    )}
                   </div>
-                  <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-                    <span>The Autonomous Organization Handbook</span>
-                    <Lock className="size-5 text-amber-500 shrink-0" />
+                  <h2 className="text-2xl font-bold tracking-tight">
+                    The Autonomous Organization Handbook
                   </h2>
                   <p className="text-muted-foreground text-sm max-w-xl">
                     A personal digital research lab and multi-year handbook investigating the principles, dynamics, and architecture of organizations composed of autonomous, adaptive AI agents and human-machine collectives.
@@ -114,22 +138,51 @@ export default function BookPage() {
                 </div>
               </div>
 
-              {/* Locked Notice & Details */}
+              {/* Published Chapters for Book 2 */}
+              {sortedAgentChapters.length > 0 && (
+                <div className="space-y-3 mb-6">
+                  <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-4 flex items-center justify-between">
+                    <span>Published Chapters</span>
+                    {!unlocked && <span className="text-xs text-amber-500 font-normal">Requires Passcode or Author IP</span>}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {sortedAgentChapters.map((chapter, id) => (
+                      <Link
+                        key={chapter._meta.path}
+                        href={`/book/agent-handbook/${chapter._meta.path.replace(/\.mdx$/, "")}`}
+                        className="flex items-center gap-3 p-3.5 rounded-xl border bg-background hover:bg-muted/60 hover:border-amber-500/30 transition-all group"
+                      >
+                        <div className="flex items-center justify-center bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg size-8 font-semibold text-xs shrink-0 border border-amber-500/20">
+                          {id < 10 ? `0${id}` : id}
+                        </div>
+                        <h4 className="text-sm font-medium group-hover:text-amber-500 transition-colors line-clamp-1 flex-1">
+                          {chapter.title}
+                        </h4>
+                        {!unlocked && <Lock className="size-3.5 text-muted-foreground shrink-0" />}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Progress / Lock Notice */}
               <div className="rounded-xl border border-dashed border-amber-500/30 bg-amber-500/5 p-6 flex flex-col items-center text-center gap-3">
                 <div className="size-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
-                  <Lock className="size-6" />
+                  {unlocked ? <Sparkles className="size-6" /> : <Lock className="size-6" />}
                 </div>
                 <div className="space-y-1">
                   <h3 className="font-semibold text-base text-foreground">
-                    Handbook Currently Locked
+                    {unlocked ? "Organic Monograph Progress" : "Restricted Monograph"}
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
-                    This handbook is actively being researched and written. Access to the 50 chapters is currently restricted while initial drafts, benchmarks, and agent simulations are finalized.
+                    {unlocked
+                      ? "This handbook is actively being written across 50 conceptual chapters. Released chapters are accessible above."
+                      : "Full access to chapter text is restricted to authorized IP addresses or lead researchers holding the secret passcode."}
                   </p>
                 </div>
                 <div className="inline-flex items-center gap-1.5 text-xs text-amber-600 dark:text-amber-400 font-medium pt-1">
-                  <Sparkles className="size-3.5" />
-                  <span>Early chapters releasing soon</span>
+                  <KeyRound className="size-3.5" />
+                  <span>Passcode / IP Whitelist Protection Enabled</span>
                 </div>
               </div>
             </div>

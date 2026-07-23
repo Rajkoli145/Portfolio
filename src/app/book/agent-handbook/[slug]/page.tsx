@@ -1,4 +1,4 @@
-import { allChapters } from "content-collections";
+import { allAgentChapters } from "content-collections";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -7,7 +7,7 @@ import { isHandbookUnlocked } from "@/lib/handbook-auth";
 import { HandbookLockScreen } from "@/components/handbook-lock-screen";
 
 export async function generateStaticParams() {
-  return allChapters.map((chapter) => ({
+  return allAgentChapters.map((chapter) => ({
     slug: chapter._meta.path.replace(/\.mdx$/, ""),
   }));
 }
@@ -16,17 +16,17 @@ export async function generateMetadata(props: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await props.params;
-  const chapter = allChapters.find((c) => c._meta.path.replace(/\.mdx$/, "") === slug);
+  const chapter = allAgentChapters.find((c) => c._meta.path.replace(/\.mdx$/, "") === slug);
 
   if (!chapter) return;
 
   return {
-    title: chapter.title,
+    title: `${chapter.title} | The Autonomous Organization Handbook`,
     description: chapter.summary,
   };
 }
 
-export default async function ChapterPage(props: {
+export default async function AgentChapterPage(props: {
   params: Promise<{ slug: string }>;
   searchParams?: Promise<{ secret?: string }>;
 }) {
@@ -35,7 +35,7 @@ export default async function ChapterPage(props: {
   
   const { unlocked } = await isHandbookUnlocked(resolvedSearchParams?.secret);
 
-  const sortedChapters = [...allChapters].sort((a, b) => {
+  const sortedChapters = [...allAgentChapters].sort((a, b) => {
     const getNum = (path: string) => {
       const match = path.match(/^(\d+)/);
       return match ? parseInt(match[1]) : 999;
@@ -78,7 +78,7 @@ export default async function ChapterPage(props: {
         
         <div className="mt-20 pt-8 border-t flex flex-col sm:flex-row justify-between items-center gap-4">
           {previousChapter ? (
-            <Link href={`/book/${previousChapter._meta.path.replace(/\.mdx$/, "")}`} className="flex items-center gap-2 px-4 py-3 border rounded-xl hover:bg-muted transition-colors w-full sm:w-auto text-left group">
+            <Link href={`/book/agent-handbook/${previousChapter._meta.path.replace(/\.mdx$/, "")}`} className="flex items-center gap-2 px-4 py-3 border rounded-xl hover:bg-muted transition-colors w-full sm:w-auto text-left group">
                 <ChevronLeft className="size-5 group-hover:-translate-x-1 transition-transform text-muted-foreground" />
                 <div className="flex flex-col">
                     <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Previous</span>
@@ -88,7 +88,7 @@ export default async function ChapterPage(props: {
           ) : <div></div>}
           
           {nextChapter ? (
-            <Link href={`/book/${nextChapter._meta.path.replace(/\.mdx$/, "")}`} className="flex items-center justify-end gap-2 px-4 py-3 border rounded-xl hover:bg-muted transition-colors w-full sm:w-auto text-right group">
+            <Link href={`/book/agent-handbook/${nextChapter._meta.path.replace(/\.mdx$/, "")}`} className="flex items-center justify-end gap-2 px-4 py-3 border rounded-xl hover:bg-muted transition-colors w-full sm:w-auto text-right group">
                 <div className="flex flex-col">
                     <span className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Next</span>
                     <span className="font-medium text-foreground line-clamp-1">{nextChapter.title}</span>

@@ -22,13 +22,37 @@ const chapters = defineCollection({
             remarkPlugins: [remarkGfm, remarkCodeMeta],
         });
         return {
-        ...document,
+            ...document,
+            mdx,
+        };
+    },
+});
+
+const agentChapters = defineCollection({
+    name: "agentChapters",
+    directory: "content/agent-book",
+    include: "**/*.mdx",
+    schema: z.object({
+        title: z.string(),
+        publishedAt: z.string(),
+        updatedAt: z.string().optional(),
+        author: z.string().optional(),
+        summary: z.string(),
+        image: z.string().optional(),
+        content: z.string(),
+    }),
+    transform: async (document, context) => {
+        const mdx = await compileMDX(context, document, {
+            remarkPlugins: [remarkGfm, remarkCodeMeta],
+        });
+        return {
+            ...document,
             mdx,
         };
     },
 });
 
 export default defineConfig({
-    collections: [chapters],
+    collections: [chapters, agentChapters],
 });
 

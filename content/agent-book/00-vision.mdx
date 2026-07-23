@@ -1,0 +1,100 @@
+---
+title: "Chapter 0 — Vision"
+publishedAt: "2026-07-23"
+summary: "Chapter from The Autonomous Organization Handbook."
+---
+
+## Introduction
+
+Every major shift in the tools available to a civilization has forced a redesign of how work is coordinated. The printing press dismantled the scribal guild's monopoly on the reproduction of information. The steam engine and the railroad created a scale of production that no workshop-based guild could coordinate, and gave rise first to the factory and then to the multi-unit industrial corporation. The telegraph decoupled the speed of communication from the speed of transportation for the first time in history — arguably the single largest reason the modern corporation, with distant branch offices reporting to a central headquarters, became possible at all. In each case, the interesting story was never the technology considered in isolation. It was the coordination structure the technology made viable, and the older structure it rendered obsolete.
+
+The emergence of increasingly autonomous, tool-using, goal-directed artificial agents is the latest instance of this pattern. Studied only as a matter of technique — which architecture to use, which method improves reliability, which protocol reduces latency — the subject remains shallow, because it treats the agents themselves as the object of study rather than the organization they collectively form. The deeper and more durable problem is that we are approaching a point at which organizations must be designed whose principal constituents are neither human employees nor simple deterministic programs, but semi-autonomous, adaptive, goal-pursuing entities operating at a scale, speed, and multiplicity no prior human institution has had to accommodate.
+
+This is a problem of organizational design — a field with roughly a century of rigorous scholarship — applied to a substrate that does not share several of the constraints that shaped that scholarship in the first place. This handbook exists to work out, carefully and from first principles, which parts of that scholarship still apply, which were quietly built on assumptions about human biology and psychology, and which problems are genuinely new. Its ambition is not to describe any particular product, platform, or technology, but to establish the durable principles by which any autonomous organization — regardless of the specific systems that compose it — might be designed, governed, coordinated, secured, and allowed to evolve.
+
+## Main Content
+
+### 0.1 The Limits of a Purely Technical Framing
+
+It is tempting to treat the challenge of autonomous organization as an engineering problem: improve an agent's reasoning, its access to tools, its memory, and the organizational difficulties will resolve themselves as a byproduct of individual capability. This handbook takes a different view.
+
+Every problem an organization exists to solve — dividing labor without losing coherence, routing information to the party that needs it before it loses relevance, keeping the incentives of a subordinate unit aligned with the goals of the whole, detecting and containing a failure before it cascades, deciding who holds the authority to act when opinions differ — predates computing by thousands of years. These are not artifacts of human cognitive limitation alone; many are structural consequences of any system composed of multiple semi-independent decision-making units pursuing a shared objective under uncertainty. A colony of ants solves a version of the division-of-labor and information-routing problem without any individual ant holding anything resembling a plan. A multicellular organism solves a version of the internal-security problem — a cancer cell is, structurally, a component that no longer takes instruction from the organism as a whole — through the immune system, not through better cells. An army solves the problem of propagating intent without direct control through doctrines developed centuries before the radio, let alone the computer.
+
+Treating the coordination of many agents as a purely technical challenge tends, quietly and usually at some cost, to reinvent ideas that organizational theory, economics, cybernetics, and biology have already worked out with considerably more rigor. A designer unfamiliar with Ronald Coase's account of why firms exist at all is likely to arrive at a weaker version of the same reasoning while deciding when one agent should delegate a task to another rather than complete it directly. A designer unfamiliar with W. Ross Ashby's Law of Requisite Variety is likely to under-provision the internal diversity an organization needs to match the diversity of problems its environment presents. The agents are the workers. The organization is the harder and more consequential design problem, and it is one this handbook treats as continuous with — not separate from — the study of every organization that has ever existed.
+
+> Research Note: The claim that individual-agent capability and organizational competence are only weakly related — that a collection of highly capable agents can still be organizationally incompetent — is a testable proposition. It belongs in research-notes/chapter-00/.
+
+### 0.2 From Studying Systems to Studying Organizations
+
+Studying a single artificial system — its accuracy, its alignment properties, its capability profile — is analogous to studying a single neuron. The comparison is instructive rather than exact: it is a necessary inquiry, but it answers a different question than the one this handbook asks. Studying how many such systems interact — competing for resources, delegating to one another, detecting and correcting one another's errors, jointly pursuing objectives no one of them holds individually — is analogous to sociology, political science, or organizational behavior: a different level of description, with different tools, different failure modes, and different unresolved questions.
+
+Most existing discourse about artificial agents operates at the first level: benchmarking individual capability, individual reliability, individual task success. The organizational level — how a population of individually reliable agents avoids becoming collectively unreliable through miscoordination, misaligned local incentives, or bottlenecked information — is comparatively unexamined, despite a century of scholarship devoted to precisely this question for the human case. The central methodological commitment of this handbook is to import that scholarship deliberately, rather than allow it to be reconstructed piecemeal, and at some cost, one incident at a time.
+
+### 0.3 An Interdisciplinary Foundation
+
+No single field has developed a complete account of coordination among many acting units; several have developed rigorous partial accounts, and this handbook treats them as complementary rather than competing.
+
+History offers the largest available sample of organizational designs tested against real consequences over long periods, from small kin-based bands to multinational corporations, and shows which coordination patterns recur across very different technological settings — evidence that they are closer to structural necessities than to accidents of a particular era. Biology offers working examples of coordination among very large numbers of simple, non-deliberative units: eusocial insect colonies, multicellular organisms, immune systems, and the foraging behavior of slime molds all achieve organization-level competence without anything resembling a human hierarchy. Economics supplies formal tools for the questions an organization must answer operationally — why a boundary between "inside" and "outside" exists at all, how tasks should be allocated under incomplete information, and what happens when one party's interests diverge from the party it is meant to serve. Distributed systems research has already formalized, with mathematical precision, problems an organization of software agents will face directly: reaching agreement among unreliable or dishonest participants, trading consistency against availability under network failure, and passing messages reliably — in effect, the communication layer of any artificial organization. Cybernetics, the original discipline of feedback and control in complex systems, supplies foundational results describing what any regulatory subsystem must be capable of to keep a larger system stable. Military strategy solved the problem of decentralized execution under centralized intent earlier, and more rigorously, than most civilian institutions, out of sheer operational necessity — doctrines that substitute shared intent for direct control exist because reliable, real-time communication with distant units could never be guaranteed. Organizational theory is this handbook's direct academic ancestor, and its landmark findings about bounded rationality, structure, and managerial coordination are patterns to be tested against a new substrate rather than assumed to transfer. Complexity science, finally, provides the mathematics of emergence — how simple local rules among many interacting units produce organization-level behavior that cannot be predicted by examining any single unit in isolation, which is the essential lens for understanding what a large population of interacting agents will actually do, as distinct from what its designers intended.
+
+### 0.4 The Long-Term Object of Study
+
+The trajectory this handbook is written toward is one in which organizations exist whose primary working population is composed of autonomous or semi-autonomous agents numbering in the thousands or millions — capable of forming and dissolving sub-organizations in response to changing objectives, operating at decision speeds that make continuous human review of every decision structurally impossible, while remaining governable, auditable, and correctable by the people who bear ultimate responsibility for their consequences.
+
+This is not a claim that such organizations are imminent, nor a specification for building one. It names the object of study: an organizational form that does not yet exist in mature form, that will not resemble a human corporation with its employees replaced by software, and that requires a theory of its own rather than a direct transfer of existing management practice.
+
+### 0.5 Approach and Method
+
+The inquiry that follows rests on four commitments. Existing organizational patterns are treated as evidence rather than as defaults — every borrowed practice is required to justify itself against the specific constraints of the new substrate rather than being carried over by habit. Every mechanism under discussion is decomposed into the problem it solves and the assumption about its participants that makes it the right solution, so that when the participants change, it becomes visible which mechanisms lose their justification. No single discipline is treated as authoritative; where history, biology, economics, and distributed-systems theory converge on the same structural finding, that convergence is treated as stronger evidence than any one field's conclusion taken alone. And, at this early stage of the subject, a well-posed question that reframes a problem is treated as more valuable than a confident but untested answer.
+
+These commitments translate into a small set of questions that recur throughout the handbook and give the inquiry its shape: What does an organization do that an unstructured collection of capable agents cannot do on its own? Which organizational mechanisms exist because of human cognitive and physiological limits, and which exist because of structural properties of coordination among multiple agents as such? What changes about organizational design when the marginal cost of adding another competent worker approaches zero, and that worker can be replicated exactly? What changes when internal communication can, in principle, be instantaneous, complete, and permanently recorded? What must remain constant — trust, verification, incentive alignment, feedback — regardless of what the participants are made of?
+
+> Research Note: Whether convergence across independent disciplines is genuine evidence of a substrate-independent necessity, or an artifact of a shared intellectual tradition, is itself an open methodological question. It belongs in research-notes/chapter-00/.
+
+### 0.6 Scope and Boundaries
+
+This handbook is conceived as a multi-chapter work. The chapter that follows this one establishes, on the evidence of human organizations alone, what an organization fundamentally is — its definition, the reasons it exists, its historical forms, its recurring characteristics, its common failure modes, and the principles that appear to hold across nearly all of them. Later chapters, building outward from that foundation, are expected to address organizational structure in depth; coordination mechanisms and protocols; incentive and mechanism design for non-human participants; governance, authority, and constitutional design; security and the organizational equivalent of an immune system; the economics and labor markets of agent capacity; and resilience, failure, and recovery.
+
+It is worth stating plainly what this handbook does not attempt. It is not a guide to any particular method of building or prompting artificial agents, and it is not tied to any specific platform or vendor. It is not focused on near-term implementation advice. It does not assume that any existing human organizational model — bureaucratic, corporate, or otherwise — is optimal for a non-human substrate by default. And it makes no claim about when, or whether, fully autonomous organizations of the kind described in Section 0.4 will come to exist; its purpose is to develop the theory that would be needed to design one well, independent of the timeline on which that need arises.
+
+### 0.7 How This Handbook Is Organized
+
+Chapter 1 deliberately withholds any discussion of artificial agents until its closing sections. The reason is methodological: establishing what an organization is on human evidence alone allows each later chapter to test that foundation against a non-human substrate explicitly, rather than silently assuming the human case transfers. Each subsequent chapter is intended to take up one dimension introduced in Chapter 1 — structure, coordination, incentives, governance, security, adaptation — and treat it as a deep, self-contained study, building the handbook outward from a shared foundation rather than beginning again with each new topic.
+
+## Figures
+
+**Figure 0.1. The recurring link between communication technology and organizational form.** A timeline diagram spanning, at minimum, the following pairings: spoken language and the kin-based band; writing and the early administrative bureaucracy; the printing press and the transformation of the guild system; the telegraph and railroad and the multi-unit corporation; and digital networks and the network organization. Each technological development on the upper track is connected by an arrow to the organizational form it made viable on the lower track, illustrating the argument developed in Sections 0.1 through 0.4: that the interesting consequence of a new coordination technology is rarely the technology itself, but the organizational structure it enables.
+
+## Examples
+
+The pattern described in this chapter — a new coordination technology giving rise to a new organizational form, and rendering an older one obsolete — recurs clearly enough across history to be treated as a starting point rather than a novel observation.
+
+The printing press did not merely make books cheaper; it broke the medieval scribal guild's control over the reproduction and distribution of written knowledge, a control that guild had exercised for centuries as its primary source of economic and institutional power.
+
+The steam engine, by concentrating substantial and reliable power in a fixed location, made possible a scale and continuity of production that no distributed network of individual workshops could match, giving rise to the factory as an organizational form built around the machine's rhythm rather than the craftsman's.
+
+The telegraph, combined with the railroad, allowed a central office to receive information from, and issue instructions to, distant operating units faster than any person or document could travel between them — a capability with no earlier precedent, and one that historians of the corporation credit as the specific enabling condition for the multi-unit, professionally managed firm.
+
+The arrival of low-cost digital networks extended this same logic further, collapsing the cost of both communication and coordination to the point where loosely federated, protocol-mediated network organizations — open-source software communities prominent among them — became viable without requiring the multi-unit corporation's managerial hierarchy at all.
+
+In each case, the technology is a necessary but not sufficient explanation. What determined the shape of the resulting organization was the specific coordination problem the new technology made solvable, and the specific coordination problem it left unsolved. This handbook's central wager is that the same will prove true of artificial agents: the technology itself will matter less, in the long run, than the organizational theory developed to make use of it well.
+
+## Summary
+
+This chapter has argued that the challenge posed by increasingly autonomous artificial agents is best understood as a problem in organizational design, continuous with a much older body of scholarship, rather than as a purely technical problem to be solved through better individual agents alone. It has argued that the relevant level of analysis is not the individual system but the organization such systems collectively form, and that no single discipline — history, biology, economics, distributed systems, cybernetics, military strategy, organizational theory, or complexity science — offers a complete account of that level on its own. It has set out the long-term object of this handbook's study: organizations whose primary constituents are autonomous agents operating at a scale and speed no human institution has faced, while remaining governable by the people responsible for them. And it has stated, as plainly as possible, what lies outside this handbook's scope, so that its ambitions are not mistaken for something narrower or something larger than they are.
+
+Everything that follows in this handbook is organized around a single question, restated here as this chapter's closing claim and the thread that connects every chapter to come:
+
+> **The Fundamental Research Question**
+>
+> *What principles are required to design, govern, coordinate, secure, evolve, and understand autonomous organizations composed primarily of intelligent agents?*
+
+## Recommended Reading
+
+- Ronald Coase, "The Nature of the Firm," *Economica* (1937)
+- Herbert Simon, *Administrative Behavior* (1947)
+- Norbert Wiener, *Cybernetics: Or Control and Communication in the Animal and the Machine* (1948)
+- W. Ross Ashby, *An Introduction to Cybernetics* (1956)
+- Alfred Chandler, *The Visible Hand: The Managerial Revolution in American Business* (1977)
+- Henry Mintzberg, *The Structuring of Organizations* (1979)
+- Clay Shirky, *Here Comes Everybody* (2008)
+- Melanie Mitchell, *Complexity: A Guided Tour* (2009)
