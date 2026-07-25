@@ -110,6 +110,18 @@ export const DATA = {
 
   work: [
     {
+      company: "Handshake AI",
+      href: "https://joinhandshake.com/",
+      badges: ["Contract"],
+      location: "Remote",
+      title: "AI Model Evaluation Contributor",
+      logoUrl: "/handshake.png",
+      start: "Jul 2026",
+      end: "Present",
+      description:
+        "Selected through a competitive screening process for Project Dynamo, contributing to the evaluation of frontier AI models on realistic software engineering tasks. Responsibilities include evaluating AI models using terminal-based software engineering workflows, designing and validating challenging engineering tasks that test reasoning, debugging, and code generation, analyzing model performance to provide structured quality feedback, and working with GitHub repositories, containerized environments, and automated evaluation pipelines to improve next-generation AI systems.",
+    },
+    {
       company: "Unified Mentor",
       href: "#",
       badges: [],
