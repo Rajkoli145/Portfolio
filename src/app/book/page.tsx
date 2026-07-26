@@ -111,17 +111,24 @@ export default function BookPage() {
     };
   };
 
-  const formatNoteDisplayTitle = (note: any, prefix: string) => {
+  const formatNoteDisplayTitle = (note: any, filename: string) => {
+    if (filename.includes("hypotheses")) {
+      return "Hypotheses & Proposed Experiments";
+    }
+    if (filename.includes("notes")) {
+      return "Analytical Notes";
+    }
+    if (filename.includes("questions")) {
+      return "Open Questions";
+    }
+    if (filename.includes("reading")) {
+      return "Reading & Bibliography Notes";
+    }
     let title = note.title.replace(/^#\s*/, "");
     if (title.includes("—")) {
       title = title.split("—").slice(1).join("—").trim();
-    } else if (title.includes("-")) {
-      const parts = title.split("-");
-      if (parts.length > 1) {
-        title = parts.slice(1).join("-").trim();
-      }
     }
-    return `Chapter ${prefix} — ${title}`;
+    return title;
   };
 
   return (
@@ -266,7 +273,7 @@ export default function BookPage() {
                             {notes.map((note) => {
                               const noteSlug = note._meta.path.replace(/\.mdx$/, "");
                               const { icon: NoteIcon, category, color } = getNoteIconAndCategory(noteSlug);
-                              const displayTitle = formatNoteDisplayTitle(note, prefix);
+                              const displayTitle = formatNoteDisplayTitle(note, noteSlug);
                               return (
                                 <Link
                                   key={note._meta.path}
