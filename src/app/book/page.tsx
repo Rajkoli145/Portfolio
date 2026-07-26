@@ -75,10 +75,6 @@ export default function BookPage() {
     };
   });
 
-  const generalNotes = allAgentNotes.filter(
-    (note) => getChapterPrefix(note._meta.path) === "general"
-  );
-
   const getNoteIconAndCategory = (filename: string) => {
     if (filename.includes("hypotheses")) {
       return {
@@ -113,6 +109,19 @@ export default function BookPage() {
       category: "Research Note",
       color: "text-primary bg-primary/10 border-primary/20",
     };
+  };
+
+  const formatNoteDisplayTitle = (note: any, prefix: string) => {
+    let title = note.title.replace(/^#\s*/, "");
+    if (title.includes("—")) {
+      title = title.split("—").slice(1).join("—").trim();
+    } else if (title.includes("-")) {
+      const parts = title.split("-");
+      if (parts.length > 1) {
+        title = parts.slice(1).join("-").trim();
+      }
+    }
+    return `Chapter ${prefix} — ${title}`;
   };
 
   return (
@@ -214,7 +223,7 @@ export default function BookPage() {
 
               {/* Categorized Chapters & Research Notes */}
               <div className="space-y-8 mb-8">
-                {chapterGroups.map(({ chapter, notes }, index) => {
+                {chapterGroups.map(({ chapter, prefix, notes }, index) => {
                   const slug = chapter._meta.path.replace(/\.mdx$/, "");
                   return (
                     <div
@@ -257,6 +266,7 @@ export default function BookPage() {
                             {notes.map((note) => {
                               const noteSlug = note._meta.path.replace(/\.mdx$/, "");
                               const { icon: NoteIcon, category, color } = getNoteIconAndCategory(noteSlug);
+                              const displayTitle = formatNoteDisplayTitle(note, prefix);
                               return (
                                 <Link
                                   key={note._meta.path}
@@ -271,7 +281,7 @@ export default function BookPage() {
                                       {category}
                                     </span>
                                     <span className="text-xs font-medium text-foreground group-hover:text-amber-500 transition-colors truncate">
-                                      {note.title.replace(/^#\s*/, "")}
+                                      {displayTitle}
                                     </span>
                                   </div>
                                   <ChevronRight className="size-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform shrink-0" />
@@ -285,32 +295,6 @@ export default function BookPage() {
                   );
                 })}
               </div>
-
-              {/* General / Project Notes (if any) */}
-              {generalNotes.length > 0 && (
-                <div className="space-y-3 mb-8 pt-6 border-t border-border/60">
-                  <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
-                    General Research Documentation
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {generalNotes.map((note) => {
-                      const noteSlug = note._meta.path.replace(/\.mdx$/, "");
-                      return (
-                        <Link
-                          key={note._meta.path}
-                          href={`/book/agent-notes/${noteSlug}`}
-                          className="flex items-center gap-2.5 p-2.5 rounded-lg border bg-card hover:bg-muted/60 transition-all group"
-                        >
-                          <FileText className="size-4 text-amber-500 shrink-0" />
-                          <span className="text-xs font-medium text-foreground group-hover:text-amber-500 transition-colors truncate">
-                            {note.title}
-                          </span>
-                        </Link>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
 
               {/* Progress / Lock Notice */}
               <div className="rounded-xl border border-dashed border-amber-500/30 bg-amber-500/5 p-6 flex flex-col items-center text-center gap-3">

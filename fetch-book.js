@@ -30,7 +30,7 @@ const repos = [
             {
                 subDir: 'research-notes',
                 destDir: path.join(__dirname, 'content', 'agent-notes'),
-                exclude: [],
+                exclude: ['README.md'],
                 defaultSummary: 'Research notes, hypotheses, and analytical commentary.'
             }
         ]
