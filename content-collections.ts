@@ -52,7 +52,31 @@ const agentChapters = defineCollection({
     },
 });
 
+const agentNotes = defineCollection({
+    name: "agentNotes",
+    directory: "content/agent-notes",
+    include: "**/*.mdx",
+    schema: z.object({
+        title: z.string(),
+        publishedAt: z.string(),
+        updatedAt: z.string().optional(),
+        author: z.string().optional(),
+        summary: z.string(),
+        image: z.string().optional(),
+        content: z.string(),
+    }),
+    transform: async (document, context) => {
+        const mdx = await compileMDX(context, document, {
+            remarkPlugins: [remarkGfm, remarkCodeMeta],
+        });
+        return {
+            ...document,
+            mdx,
+        };
+    },
+});
+
 export default defineConfig({
-    collections: [chapters, agentChapters],
+    collections: [chapters, agentChapters, agentNotes],
 });
 

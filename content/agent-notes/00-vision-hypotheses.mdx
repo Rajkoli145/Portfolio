@@ -1,0 +1,80 @@
+---
+title: "00-vision — Hypotheses & Proposed Experiments"
+publishedAt: "2026-07-26"
+summary: "Research notes, hypotheses, and analytical commentary."
+---
+
+*Not part of the handbook. Original, falsifiable claims generated while drafting Chapter 0 (Vision), each paired with a proposed experiment. Cross-references `handbook/chapter_00_vision.md`.*
+
+---
+
+### H0.1 — Legibility Reduces Cascading Failure Latency
+
+Organizations whose internal coordination mechanisms are fully legible (auditable in near real time) will show a lower rate of cascading failures than organizations of equivalent structural complexity with opaque coordination, because failure-*detection* latency, not failure *rate*, is the dominant driver of cascade severity.
+
+**Proposed Experiment E0.1**
+- *Method:* Agent-based simulation of a multi-agent task pipeline with configurable audit-log granularity (none → full per-decision logging).
+- *Design:* Inject randomized single-point failures at varying pipeline depths; vary audit granularity across runs; hold task complexity and agent count constant.
+- *Metrics:* Time-to-detection, cascade size, false-positive detection rate.
+- *Expected outcome:* Negative correlation between audit granularity and both time-to-detection and cascade size, with diminishing returns above some threshold.
+- *Limitations:* Simulated agents may not capture real deployed-system failure modes; results may not generalize beyond the modeled topology.
+
+---
+
+### H0.2 — The Coordination Laffer Curve
+
+Beyond some critical ratio of participant count to communication-protocol bandwidth, the marginal return of adding another individually competent agent to an organization turns negative, producing an inverted-U relationship between headcount and net output.
+
+**Proposed Experiment E0.2**
+- *Method:* Parametric agent-based simulation varying agent count at several fixed communication-bandwidth levels, measuring aggregate task throughput on an interdependent shared-goal task.
+- *Metrics:* Aggregate throughput per unit time, message queue depth, task completion latency.
+- *Expected outcome:* Inverted-U throughput curve at each bandwidth level, peak shifting rightward as bandwidth increases.
+- *Limitations:* Real organizations can adapt topology dynamically in ways a fixed-topology simulation cannot capture.
+
+---
+
+### H0.3 — Legibility Bias in Structural Design
+
+Designers of AI agent organizations will, by default, import human hierarchical structures not because those structures are efficient for a non-human substrate, but because they are legible and familiar to the human designers and overseers (institutional isomorphism applied to AI system design choices).
+
+**Proposed Experiment E0.3**
+- *Method:* Controlled design study — participants architect a coordination structure for a described agent-organization task; benchmark their structure in simulation against an algorithmically optimized alternative.
+- *Metrics:* Performance gap between participant-designed and optimizer-designed structures; frequency with which participant designs resemble conventional human org charts.
+- *Expected outcome:* Performance gap correlated with resemblance to familiar hierarchical forms.
+- *Limitations:* Participant pool (likely people with human-management backgrounds) may not represent future AI-native designers.
+
+---
+
+### H0.4 — Triangulation as Truth Signal
+
+Predictions about novel organizational forms derived from convergent multi-disciplinary analysis will be measurably more accurate, in retrospect, than predictions derived from single-discipline analysis of the same case.
+
+**Proposed Experiment E0.4**
+- *Method:* Retrospective forecasting exercise — pose a historical organizational transition to single-discipline analyst groups and to one triangulating group, before revealing the historical outcome.
+- *Metrics:* Calibration score (e.g., Brier score) of each group's predictions against the known outcome.
+- *Expected outcome:* Better calibration for the triangulating group, effect size uncertain.
+- *Limitations:* Small sample of clean "held-out" historical cases; hindsight bias risk.
+
+---
+
+### H0.5 — Verification Bandwidth Bounds Safe Decentralization
+
+The rate at which an organization can safely decentralize decision-making authority is bounded by how quickly it can verify decentralized decisions after the fact, not by the raw individual capability of its members.
+
+**Proposed Experiment E0.5**
+- *Method:* Multivariate simulation independently varying agent competence and after-the-fact verification throughput, at several fixed decentralization levels, on a decision-making task with a defined error cost.
+- *Metrics:* Undetected error rate, incident severity, time-to-correction.
+- *Expected outcome:* Verification bandwidth explains more variance in incident rate than individual competence once competence exceeds a minimum threshold.
+- *Limitations:* Assumes independent errors across agents; correlated/systemic errors (e.g., shared training flaw) not modeled.
+
+---
+
+### H0.6 — Convergent Failure Mode Rediscovery
+
+Autonomous organizations, left to develop their own coordination practices without exposure to the organizational-theory literature, will independently reproduce most of the human-organization failure modes catalogued in Chapter 1, because those failure modes are structural properties of multi-unit coordination rather than artifacts specific to human cognition.
+
+**Proposed Experiment E0.6**
+- *Method:* Multi-agent simulation given only a shared task objective and local communication tools, no explicit coordination doctrine, observed over many task cycles.
+- *Metrics:* Frequency and type of emergent failure, mapped against Chapter 1's failure-mode taxonomy.
+- *Expected outcome:* Emergence of bottleneck- and coordination-failure analogues in particular, since these follow from topology rather than participant psychology.
+- *Limitations:* Current agent architectures may not exhibit rich enough emergent behavior for some human-specific failure modes to appear — a meaningful negative result if so, not a null one.

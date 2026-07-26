@@ -1,24 +1,33 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
-import { allChapters, allAgentChapters } from "content-collections";
+import { allChapters, allAgentChapters, allAgentNotes } from "content-collections";
 import Link from "next/link";
-import type { Metadata } from "next";
-import { Lock, BookOpen, CheckCircle2, Sparkles, KeyRound } from "lucide-react";
-import { isHandbookUnlocked } from "@/lib/handbook-auth";
-
-export const dynamic = "force-dynamic";
-
-export const metadata: Metadata = {
-  title: "Books & Handbooks",
-  description: "A collection of research handbooks, engineering guides, and ongoing monographs.",
-};
+import { Lock, BookOpen, CheckCircle2, Sparkles, KeyRound, FlaskConical, FileText } from "lucide-react";
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default async function BookPage(props: {
-  searchParams?: Promise<{ secret?: string }>;
-}) {
-  const resolvedSearchParams = props.searchParams ? await props.searchParams : undefined;
-  const { unlocked, reason } = await isHandbookUnlocked(resolvedSearchParams?.secret);
+export default function BookPage() {
+  const [unlocked, setUnlocked] = useState(false);
+
+  useEffect(() => {
+    // Check local storage or verify ip silently
+    const cachedPasscode = localStorage.getItem("handbook_passcode");
+    if (cachedPasscode === "145") {
+      setUnlocked(true);
+      return;
+    }
+
+    fetch("/api/unlock-handbook")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.unlocked) {
+          setUnlocked(true);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const sortedStartupChapters = [...allChapters].sort((a, b) => {
     const getNum = (path: string) => {
@@ -52,20 +61,13 @@ export default async function BookPage(props: {
             <p className="text-lg text-muted-foreground max-w-[620px]">
               A collection of living handbooks, research monographs, and practical guides on startup research and autonomous AI agent systems.
             </p>
-
-            {unlocked && (
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 text-xs font-medium">
-                <CheckCircle2 className="size-3.5" />
-                <span>Unlocked Access ({reason === "localhost" ? "Localhost" : reason === "ip" ? "Whitelisted IP" : "Passcode Verified"})</span>
-              </div>
-            )}
           </div>
         </BlurFade>
 
         {/* Handbooks Container */}
         <div className="flex flex-col gap-12">
           
-          {/* Book 1: Startup Research Handbook */}
+          {/* Book 1: Startup Research Handbook (Unlocked) */}
           <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
             <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm relative overflow-hidden">
               <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 pb-6 border-b">
@@ -142,7 +144,7 @@ export default async function BookPage(props: {
 
               {/* Published Chapters for Book 2 */}
               {sortedAgentChapters.length > 0 && (
-                <div className="space-y-3 mb-6">
+                <div className="space-y-3 mb-8">
                   <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-4 flex items-center justify-between">
                     <span>Published Chapters</span>
                     {!unlocked && <span className="text-xs text-amber-500 font-normal">Requires Passcode or Author IP</span>}
@@ -167,6 +169,40 @@ export default async function BookPage(props: {
                 </div>
               )}
 
+              {/* Research Lab Notes & Hypotheses Section */}
+              {allAgentNotes.length > 0 && (
+                <div className="space-y-3 mb-8 pt-6 border-t border-border/60">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
+                      <FlaskConical className="size-4" />
+                      <span>Research Lab Notes & Hypotheses ({allAgentNotes.length})</span>
+                    </h3>
+                    <span className="text-xs text-muted-foreground">Open Research Logs</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {allAgentNotes.map((note) => (
+                      <Link
+                        key={note._meta.path}
+                        href={`/book/agent-notes/${note._meta.path.replace(/\.mdx$/, "")}`}
+                        className="flex items-start gap-3 p-3 rounded-xl border bg-background/80 hover:bg-muted/60 hover:border-amber-500/40 transition-all group"
+                      >
+                        <div className="flex items-center justify-center bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg p-2 text-xs shrink-0 mt-0.5">
+                          <FileText className="size-4" />
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <h4 className="text-sm font-medium group-hover:text-amber-500 transition-colors line-clamp-1">
+                            {note.title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
+                            {note.summary}
+                          </p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Progress / Lock Notice */}
               <div className="rounded-xl border border-dashed border-amber-500/30 bg-amber-500/5 p-6 flex flex-col items-center text-center gap-3">
                 <div className="size-12 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center border border-amber-500/20">
@@ -178,7 +214,7 @@ export default async function BookPage(props: {
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
                     {unlocked
-                      ? "This handbook is actively being written across 50 conceptual chapters. Released chapters are accessible above."
+                      ? "This handbook is actively being written across 50 conceptual chapters. Released chapters and working research notes are accessible above."
                       : "Full access to chapter text is restricted to authorized IP addresses or lead researchers holding the secret passcode."}
                   </p>
                 </div>

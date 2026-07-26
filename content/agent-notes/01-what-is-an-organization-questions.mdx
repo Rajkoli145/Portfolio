@@ -1,0 +1,37 @@
+---
+title: "01-what-is-an-organization — Open Questions"
+publishedAt: "2026-07-26"
+summary: "Research notes, hypotheses, and analytical commentary."
+---
+
+*Not part of the handbook. Questions surfaced while analyzing Chapter 1, plus items carried forward for later chapters. Cross-references `handbook/chapter_01_what-is-an-organization.md`.*
+
+---
+
+### Surfaced from this chapter
+
+**Q1.1** (re: Section 2, "Why Organizations Exist" / Section 8, "Universal Principles")
+Is trust a fundamental characteristic of organizing, or is it specifically a substitute for costly verification — meaning it could be structurally *replaced*, not merely supplemented, wherever verification becomes cheap? The chapter's own Section 8 language ("trust substitutes for costly verification") suggests the latter, but Section 4 lists Trust as one of eleven core characteristics without qualification. See H1.2 in `hypotheses.md` for a proposed test, and `notes.md` under "On the eleven core characteristics" for the fuller argument.
+
+**Q1.2** (re: Section 2, "Why Organizations Exist")
+Does the risk-pooling justification for organizing survive when an organization's "members" are copies or near-copies of the same underlying model rather than independently-varying individuals? If member failures are correlated rather than independent, risk pooling may not transfer to AI organizations in the form Section 9 implies — it may need to be re-derived, or explicitly flagged as conditional on engineered diversity. See H1.5 in `hypotheses.md`.
+
+**Q1.3** (re: Section 3, "Historical Evolution")
+Does presenting the eight historical stages in linear sequence risk implying a maturity ladder — that an AI organization should be expected to "progress" through analogous stages — when each stage was in fact a locally optimal response to a specific historical cost structure rather than a step toward a better organizational form in any absolute sense? This is a framing question about how later chapters should use this chapter's historical material, not a claim about the history itself. See `notes.md`, "On the historical evolution sequence."
+
+**Q1.4** (re: Section 7, "Case Studies")
+What does a coordination institution that emerged without central design look like, and does it exhibit the same universal principles (Section 8) as the deliberately engineered institutions this chapter's case studies are drawn from? All six current case studies (NASA, Toyota, Amazon, military mission command, Wikipedia, Linux) are cases of institutions built by an identifiable set of designers against a known problem. None demonstrates undesigned, emergent coordination of the kind studied in commons-governance literature. See `notes.md`, "On the case study sample," and `reading.md` for a candidate source.
+
+**Q1.5** (re: Section 9, "Transition to Autonomous Organizations")
+Does the advantage of decentralized decision authority (illustrated by the mission-command case study) depend on communication latency, on local information asymmetry, or on both independently? If it depends primarily on information asymmetry, the advantage should persist even as AI-to-AI communication latency approaches zero — a materially different prediction than reading the case study as being "about" slow communication. See H1.4 in `hypotheses.md`.
+
+**Q1.6** (re: Section 9, "Transition to Autonomous Organizations")
+The chapter treats "verification cost" as a single quantity that drops for AI organizations. Is this actually one quantity, or at least two — the cost of verifying that an action executed as specified, versus the cost of verifying that a decision was the right one under the uncertainty that existed at the time it was made? If these have different cost profiles for AI agents, later chapters that build governance or incentive mechanisms on "cheap verification" need to specify which kind they mean. See `notes.md`, "On Section 9's verification-cost claim."
+
+---
+
+### Open items carried forward
+
+- The Western/corporate/open-source concentration flagged in Chapter 0's reading-list gap (see `00-vision/questions.md`) recurs here in the case-study selection itself (Section 7), not only in the bibliography. Both gaps likely need to be closed together, ideally by the same non-Western and non-corporate sources.
+- Chapter 0's proposed assumption-tagging scheme (Human-Specific / Substrate-Independent / Undetermined), still not formally adopted as of this chapter, would resolve Q1.1 and Q1.2 more systematically if applied retroactively to Section 4's eleven characteristics and Section 2's four justifications. Whether to adopt it formally remains open, as stated in `00-vision/questions.md`.
+- Whether "centralization and decentralization trade off along the same axis" (Section 8) refers to one axis or conflates at least two (information asymmetry and communication latency, per Q1.5) should be resolved before a later governance or coordination-protocol chapter builds directly on this principle.
