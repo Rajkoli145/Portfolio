@@ -4,7 +4,19 @@ import { useEffect, useState } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { allChapters, allAgentChapters, allAgentNotes } from "content-collections";
 import Link from "next/link";
-import { Lock, BookOpen, CheckCircle2, Sparkles, KeyRound, FlaskConical, FileText } from "lucide-react";
+import {
+  Lock,
+  BookOpen,
+  CheckCircle2,
+  Sparkles,
+  KeyRound,
+  FlaskConical,
+  FileText,
+  HelpCircle,
+  Library,
+  ChevronRight,
+  ArrowRight,
+} from "lucide-react";
 
 const BLUR_FADE_DELAY = 0.04;
 
@@ -12,7 +24,6 @@ export default function BookPage() {
   const [unlocked, setUnlocked] = useState(false);
 
   useEffect(() => {
-    // Check local storage or verify ip silently
     const cachedPasscode = localStorage.getItem("handbook_passcode");
     if (cachedPasscode === "145") {
       setUnlocked(true);
@@ -44,6 +55,65 @@ export default function BookPage() {
     };
     return getNum(a._meta.path) - getNum(b._meta.path);
   });
+
+  // Extract chapter prefix e.g. "00" or "01"
+  const getChapterPrefix = (path: string) => {
+    const match = path.match(/^(\d+)/);
+    return match ? match[1] : "general";
+  };
+
+  // Group notes under each chapter
+  const chapterGroups = sortedAgentChapters.map((chapter) => {
+    const prefix = getChapterPrefix(chapter._meta.path);
+    const relatedNotes = allAgentNotes.filter(
+      (note) => getChapterPrefix(note._meta.path) === prefix
+    );
+    return {
+      chapter,
+      prefix,
+      notes: relatedNotes,
+    };
+  });
+
+  const generalNotes = allAgentNotes.filter(
+    (note) => getChapterPrefix(note._meta.path) === "general"
+  );
+
+  const getNoteIconAndCategory = (filename: string) => {
+    if (filename.includes("hypotheses")) {
+      return {
+        icon: FlaskConical,
+        category: "Hypotheses & Experiments",
+        color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
+      };
+    }
+    if (filename.includes("notes")) {
+      return {
+        icon: FileText,
+        category: "Analytical Commentary",
+        color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
+      };
+    }
+    if (filename.includes("questions")) {
+      return {
+        icon: HelpCircle,
+        category: "Open Questions",
+        color: "text-purple-500 bg-purple-500/10 border-purple-500/20",
+      };
+    }
+    if (filename.includes("reading")) {
+      return {
+        icon: Library,
+        category: "Reading & Bibliography",
+        color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
+      };
+    }
+    return {
+      icon: FileText,
+      category: "Research Note",
+      color: "text-primary bg-primary/10 border-primary/20",
+    };
+  };
 
   return (
     <div className="max-w-4xl mx-auto py-12 pb-24 sm:py-24 px-6">
@@ -119,12 +189,12 @@ export default function BookPage() {
               {/* Subtle top accent gradient */}
               <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 opacity-80" />
               
-              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6 pb-6 border-b">
+              <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8 pb-6 border-b">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2.5">
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
                       <Sparkles className="size-3" />
-                      Active Research ({sortedAgentChapters.length} Released)
+                      Active Research ({sortedAgentChapters.length} Chapters Released)
                     </span>
                     {!unlocked && (
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-500/10 text-red-500 border border-red-500/20">
@@ -137,68 +207,107 @@ export default function BookPage() {
                     The Autonomous Organization Handbook
                   </h2>
                   <p className="text-muted-foreground text-sm max-w-xl">
-                    A personal digital research lab and multi-year handbook investigating the principles, dynamics, and architecture of organizations composed of autonomous, adaptive AI agents and human-machine collectives.
+                    A personal digital research lab investigating the principles, dynamics, and architecture of organizations composed of autonomous AI agents.
                   </p>
                 </div>
               </div>
 
-              {/* Published Chapters for Book 2 */}
-              {sortedAgentChapters.length > 0 && (
-                <div className="space-y-3 mb-8">
-                  <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wider mb-4 flex items-center justify-between">
-                    <span>Published Chapters</span>
-                    {!unlocked && <span className="text-xs text-amber-500 font-normal">Requires Passcode or Author IP</span>}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {sortedAgentChapters.map((chapter, id) => (
-                      <Link
-                        key={chapter._meta.path}
-                        href={`/book/agent-handbook/${chapter._meta.path.replace(/\.mdx$/, "")}`}
-                        className="flex items-center gap-3 p-3.5 rounded-xl border bg-background hover:bg-muted/60 hover:border-amber-500/30 transition-all group"
-                      >
-                        <div className="flex items-center justify-center bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg size-8 font-semibold text-xs shrink-0 border border-amber-500/20">
-                          {id < 10 ? `0${id}` : id}
+              {/* Categorized Chapters & Research Notes */}
+              <div className="space-y-8 mb-8">
+                {chapterGroups.map(({ chapter, notes }, index) => {
+                  const slug = chapter._meta.path.replace(/\.mdx$/, "");
+                  return (
+                    <div
+                      key={chapter._meta.path}
+                      className="rounded-xl border bg-background/90 p-5 space-y-4 transition-all"
+                    >
+                      {/* Chapter Main Card */}
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center justify-center bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg size-9 font-bold text-xs shrink-0 border border-amber-500/20">
+                            {index < 10 ? `0${index}` : index}
+                          </div>
+                          <div>
+                            <div className="text-[11px] font-semibold uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                              Chapter Document
+                            </div>
+                            <h3 className="text-base font-bold tracking-tight text-foreground">
+                              {chapter.title}
+                            </h3>
+                          </div>
                         </div>
-                        <h4 className="text-sm font-medium group-hover:text-amber-500 transition-colors line-clamp-1 flex-1">
-                          {chapter.title}
-                        </h4>
-                        {!unlocked && <Lock className="size-3.5 text-muted-foreground shrink-0" />}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
 
-              {/* Research Lab Notes & Hypotheses Section */}
-              {allAgentNotes.length > 0 && (
+                        <Link
+                          href={`/book/agent-handbook/${slug}`}
+                          className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium bg-amber-500 text-black hover:bg-amber-400 transition-colors shrink-0 shadow-sm"
+                        >
+                          <span>Read Chapter</span>
+                          {unlocked ? <ArrowRight className="size-3.5" /> : <Lock className="size-3.5" />}
+                        </Link>
+                      </div>
+
+                      {/* Chapter Research Notes Sub-Grid */}
+                      {notes.length > 0 && (
+                        <div className="space-y-2 pt-1">
+                          <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                            <FlaskConical className="size-3.5 text-amber-500" />
+                            <span>Research Notes & Working Experiments</span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                            {notes.map((note) => {
+                              const noteSlug = note._meta.path.replace(/\.mdx$/, "");
+                              const { icon: NoteIcon, category, color } = getNoteIconAndCategory(noteSlug);
+                              return (
+                                <Link
+                                  key={note._meta.path}
+                                  href={`/book/agent-notes/${noteSlug}`}
+                                  className="flex items-center gap-2.5 p-2.5 rounded-lg border bg-card hover:bg-muted/60 hover:border-amber-500/40 transition-all group"
+                                >
+                                  <div className={`p-1.5 rounded-md border ${color} shrink-0`}>
+                                    <NoteIcon className="size-3.5" />
+                                  </div>
+                                  <div className="flex flex-col min-w-0 flex-1">
+                                    <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
+                                      {category}
+                                    </span>
+                                    <span className="text-xs font-medium text-foreground group-hover:text-amber-500 transition-colors truncate">
+                                      {note.title.replace(/^#\s*/, "")}
+                                    </span>
+                                  </div>
+                                  <ChevronRight className="size-3.5 text-muted-foreground group-hover:translate-x-0.5 transition-transform shrink-0" />
+                                </Link>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* General / Project Notes (if any) */}
+              {generalNotes.length > 0 && (
                 <div className="space-y-3 mb-8 pt-6 border-t border-border/60">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-sm text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-2">
-                      <FlaskConical className="size-4" />
-                      <span>Research Lab Notes & Hypotheses ({allAgentNotes.length})</span>
-                    </h3>
-                    <span className="text-xs text-muted-foreground">Open Research Logs</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    {allAgentNotes.map((note) => (
-                      <Link
-                        key={note._meta.path}
-                        href={`/book/agent-notes/${note._meta.path.replace(/\.mdx$/, "")}`}
-                        className="flex items-start gap-3 p-3 rounded-xl border bg-background/80 hover:bg-muted/60 hover:border-amber-500/40 transition-all group"
-                      >
-                        <div className="flex items-center justify-center bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-lg p-2 text-xs shrink-0 mt-0.5">
-                          <FileText className="size-4" />
-                        </div>
-                        <div className="flex flex-col min-w-0">
-                          <h4 className="text-sm font-medium group-hover:text-amber-500 transition-colors line-clamp-1">
+                  <h3 className="font-semibold text-xs text-muted-foreground uppercase tracking-wider">
+                    General Research Documentation
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {generalNotes.map((note) => {
+                      const noteSlug = note._meta.path.replace(/\.mdx$/, "");
+                      return (
+                        <Link
+                          key={note._meta.path}
+                          href={`/book/agent-notes/${noteSlug}`}
+                          className="flex items-center gap-2.5 p-2.5 rounded-lg border bg-card hover:bg-muted/60 transition-all group"
+                        >
+                          <FileText className="size-4 text-amber-500 shrink-0" />
+                          <span className="text-xs font-medium text-foreground group-hover:text-amber-500 transition-colors truncate">
                             {note.title}
-                          </h4>
-                          <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-                            {note.summary}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -214,7 +323,7 @@ export default function BookPage() {
                   </h3>
                   <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
                     {unlocked
-                      ? "This handbook is actively being written across 50 conceptual chapters. Released chapters and working research notes are accessible above."
+                      ? "This handbook is actively being written across 50 conceptual chapters. Released chapters and working research notes are grouped above."
                       : "Full access to chapter text is restricted to authorized IP addresses or lead researchers holding the secret passcode."}
                   </p>
                 </div>
