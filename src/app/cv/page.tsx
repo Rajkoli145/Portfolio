@@ -63,11 +63,30 @@ export default function ResumePage() {
       {/* Embedded PDF Viewer */}
       <BlurFade delay={BLUR_FADE_DELAY * 2}>
         <div className="w-full rounded-2xl border border-border bg-card shadow-sm overflow-hidden p-2 sm:p-4">
-          <iframe
-            src="/Rajkoli_CV.pdf#toolbar=0"
-            className="w-full h-[75vh] min-h-[600px] rounded-xl border-none"
-            title="Raj Koli Resume PDF"
-          />
+          <object
+            data="/Rajkoli_CV.pdf#toolbar=0"
+            type="application/pdf"
+            className="w-full h-[78vh] min-h-[600px] rounded-xl border-none"
+          >
+            <embed
+              src="/Rajkoli_CV.pdf#toolbar=0"
+              type="application/pdf"
+              className="w-full h-[78vh] min-h-[600px] rounded-xl border-none"
+            />
+            <div className="p-8 text-center flex flex-col items-center justify-center gap-4">
+              <p className="text-sm text-muted-foreground">
+                Your browser does not support inline PDF previews.
+              </p>
+              <a
+                href="/Rajkoli_CV.pdf"
+                download="Rajkoli_CV.pdf"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium"
+              >
+                <Download className="size-4" />
+                <span>Download PDF Resume</span>
+              </a>
+            </div>
+          </object>
         </div>
       </BlurFade>
     </div>
