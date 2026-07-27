@@ -65,7 +65,7 @@ export const DATA = {
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
     { href: "/book", icon: NotebookIcon, label: "Book" },
-    { href: "/Rajkoli_CV.pdf", icon: FileText, label: "Resume" },
+    { href: "/cv", icon: FileText, label: "Resume" },
     { href: "/spotify", icon: Icons.spotify, label: "Spotify" },
     { href: "/netflix", icon: Icons.netflix, label: "Movies" },
     { href: "/github", icon: Icons.github, label: "GitHub" },
