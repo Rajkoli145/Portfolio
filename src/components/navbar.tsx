@@ -15,7 +15,7 @@ export default function Navbar() {
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-50">
       <Dock className="z-50 pointer-events-auto relative h-14 p-2 w-fit mx-auto flex gap-2 border bg-card/90 backdrop-blur-3xl shadow-[0_0_10px_3px] shadow-primary/5">
         {DATA.navbar.filter(item => item.label !== "Spotify" && item.label !== "Movies" && item.label !== "Settings").map((item) => {
-          const isExternal = item.href.startsWith("http");
+          const isExternal = item.href.startsWith("http") || item.href.endsWith(".pdf");
           return (
             <Tooltip key={item.href}>
               <TooltipTrigger asChild>
