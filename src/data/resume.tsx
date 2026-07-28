@@ -114,12 +114,24 @@ export const DATA = {
       href: "https://joinhandshake.com/",
       badges: ["Contract"],
       location: "Remote",
-      title: "AI Model Evaluation Contributor",
+      title: "AI Benchmark Engineer",
       logoUrl: "/handshake.png",
       start: "Jul 2026",
       end: "Present",
       description:
         "Selected through a competitive screening process for Project Dynamo, contributing to the evaluation of frontier AI models on realistic software engineering tasks. Responsibilities include evaluating AI models using terminal-based software engineering workflows, designing and validating challenging engineering tasks that test reasoning, debugging, and code generation, analyzing model performance to provide structured quality feedback, and working with GitHub repositories, containerized environments, and automated evaluation pipelines to improve next-generation AI systems.",
+    },
+    {
+      company: "Parsewave",
+      href: "#",
+      badges: ["Trial"],
+      location: "Remote",
+      title: "AI Benchmark Contributor",
+      logoUrl: "/parsewave.png",
+      start: "Jun 2026",
+      end: "Present",
+      description:
+        "Designed and completed Terminal-Bench style benchmark tasks for AI agents in a structured evaluation environment. Developed deterministic task environments, automated validation workflows, and reproducible evaluation artifacts for model assessment. Successfully completed a paid benchmark contribution that passed technical review and quality evaluation.",
     },
     {
       company: "Unified Mentor",

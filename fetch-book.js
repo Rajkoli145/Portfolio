@@ -15,25 +15,6 @@ const repos = [
                 defaultSummary: 'Chapter from the Startup Research Handbook.'
             }
         ]
-    },
-    {
-        name: 'The Autonomous Organization Handbook',
-        url: 'https://github.com/Rajkoli145/Autonomous-Organization-Handbook.git',
-        tmpDir: path.join(__dirname, '.tmp_agent_book_repo'),
-        sources: [
-            {
-                subDir: 'chapters',
-                destDir: path.join(__dirname, 'content', 'agent-book'),
-                exclude: [],
-                defaultSummary: 'Chapter from The Autonomous Organization Handbook.'
-            },
-            {
-                subDir: 'research-notes',
-                destDir: path.join(__dirname, 'content', 'agent-notes'),
-                exclude: ['README.md'],
-                defaultSummary: 'Research notes, hypotheses, and analytical commentary.'
-            }
-        ]
     }
 ];
 
