@@ -184,17 +184,27 @@ export default function LocalResearchEditorPage() {
   };
 
   const handleNewEntry = () => {
-    const today = new Date().toISOString().split("T")[0];
-    const newSlug = `${today}-new-research-note`;
     setSelectedSlug(null);
-    setSlug(newSlug);
-    setTitle("New Research Note");
+    setSlug("");
+    setTitle("");
     setProject("failure-recovery-benchmark");
     setTagsInput("research-notes, experiment-log");
     setStatus("draft");
-    setSummary("Brief summary of research findings...");
-    setContent("## Overview\n\nDocument your experiment, findings, or literature notes here...");
+    setSummary("");
+    setContent("");
     localStorage.removeItem(LOCAL_STORAGE_KEY);
+  };
+
+  const computeSlug = (targetTitle: string, currentSelectedSlug: string | null) => {
+    if (currentSelectedSlug && currentSelectedSlug.trim() !== "") {
+      return currentSelectedSlug;
+    }
+    const today = new Date().toISOString().split("T")[0];
+    const cleanTitle = (targetTitle || "new-note")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    return `${today}-${cleanTitle || "note"}`;
   };
 
   const autoSaveToDisk = async (draftData: any) => {
@@ -205,9 +215,11 @@ export default function LocalResearchEditorPage() {
         .map((t: string) => t.trim())
         .filter(Boolean);
 
+      const targetSlug = computeSlug(draftData.title, selectedSlug);
+
       const payload = {
-        slug: draftData.slug || draftData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
-        title: draftData.title,
+        slug: targetSlug,
+        title: draftData.title || "Untitled Note",
         project: draftData.project,
         tags: parsedTags,
         status: draftData.status,
@@ -223,7 +235,10 @@ export default function LocalResearchEditorPage() {
 
       if (res.ok) {
         const data = await res.json();
-        if (data.slug) setSlug(data.slug);
+        if (data.slug) {
+          setSelectedSlug(data.slug);
+          setSlug(data.slug);
+        }
         setAutoSaveStatus("Auto-saved to disk");
         localStorage.removeItem(LOCAL_STORAGE_KEY);
       }
@@ -247,8 +262,10 @@ export default function LocalResearchEditorPage() {
         .map((t) => t.trim())
         .filter(Boolean);
 
+      const targetSlug = computeSlug(title, selectedSlug);
+
       const payload = {
-        slug: slug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        slug: targetSlug,
         title,
         project,
         tags: parsedTags,
@@ -269,8 +286,9 @@ export default function LocalResearchEditorPage() {
       setMessage(`Entry saved successfully to research/entries/${data.slug}.md!`);
       setAutoSaveStatus("Saved to disk");
       localStorage.removeItem(LOCAL_STORAGE_KEY);
-      await fetchEntries();
       setSelectedSlug(data.slug);
+      setSlug(data.slug);
+      await fetchEntries();
     } catch (err: any) {
       alert(`Error saving entry: ${err.message}`);
     } finally {
