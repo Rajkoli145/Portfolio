@@ -54,86 +54,93 @@ export default async function ResearchPage() {
 
         {/* Entries List Grouped by Project or Chronological */}
         <div className="flex flex-col gap-10">
-          {projects.map((projectSlug, pIndex) => {
-            const projectEntries = sortedEntries.filter((e) => e.project === projectSlug);
-            const projectTitle =
-              projectSlug === "startup-research-handbook"
-                ? "Startup Research Handbook"
-                : projectSlug === "failure-recovery-benchmark"
-                ? "Failure Recovery & Agent Benchmarks"
-                : projectSlug.replace(/-/g, " ");
+          {projects.length === 0 ? (
+            <BlurFade delay={BLUR_FADE_DELAY * 1.5}>
+              <div className="rounded-2xl border bg-card p-12 text-center space-y-4 shadow-sm">
+                <FlaskConical className="size-10 text-muted-foreground mx-auto opacity-50" />
+                <h3 className="text-xl font-bold">No Published Research Logs Yet</h3>
+                <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  Research logs and benchmark evaluations will appear here once published from the local editor.
+                </p>
+              </div>
+            </BlurFade>
+          ) : (
+            projects.map((projectSlug, pIndex) => {
+              const projectEntries = sortedEntries.filter((e) => e.project === projectSlug);
+              const projectTitle = projectSlug.replace(/-/g, " ");
 
-            return (
-              <BlurFade key={projectSlug} delay={BLUR_FADE_DELAY * (1.5 + pIndex * 0.5)}>
-                <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm relative overflow-hidden space-y-6">
-                  {/* Project Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                          <FolderGit2 className="size-3" />
-                          Project
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          {projectEntries.length} Published {projectEntries.length === 1 ? "Log" : "Logs"}
-                        </span>
+              return (
+                <BlurFade key={projectSlug} delay={BLUR_FADE_DELAY * (1.5 + pIndex * 0.5)}>
+                  <div className="rounded-2xl border bg-card p-6 sm:p-8 shadow-sm relative overflow-hidden space-y-6">
+                    {/* Project Header */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                            <FolderGit2 className="size-3" />
+                            Project
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {projectEntries.length} Published {projectEntries.length === 1 ? "Log" : "Logs"}
+                          </span>
+                        </div>
+                        <h2 className="text-2xl font-bold tracking-tight capitalize">{projectTitle}</h2>
                       </div>
-                      <h2 className="text-2xl font-bold tracking-tight capitalize">{projectTitle}</h2>
                     </div>
-                  </div>
 
-                  {/* Entries Grid / List */}
-                  <div className="grid grid-cols-1 gap-3">
-                    {projectEntries.map((entry) => {
-                      const slug = entry._meta.path.replace(/\.(md|mdx)$/, "");
-                      const formattedDate = (entry.createdAt || entry.publishedAt || "2026-07-27").split("T")[0];
+                    {/* Entries Grid / List */}
+                    <div className="grid grid-cols-1 gap-3">
+                      {projectEntries.map((entry) => {
+                        const slug = entry._meta.path.replace(/\.(md|mdx)$/, "");
+                        const formattedDate = (entry.createdAt || entry.publishedAt || "2026-07-27").split("T")[0];
 
-                      return (
-                        <Link
-                          key={entry._meta.path}
-                          href={`/research/${slug}`}
-                          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border bg-background hover:bg-muted/60 hover:border-amber-500/40 transition-all group"
-                        >
-                          <div className="space-y-1.5 flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-xs text-muted-foreground font-mono flex items-center gap-1">
-                                <Calendar className="size-3" />
-                                {formattedDate}
-                              </span>
-                              {entry.tags?.map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] font-medium"
-                                >
-                                  <TagIcon className="size-2.5" />
-                                  {tag}
+                        return (
+                          <Link
+                            key={entry._meta.path}
+                            href={`/research/${slug}`}
+                            className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border bg-background hover:bg-muted/60 hover:border-amber-500/40 transition-all group"
+                          >
+                            <div className="space-y-1.5 flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="text-xs text-muted-foreground font-mono flex items-center gap-1">
+                                  <Calendar className="size-3" />
+                                  {formattedDate}
                                 </span>
-                              ))}
+                                {entry.tags?.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-secondary text-secondary-foreground text-[10px] font-medium"
+                                  >
+                                    <TagIcon className="size-2.5" />
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+
+                              <h3 className="text-base font-bold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-1">
+                                {entry.title}
+                              </h3>
+
+                              {entry.summary && (
+                                <p className="text-xs text-muted-foreground line-clamp-2">
+                                  {entry.summary}
+                                </p>
+                              )}
                             </div>
 
-                            <h3 className="text-base font-bold text-foreground group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors line-clamp-1">
-                              {entry.title}
-                            </h3>
-
-                            {entry.summary && (
-                              <p className="text-xs text-muted-foreground line-clamp-2">
-                                {entry.summary}
-                              </p>
-                            )}
-                          </div>
-
-                          <div className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 shrink-0 sm:self-center">
-                            <span>Read Log</span>
-                            <ChevronRight className="size-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        </Link>
-                      );
-                    })}
+                            <div className="flex items-center gap-1 text-xs font-semibold text-amber-600 dark:text-amber-400 shrink-0 sm:self-center">
+                              <span>Read Log</span>
+                              <ChevronRight className="size-4 group-hover:translate-x-1 transition-transform" />
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              </BlurFade>
-            );
-          })}
+                </BlurFade>
+              );
+            })
+          )}
         </div>
       </section>
     </div>

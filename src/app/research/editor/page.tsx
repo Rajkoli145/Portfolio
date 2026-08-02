@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import Link from "next/link";
 import ReactMarkdown from "react-markdown";
@@ -20,6 +20,8 @@ import {
   AlertCircle,
   Maximize2,
   Minimize2,
+  RefreshCw,
+  Check,
 } from "lucide-react";
 
 interface ResearchEntry {
@@ -34,20 +36,24 @@ interface ResearchEntry {
   content: string;
 }
 
+const LOCAL_STORAGE_KEY = "research_editor_unsaved_draft";
+
 export default function LocalResearchEditorPage() {
   const [entries, setEntries] = useState<ResearchEntry[]>([]);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [autoSaveStatus, setAutoSaveStatus] = useState<string>("Saved");
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [hasRestoredDraft, setHasRestoredDraft] = useState(false);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [projectFilter, setProjectFilter] = useState<string>("all");
   const [tagFilter, setTagFilter] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("",);
 
   // Editor Form State
   const [slug, setSlug] = useState("");
@@ -58,6 +64,10 @@ export default function LocalResearchEditorPage() {
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
 
+  const isInitialMount = useRef(true);
+  const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Load entries from server API
   const fetchEntries = async () => {
     try {
       setLoading(true);
@@ -70,10 +80,35 @@ export default function LocalResearchEditorPage() {
         throw new Error("Failed to load entries");
       }
       const data = await res.json();
-      setEntries(data.entries || []);
+      const loadedEntries: ResearchEntry[] = data.entries || [];
+      setEntries(loadedEntries);
 
-      if (data.entries?.length > 0 && !selectedSlug) {
-        loadEntryIntoForm(data.entries[0]);
+      // Check if there is an unsaved draft in localStorage
+      const savedDraftRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (savedDraftRaw && !hasRestoredDraft) {
+        try {
+          const draft = JSON.parse(savedDraftRaw);
+          if (draft.title || draft.content) {
+            setSlug(draft.slug || "");
+            setTitle(draft.title || "Restored Unsaved Draft");
+            setProject(draft.project || "failure-recovery-benchmark");
+            setTagsInput(draft.tagsInput || "research-notes");
+            setStatus(draft.status || "draft");
+            setSummary(draft.summary || "");
+            setContent(draft.content || "");
+            setSelectedSlug(draft.slug || null);
+            setHasRestoredDraft(true);
+            setMessage("Restored unsaved draft from local storage.");
+            setLoading(false);
+            return;
+          }
+        } catch {}
+      }
+
+      if (loadedEntries.length > 0 && !selectedSlug && !hasRestoredDraft) {
+        loadEntryIntoForm(loadedEntries[0]);
+      } else if (loadedEntries.length === 0 && !hasRestoredDraft) {
+        handleNewEntry();
       }
     } catch (err: any) {
       setError(err.message);
@@ -85,6 +120,57 @@ export default function LocalResearchEditorPage() {
   useEffect(() => {
     fetchEntries();
   }, []);
+
+  // Save current form state to localStorage automatically on edit
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+
+    const currentDraft = {
+      slug,
+      title,
+      project,
+      tagsInput,
+      status,
+      summary,
+      content,
+      updatedAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(currentDraft));
+    setAutoSaveStatus("Unsaved changes");
+
+    // Debounced auto-save to disk after 2.5 seconds of idle typing
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    autoSaveTimerRef.current = setTimeout(() => {
+      if (title.trim()) {
+        autoSaveToDisk(currentDraft);
+      }
+    }, 2500);
+  }, [title, project, tagsInput, status, summary, content, slug]);
+
+  // Handle Tab close / refresh warning
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Always store current state to localStorage before unload
+      const draft = {
+        slug,
+        title,
+        project,
+        tagsInput,
+        status,
+        summary,
+        content,
+        updatedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [slug, title, project, tagsInput, status, summary, content]);
 
   const loadEntryIntoForm = (entry: ResearchEntry) => {
     setSelectedSlug(entry.slug);
@@ -108,6 +194,42 @@ export default function LocalResearchEditorPage() {
     setStatus("draft");
     setSummary("Brief summary of research findings...");
     setContent("## Overview\n\nDocument your experiment, findings, or literature notes here...");
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  };
+
+  const autoSaveToDisk = async (draftData: any) => {
+    try {
+      setAutoSaveStatus("Auto-saving...");
+      const parsedTags = (draftData.tagsInput || "")
+        .split(",")
+        .map((t: string) => t.trim())
+        .filter(Boolean);
+
+      const payload = {
+        slug: draftData.slug || draftData.title.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+        title: draftData.title,
+        project: draftData.project,
+        tags: parsedTags,
+        status: draftData.status,
+        summary: draftData.summary,
+        content: draftData.content,
+      };
+
+      const res = await fetch("/api/research/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.slug) setSlug(data.slug);
+        setAutoSaveStatus("Auto-saved to disk");
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+      }
+    } catch {
+      setAutoSaveStatus("Saved to localStorage");
+    }
   };
 
   const handleSave = async () => {
@@ -145,6 +267,8 @@ export default function LocalResearchEditorPage() {
 
       const data = await res.json();
       setMessage(`Entry saved successfully to research/entries/${data.slug}.md!`);
+      setAutoSaveStatus("Saved to disk");
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
       await fetchEntries();
       setSelectedSlug(data.slug);
     } catch (err: any) {
@@ -167,6 +291,7 @@ export default function LocalResearchEditorPage() {
       if (!res.ok) throw new Error("Failed to delete file");
 
       setMessage(`Deleted entry ${selectedSlug}.md`);
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
       setSelectedSlug(null);
       await fetchEntries();
       handleNewEntry();
@@ -218,7 +343,7 @@ export default function LocalResearchEditorPage() {
         {/* Top Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-wrap">
               <Link
                 href="/research"
                 className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 border rounded-md px-2.5 py-1 bg-card"
@@ -229,6 +354,10 @@ export default function LocalResearchEditorPage() {
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
                 <Sparkles className="size-3" />
                 Local Dev Editor (Localhost Only)
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground px-2 py-0.5 rounded-md border bg-muted/40 font-mono">
+                <Check className="size-3 text-emerald-500" />
+                {autoSaveStatus}
               </span>
             </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -466,7 +595,7 @@ export default function LocalResearchEditorPage() {
             <div
               className={`border bg-card p-5 space-y-4 shadow-sm transition-all ${
                 isMaximized
-                  ? "fixed inset-3 z-50 rounded-2xl bg-background border-border shadow-2xl flex flex-col overflow-hidden"
+                  ? "fixed inset-0 z-[100] w-screen h-screen bg-background border-none p-6 shadow-2xl flex flex-col overflow-hidden"
                   : "rounded-2xl"
               }`}
             >
@@ -476,9 +605,12 @@ export default function LocalResearchEditorPage() {
                   <span>Markdown Entry Content</span>
                   {isMaximized && (
                     <span className="text-[10px] text-amber-600 dark:text-amber-400 font-normal border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 rounded-full">
-                      Fullscreen Mode
+                      True Fullscreen Mode
                     </span>
                   )}
+                  <span className="text-[10px] text-muted-foreground font-mono ml-2 hidden sm:inline">
+                    ({autoSaveStatus})
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-3">
@@ -518,8 +650,8 @@ export default function LocalResearchEditorPage() {
               </div>
 
               <div
-                className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${
-                  isMaximized ? "flex-1 min-h-0" : ""
+                className={`grid grid-cols-1 md:grid-cols-2 gap-6 ${
+                  isMaximized ? "flex-1 min-h-0 h-full" : ""
                 }`}
               >
                 {/* Editor Column */}
@@ -532,7 +664,7 @@ export default function LocalResearchEditorPage() {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="# Document your research..."
-                    className={`w-full text-xs font-mono p-3 rounded-xl border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary leading-relaxed ${
+                    className={`w-full text-xs font-mono p-4 rounded-xl border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary leading-relaxed ${
                       isMaximized ? "flex-1 h-full min-h-0 resize-none" : ""
                     }`}
                   />
@@ -544,7 +676,7 @@ export default function LocalResearchEditorPage() {
                     <Eye className="size-3 text-muted-foreground" /> Live Preview
                   </span>
                   <div
-                    className={`w-full p-3.5 rounded-xl border bg-background prose prose-neutral dark:prose-invert max-w-none text-xs leading-relaxed overflow-y-auto ${
+                    className={`w-full p-4 rounded-xl border bg-background prose prose-neutral dark:prose-invert max-w-none text-xs leading-relaxed overflow-y-auto ${
                       isMaximized ? "flex-1 h-full min-h-0" : "h-[375px]"
                     }`}
                   >
