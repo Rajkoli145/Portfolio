@@ -1,5 +1,5 @@
 import { Icons } from "@/components/icons";
-import { HomeIcon, NotebookIcon, Clapperboard, Settings, FileText } from "lucide-react";
+import { HomeIcon, FlaskConical, Clapperboard, Settings, FileText } from "lucide-react";
 import { ReactLight } from "@/components/ui/svgs/reactLight";
 import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
@@ -64,7 +64,7 @@ export const DATA = {
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
-    { href: "/book", icon: NotebookIcon, label: "Book" },
+    { href: "/research", icon: FlaskConical, label: "Research" },
     { href: "/cv", icon: FileText, label: "Resume" },
     { href: "/spotify", icon: Icons.spotify, label: "Spotify" },
     { href: "/netflix", icon: Icons.netflix, label: "Movies" },
@@ -114,7 +114,7 @@ export const DATA = {
       href: "https://joinhandshake.com/",
       badges: ["Contract"],
       location: "Remote",
-      title: "AI Benchmark Engineer",
+      title: "AI Benchmark Contributor",
       logoUrl: "/handshake.png",
       start: "Jul 2026",
       end: "Present",

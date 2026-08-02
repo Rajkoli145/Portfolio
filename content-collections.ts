@@ -4,17 +4,19 @@ import remarkGfm from "remark-gfm";
 import { z } from "zod";
 import { remarkCodeMeta } from "./src/lib/remark-code-meta";
 
-const chapters = defineCollection({
-    name: "chapters",
-    directory: "content/book",
-    include: "**/*.mdx",
+const research = defineCollection({
+    name: "research",
+    directory: "research/entries",
+    include: "**/*.{md,mdx}",
     schema: z.object({
         title: z.string(),
-        publishedAt: z.string(),
+        createdAt: z.string().optional(),
+        publishedAt: z.string().optional(),
         updatedAt: z.string().optional(),
-        author: z.string().optional(),
-        summary: z.string(),
-        image: z.string().optional(),
+        project: z.string().default("failure-recovery-benchmark"),
+        tags: z.array(z.string()).default(["research-notes"]),
+        status: z.enum(["draft", "published"]).default("published"),
+        summary: z.string().optional(),
         content: z.string(),
     }),
     transform: async (document, context) => {
@@ -29,6 +31,5 @@ const chapters = defineCollection({
 });
 
 export default defineConfig({
-    collections: [chapters],
+    collections: [research],
 });
-

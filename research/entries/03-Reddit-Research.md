@@ -1,6 +1,12 @@
 ---
 title: "Chapter 3: Reddit Research — Community-Specific Mining"
-publishedAt: "2026-07-27"
+createdAt: "2026-07-27"
+updatedAt: "2026-07-27"
+project: "startup-research-handbook"
+tags:
+  - "handbook"
+  - "startup-research"
+status: "published"
 summary: "Chapter from the Startup Research Handbook."
 ---
 

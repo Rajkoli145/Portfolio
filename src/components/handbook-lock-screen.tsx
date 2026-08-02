@@ -42,7 +42,7 @@ export function HandbookLockScreen({ title }: { title?: string }) {
     <div className="max-w-xl mx-auto py-16 sm:py-24 px-6">
       <div className="mb-8">
         <Link
-          href="/book"
+          href="/research"
           className="text-sm text-muted-foreground hover:text-foreground transition-colors border border-border rounded-lg px-3 py-1.5 inline-flex items-center gap-1 bg-card"
         >
           <ChevronLeft className="size-4" />

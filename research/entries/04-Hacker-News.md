@@ -1,6 +1,12 @@
 ---
 title: "Chapter 4: Hacker News — Mining the Technical/Startup Community"
-publishedAt: "2026-07-27"
+createdAt: "2026-07-27"
+updatedAt: "2026-07-27"
+project: "startup-research-handbook"
+tags:
+  - "handbook"
+  - "startup-research"
+status: "published"
 summary: "Chapter from the Startup Research Handbook."
 ---
 

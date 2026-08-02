@@ -63,11 +63,11 @@ export function GithubCommandPalette({ repos }: { repos: any[] }) {
                             Go to Home
                         </Command.Item>
                         <Command.Item
-                            onSelect={() => runCommand(() => router.push("/book"))}
+                            onSelect={() => runCommand(() => router.push("/research"))}
                             className="flex items-center gap-2 px-2 py-2.5 rounded-md cursor-pointer text-sm text-foreground hover:bg-muted aria-selected:bg-muted transition-colors"
                         >
                             <FileText className="w-4 h-4" />
-                            Read Startup Handbook
+                            Read Research Logs
                         </Command.Item>
                         <Command.Item
                             onSelect={() => runCommand(() => window.open("https://github.com/Rajkoli145", "_blank"))}
