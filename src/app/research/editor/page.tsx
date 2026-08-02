@@ -18,6 +18,8 @@ import {
   Clock,
   Sparkles,
   AlertCircle,
+  Maximize2,
+  Minimize2,
 } from "lucide-react";
 
 interface ResearchEntry {
@@ -39,6 +41,7 @@ export default function LocalResearchEditorPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -459,37 +462,92 @@ export default function LocalResearchEditorPage() {
               </div>
             </div>
 
-            {/* Markdown Body & Live Preview Tabs */}
-            <div className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm">
-              <div className="flex items-center justify-between border-b pb-3">
+            {/* Markdown Body & Live Preview Card */}
+            <div
+              className={`border bg-card p-5 space-y-4 shadow-sm transition-all ${
+                isMaximized
+                  ? "fixed inset-3 z-50 rounded-2xl bg-background border-border shadow-2xl flex flex-col overflow-hidden"
+                  : "rounded-2xl"
+              }`}
+            >
+              <div className="flex items-center justify-between border-b pb-3 shrink-0">
                 <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
                   <FileEdit className="size-4 text-primary" />
                   <span>Markdown Entry Content</span>
+                  {isMaximized && (
+                    <span className="text-[10px] text-amber-600 dark:text-amber-400 font-normal border border-amber-500/20 bg-amber-500/10 px-2 py-0.5 rounded-full">
+                      Fullscreen Mode
+                    </span>
+                  )}
                 </div>
-                <span className="text-[10px] text-muted-foreground">Markdown & GFM Supported</span>
+
+                <div className="flex items-center gap-3">
+                  <span className="hidden sm:inline text-[10px] text-muted-foreground">
+                    Markdown & GFM Supported
+                  </span>
+
+                  {isMaximized && (
+                    <button
+                      onClick={handleSave}
+                      disabled={saving}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors shadow-sm disabled:opacity-50"
+                    >
+                      <Save className="size-3.5" />
+                      <span>{saving ? "Saving..." : "Save Entry"}</span>
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => setIsMaximized(!isMaximized)}
+                    title={isMaximized ? "Exit Fullscreen (Minimize)" : "Maximize Fullscreen Editor"}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-border bg-background hover:bg-muted text-foreground transition-colors shadow-sm"
+                  >
+                    {isMaximized ? (
+                      <>
+                        <Minimize2 className="size-3.5" />
+                        <span className="hidden sm:inline">Minimize</span>
+                      </>
+                    ) : (
+                      <>
+                        <Maximize2 className="size-3.5 text-primary" />
+                        <span className="hidden sm:inline">Maximize</span>
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div
+                className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${
+                  isMaximized ? "flex-1 min-h-0" : ""
+                }`}
+              >
                 {/* Editor Column */}
-                <div className="space-y-1">
-                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block">
+                <div className={`space-y-1 flex flex-col ${isMaximized ? "h-full min-h-0" : ""}`}>
+                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block shrink-0">
                     Editor (Input)
                   </span>
                   <textarea
-                    rows={18}
+                    rows={isMaximized ? undefined : 18}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     placeholder="# Document your research..."
-                    className="w-full text-xs font-mono p-3 rounded-xl border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary leading-relaxed"
+                    className={`w-full text-xs font-mono p-3 rounded-xl border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary leading-relaxed ${
+                      isMaximized ? "flex-1 h-full min-h-0 resize-none" : ""
+                    }`}
                   />
                 </div>
 
                 {/* Live Preview Column */}
-                <div className="space-y-1">
-                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block flex items-center gap-1">
+                <div className={`space-y-1 flex flex-col ${isMaximized ? "h-full min-h-0" : ""}`}>
+                  <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider block flex items-center gap-1 shrink-0">
                     <Eye className="size-3 text-muted-foreground" /> Live Preview
                   </span>
-                  <div className="w-full h-[375px] overflow-y-auto p-3.5 rounded-xl border bg-background prose prose-neutral dark:prose-invert max-w-none text-xs leading-relaxed">
+                  <div
+                    className={`w-full p-3.5 rounded-xl border bg-background prose prose-neutral dark:prose-invert max-w-none text-xs leading-relaxed overflow-y-auto ${
+                      isMaximized ? "flex-1 h-full min-h-0" : "h-[375px]"
+                    }`}
+                  >
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {content || "*No content entered yet...*"}
                     </ReactMarkdown>
