@@ -595,7 +595,7 @@ export default function LocalResearchEditorPage() {
             <div
               className={`border bg-card p-5 space-y-4 shadow-sm transition-all ${
                 isMaximized
-                  ? "fixed inset-0 z-[100] w-screen h-screen bg-background border-none p-6 shadow-2xl flex flex-col overflow-hidden"
+                  ? "fixed inset-0 z-[9999] w-screen h-screen bg-background border-none p-6 shadow-2xl flex flex-col overflow-hidden"
                   : "rounded-2xl"
               }`}
             >
