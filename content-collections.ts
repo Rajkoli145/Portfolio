@@ -4,6 +4,31 @@ import remarkGfm from "remark-gfm";
 import { z } from "zod";
 import { remarkCodeMeta } from "./src/lib/remark-code-meta";
 
+const chapters = defineCollection({
+    name: "chapters",
+    directory: "content/book",
+    include: "**/*.{md,mdx}",
+    schema: z.object({
+        title: z.string(),
+        publishedAt: z.string().optional(),
+        createdAt: z.string().optional(),
+        updatedAt: z.string().optional(),
+        author: z.string().optional(),
+        summary: z.string().optional(),
+        image: z.string().optional(),
+        content: z.string(),
+    }),
+    transform: async (document, context) => {
+        const mdx = await compileMDX(context, document, {
+            remarkPlugins: [remarkGfm, remarkCodeMeta],
+        });
+        return {
+            ...document,
+            mdx,
+        };
+    },
+});
+
 const research = defineCollection({
     name: "research",
     directory: "research/entries",
@@ -31,5 +56,5 @@ const research = defineCollection({
 });
 
 export default defineConfig({
-    collections: [research],
+    collections: [chapters, research],
 });
