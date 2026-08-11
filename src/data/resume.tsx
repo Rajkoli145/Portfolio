@@ -115,12 +115,12 @@ export const DATA = {
       href: "https://joinhandshake.com/",
       badges: ["Contract"],
       location: "Remote",
-      title: "AI Benchmark Contributor",
+      title: "AI Evaluation Specialist",
       logoUrl: "/handshake.png",
       start: "Jul 2026",
       end: "Present",
       description:
-        "Selected through a competitive screening process for Project Dynamo, contributing to the evaluation of frontier AI models on realistic software engineering tasks. Responsibilities include evaluating AI models using terminal-based software engineering workflows, designing and validating challenging engineering tasks that test reasoning, debugging, and code generation, analyzing model performance to provide structured quality feedback, and working with GitHub repositories, containerized environments, and automated evaluation pipelines to improve next-generation AI systems.",
+        "Working on AI model evaluation across software engineering tasks, including debugging, code generation, reasoning, and real-world development workflows",
     },
     {
       company: "Parsewave",
@@ -153,8 +153,8 @@ export const DATA = {
       location: "Remote",
       title: "Installer Contributor",
       logoUrl: "/rustchain.png",
-      start: "2026",
-      end: "2026",
+      start: "Feb 2026",
+      end: "Feb 2026",
       description:
         "Cut blockchain node setup time by building a cross-platform CLI installer for macOS and Linux that fully automated wallet configuration, file I/O, and service registration end-to-end. Implemented SHA-256 checksum validation and systemd/launchd service automation; PR merged into main repository and awarded a project bounty on first submission.",
     },
@@ -165,8 +165,8 @@ export const DATA = {
       location: "Remote",
       title: "SDK Developer",
       logoUrl: "/la_tanda.png",
-      start: "2025",
-      end: "2025",
+      start: "Feb 2026",
+      end: "May 2026",
       description:
         "Built a production TypeScript SDK with a modular HttpClient and centralized error handling, covering the full API surface. Eliminated an entire class of integration bugs by validating all endpoints against Swagger documentation before release.",
     },
@@ -177,8 +177,8 @@ export const DATA = {
       location: "Remote",
       title: "Python Contributor",
       logoUrl: "/hiero.png",
-      start: "2026",
-      end: "2026",
+      start: "Jan 2026",
+      end: "Apr 2026",
       description:
         "Contributed to the official v0.2.2 release by fixing CI/CD dependency resolution — ensuring uv run uses lowest-direct resolution in the deps-check workflow, preventing lockfile mismatches across environments. PR reviewed, merged, and shipped in an official changelog; collaborated asynchronously with 20+ open source contributors across a global community using GitHub Actions and branch-based workflows.",
     }
