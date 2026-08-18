@@ -1,11 +1,12 @@
 import { Icons } from "@/components/icons";
-import { HomeIcon, NotebookIcon, FlaskConical, Clapperboard, Settings, FileText } from "lucide-react";
+import { HomeIcon, NotebookIcon, FlaskConical, Settings, FileText } from "lucide-react";
 import { ReactLight } from "@/components/ui/svgs/reactLight";
 import { NextjsIconDark } from "@/components/ui/svgs/nextjsIconDark";
 import { Typescript } from "@/components/ui/svgs/typescript";
+import { Javascript } from "@/components/ui/svgs/javascript";
 import { Nodejs } from "@/components/ui/svgs/nodejs";
 import { Python } from "@/components/ui/svgs/python";
-import { Postgresql } from "@/components/ui/svgs/postgresql";
+import { Mongodb } from "@/components/ui/svgs/mongodb";
 import { Docker } from "@/components/ui/svgs/docker";
 
 export const DATA = {
@@ -54,13 +55,13 @@ export const DATA = {
     { name: "React", icon: ReactLight },
     { name: "Next.js", icon: NextjsIconDark },
     { name: "Typescript", icon: Typescript },
-    { name: "JavaScript", icon: Typescript },
+    { name: "JavaScript", icon: Javascript },
     { name: "Node.js", icon: Nodejs },
     { name: "Python", icon: Python },
-    { name: "MongoDB", icon: Postgresql },
+    { name: "MongoDB", icon: Mongodb },
     { name: "Docker", icon: Docker },
-    { name: "Bash/Shell", icon: Docker },
-    { name: "Tailwind CSS", icon: ReactLight },
+    { name: "Bash/Shell", icon: Icons.terminal },
+    { name: "Tailwind CSS", icon: Icons.tailwindcss },
   ],
   navbar: [
     { href: "/", icon: HomeIcon, label: "Home" },
@@ -91,7 +92,7 @@ export const DATA = {
       Discord: {
         name: "Discord",
         url: "https://discordapp.com/users/1368817799052525614",
-        icon: Icons.x,
+        icon: Icons.discord,
         navbar: false,
       },
       Youtube: {
@@ -205,7 +206,7 @@ export const DATA = {
     {
       title: "FreelancerFlow",
       href: "https://github.com/Rajkoli145/freelancerflow",
-      dates: "May 13, 2026 - Live",
+      dates: "May 13, 2026 - Maintenance",
       active: true,
       description:
         "Built a complete full-stack platform from scratch handling project tracking, invoicing, and client management for freelancers. Reduced invoice generation time by designing a structured file I/O export pipeline. Secured all API routes with JWT authentication and middleware validation. Wrote automated endpoint tests covering all critical API routes.",
@@ -221,6 +222,11 @@ export const DATA = {
           type: "Source",
           href: "https://github.com/Rajkoli145/freelancerflow",
           icon: <Icons.github className="size-3" />,
+        },
+        {
+          type: "Demo",
+          href: "https://freelancer-flow-seven.vercel.app/",
+          icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "/projects/freelancerflow.png",
@@ -245,6 +251,11 @@ export const DATA = {
           href: "https://github.com/Rajkoli145/edustory",
           icon: <Icons.github className="size-3" />,
         },
+        {
+          type: "Demo",
+          href: "https://edu-story.vercel.app/",
+          icon: <Icons.globe className="size-3" />,
+        },
       ],
       image: "/projects/edustory.png",
       video: "",
@@ -255,7 +266,7 @@ export const DATA = {
       dates: "Dec 26, 2025 - Live",
       active: true,
       description:
-        "Built a fully interactive macOS-style personal portfolio running in the browser — complete with a working dock, draggable windows, and project showcases, deployed via Vercel.",
+        "Engineered a fully interactive macOS desktop simulation in pure vanilla JavaScript — implementing a custom window manager with drag, resize, and z-index stacking from scratch using the DOM API. Built a functional dock with app launching, a working Finder-style file system, and smooth CSS keyframe animations throughout. Zero frameworks, zero dependencies — shipped and deployed to Vercel.",
       technologies: [
         "JavaScript",
         "HTML",
@@ -263,7 +274,7 @@ export const DATA = {
       ],
       links: [
         {
-          type: "Website",
+          type: "Demo",
           href: "https://rajkoli.vercel.app",
           icon: <Icons.globe className="size-3" />,
         },
@@ -274,15 +285,21 @@ export const DATA = {
     {
       title: "DealVault Escrow",
       href: "https://github.com/DealVaultHQ/dealvault-platform-escrow",
-      dates: "Feb 15, 2026 - Present",
+      dates: "Feb 15, 2026 - Working",
       active: true,
-      description: "Modern escrow web application for secure buyer-seller transactions. Building a robust platform to handle transaction states and verifiable escrow logic.",
+      description:
+        "Building a production-grade escrow platform for secure buyer-seller transactions. Designed a multi-stage transaction state machine covering fund locking, dispute handling, and conditional release logic. Enforced strict TypeScript typing across the full API surface to eliminate runtime errors. Architected the UI with Next.js App Router and server components for fast, reliable page loads.",
       technologies: ["TypeScript", "Next.js", "Tailwind CSS"],
       links: [
         {
           type: "Source",
           href: "https://github.com/DealVaultHQ/dealvault-platform-escrow",
           icon: <Icons.github className="size-3" />,
+        },
+        {
+          type: "Demo",
+          href: "https://dealvault-platform-escrow.vercel.app/",
+          icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "/projects/dealvault.png",
@@ -291,15 +308,21 @@ export const DATA = {
     {
       title: "Almost Friday",
       href: "https://github.com/Soldier224K/ALMOST_FRIDAY",
-      dates: "May 25, 2026 - Present",
+      dates: "May 25, 2026 - Working",
       active: true,
-      description: "An ongoing collaborative software project focusing on modern web infrastructure and dynamic user experiences.",
+      description:
+        "Collaborative full-stack web application built with a team across a modular React and Node.js architecture. Implemented reusable TypeScript component library with strict prop typing shared across the frontend. Structured the backend with Express route separation and middleware layering for clean API organisation. Active development with regular code reviews and branch-based Git workflow.",
       technologies: ["React", "TypeScript", "Node.js"],
       links: [
         {
           type: "Source",
           href: "https://github.com/Soldier224K/ALMOST_FRIDAY",
           icon: <Icons.github className="size-3" />,
+        },
+        {
+          type: "Demo",
+          href: "",
+          icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "/projects/almost_friday.png",
@@ -308,15 +331,21 @@ export const DATA = {
     {
       title: "AI Founder Intelligence",
       href: "https://github.com/Rajkoli145/ai-founder-intelligence",
-      dates: "May 25, 2026 - Present",
+      dates: "May 25, 2026 - Working",
       active: true,
-      description: "An AI-powered intelligence platform tailored for startup founders, providing data-driven market insights and strategic AI playbooks.",
+      description:
+        "Built an AI intelligence platform that aggregates and analyses market signals for startup founders. Designed a structured LLM prompt pipeline in Python that processes competitor data and generates actionable strategic playbooks. Integrated OpenAI API with output validation to ensure consistent, reliable responses. Delivered results through a Next.js dashboard with server-side data fetching for fast time-to-insight.",
       technologies: ["Next.js", "OpenAI", "Python"],
       links: [
         {
           type: "Source",
           href: "https://github.com/Rajkoli145/ai-founder-intelligence",
           icon: <Icons.github className="size-3" />,
+        },
+        {
+          type: "Demo",
+          href: "",
+          icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "/projects/ai_founder.png",
@@ -330,5 +359,30 @@ export const DATA = {
     description: string;
     image: string;
     links: { title: string; icon: any; href: string }[];
-  }[]
+  }[],
+  certifications: [
+    {
+      title: "GenAI 101 with Pieces",
+      issuer: "Pieces",
+      date: "Nov 2024",
+      credentialId: "GenAI 101 with Pieces",
+      credentialUrl: "",
+    },
+    {
+      title: "Postman API Fundamentals Student Expert",
+      issuer: "Canvas Credentials (Badgr)",
+      date: "Jul 2024",
+      credentialId: "EL9mYD6fSnOru3CHkrTUDQ",
+      credentialUrl: "",
+    },
+  ],
+  achievements: [
+    {
+      title: "WiCS Hackathon",
+      issuer: "Women in Computer Science (WiCS)",
+      date: "Feb 2026",
+      type: "Participation",
+      description: "Participated in the WiCS Hackathon — a competitive coding event focused on real-world problem solving.",
+    },
+  ],
 } as const;

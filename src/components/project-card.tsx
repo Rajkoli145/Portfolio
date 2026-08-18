@@ -83,9 +83,9 @@ export function ProjectCard({
             <div className="w-full h-48 bg-muted" />
           )}
         </Link>
-        {links && links.length > 0 && (
+        {links && links.filter(l => l.href).length > 0 && (
           <div className="absolute top-2 right-2 flex flex-wrap gap-2">
-            {links.map((link, idx) => (
+            {links.filter(l => l.href).map((link, idx) => (
               <Link
                 href={link.href}
                 key={idx}
@@ -111,19 +111,36 @@ export function ProjectCard({
             <h3 className="font-semibold">{title}</h3>
             <time className="text-xs text-muted-foreground flex items-center gap-1 flex-wrap">
               {dates.split(' - ').map((part, i, arr) => {
-                if (i === arr.length - 1 && (part === 'Live' || part === 'Present' || part === 'Ongoing')) {
+                if (i === arr.length - 1 && (part === 'Live' || part === 'Present' || part === 'Ongoing' || part === 'Maintenance' || part === 'Working')) {
                   const isLive = part === 'Live';
+                  const isMaintenance = part === 'Maintenance';
+                  const isWorking = part === 'Working';
                   return (
                     <span key={i} className="flex items-center gap-1">
                       <span>-</span>
                       <span className={cn(
                         "inline-flex items-center rounded-sm px-1.5 py-0.5 text-[10px] font-medium leading-none",
-                        isLive ? "bg-green-500/15 text-green-600 dark:text-green-400" : "bg-blue-500/15 text-blue-600 dark:text-blue-400"
+                        isLive ? "bg-green-500/15 text-green-600 dark:text-green-400"
+                        : isMaintenance ? "bg-orange-500/15 text-orange-600 dark:text-orange-400"
+                        : isWorking ? "bg-blue-500/15 text-blue-600 dark:text-blue-400"
+                        : "bg-blue-500/15 text-blue-600 dark:text-blue-400"
                       )}>
                         {isLive && (
                           <span className="relative flex h-1.5 w-1.5 mr-1">
                             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                          </span>
+                        )}
+                        {isMaintenance && (
+                          <span className="relative flex h-1.5 w-1.5 mr-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-orange-500"></span>
+                          </span>
+                        )}
+                        {isWorking && (
+                          <span className="relative flex h-1.5 w-1.5 mr-1">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
                           </span>
                         )}
                         {part}
