@@ -312,6 +312,7 @@ export const DATA = {
       active: true,
       description:
         "Collaborative full-stack web application built with a team across a modular React and Node.js architecture. Implemented reusable TypeScript component library with strict prop typing shared across the frontend. Structured the backend with Express route separation and middleware layering for clean API organisation. Active development with regular code reviews and branch-based Git workflow.",
+      contribution: "Architected the shared TypeScript component library used across the entire frontend. Structured the Express backend with modular route separation and middleware layering. Led code reviews and managed feature development through a branch-based Git workflow.",
       technologies: ["React", "TypeScript", "Node.js"],
       links: [
         {

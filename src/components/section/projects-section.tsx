@@ -48,6 +48,7 @@ export default function ProjectsSection() {
                                 image={project.image}
                                 video={project.video}
                                 links={project.links}
+                                contribution={"contribution" in project ? (project as any).contribution : undefined}
                             />
                         </BlurFade>
                     ))}

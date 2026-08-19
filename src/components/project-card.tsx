@@ -34,6 +34,7 @@ interface Props {
   link?: string;
   image?: string;
   video?: string;
+  contribution?: string;
   links?: readonly {
     icon: React.ReactNode;
     type: string;
@@ -51,6 +52,7 @@ export function ProjectCard({
   link,
   image,
   video,
+  contribution,
   links,
   className,
 }: Props) {
@@ -166,6 +168,12 @@ export function ProjectCard({
         <div className="text-xs flex-1 prose max-w-full text-pretty font-sans leading-relaxed text-muted-foreground dark:prose-invert">
           <Markdown>{description}</Markdown>
         </div>
+        {contribution && (
+          <div className="rounded-lg bg-muted/50 border border-border px-3 py-2 space-y-0.5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">My Contribution</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">{contribution}</p>
+          </div>
+        )}
         {tags && tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-auto">
             {tags.map((tag) => (
