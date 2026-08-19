@@ -155,7 +155,7 @@ export const DATA = {
       title: "Installer Contributor",
       logoUrl: "/rustchain.png",
       start: "Feb 2026",
-      end: "Feb 2026",
+      end: "",
       description:
         "Cut blockchain node setup time by building a cross-platform CLI installer for macOS and Linux that fully automated wallet configuration, file I/O, and service registration end-to-end. Implemented SHA-256 checksum validation and systemd/launchd service automation; PR merged into main repository and awarded a project bounty on first submission.",
     },
