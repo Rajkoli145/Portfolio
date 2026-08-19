@@ -71,7 +71,9 @@ export default function WorkSection() {
               </div>
               <div className="flex items-center gap-1 text-xs tabular-nums text-muted-foreground text-right flex-none">
                 <span>
-                  {work.start} - {work.end ?? "Present"}
+                  {!work.end || (work.start as string) === (work.end as string)
+                    ? work.start
+                    : `${work.start} – ${work.end}`}
                 </span>
               </div>
             </div>

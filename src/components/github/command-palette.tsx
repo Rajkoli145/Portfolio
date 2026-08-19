@@ -29,13 +29,17 @@ export function GithubCommandPalette({ repos }: { repos: any[] }) {
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <Command.Dialog
-                open={open}
-                onOpenChange={setOpen}
+        <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-200"
+            onClick={() => setOpen(false)}
+        >
+            <Command
                 label="Global Command Menu"
                 className="w-full max-w-xl bg-background border border-border rounded-xl shadow-2xl overflow-hidden flex flex-col"
                 onClick={(e: React.MouseEvent) => e.stopPropagation()}
+                onKeyDown={(e: React.KeyboardEvent) => {
+                    if (e.key === "Escape") setOpen(false);
+                }}
             >
                 <div className="flex items-center border-b border-border px-3">
                     <Search className="w-4 h-4 text-muted-foreground mr-2" />
@@ -81,14 +85,14 @@ export function GithubCommandPalette({ repos }: { repos: any[] }) {
 
                     <Command.Group heading="Quick Actions" className="text-xs font-medium text-muted-foreground px-2 py-1 mt-2">
                         <Command.Item
-                            onSelect={() => runCommand(() => document.getElementById("showcase")?.scrollIntoView({ behavior: 'smooth' }))}
+                            onSelect={() => runCommand(() => document.getElementById("showcase")?.scrollIntoView({ behavior: "smooth" }))}
                             className="flex items-center gap-2 px-2 py-2.5 rounded-md cursor-pointer text-sm text-foreground hover:bg-muted aria-selected:bg-muted transition-colors"
                         >
                             <Terminal className="w-4 h-4" />
                             Search Repositories
                         </Command.Item>
                         <Command.Item
-                            onSelect={() => runCommand(() => document.getElementById("timeline")?.scrollIntoView({ behavior: 'smooth' }))}
+                            onSelect={() => runCommand(() => document.getElementById("timeline")?.scrollIntoView({ behavior: "smooth" }))}
                             className="flex items-center gap-2 px-2 py-2.5 rounded-md cursor-pointer text-sm text-foreground hover:bg-muted aria-selected:bg-muted transition-colors"
                         >
                             <Activity className="w-4 h-4" />
@@ -112,9 +116,7 @@ export function GithubCommandPalette({ repos }: { repos: any[] }) {
                         </Command.Group>
                     )}
                 </Command.List>
-            </Command.Dialog>
-            {/* Click outside to close (handled by Command.Dialog, but we add a dark overlay) */}
-            <div className="fixed inset-0 -z-10" onClick={() => setOpen(false)} />
+            </Command>
         </div>
     );
 }
