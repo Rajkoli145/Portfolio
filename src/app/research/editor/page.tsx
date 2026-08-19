@@ -66,6 +66,12 @@ export default function LocalResearchEditorPage() {
 
   const isInitialMount = useRef(true);
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const selectedSlugRef = useRef<string | null>(null);
+
+  const updateSelectedSlug = (newSlug: string | null) => {
+    selectedSlugRef.current = newSlug;
+    setSelectedSlug(newSlug);
+  };
 
   // Load entries from server API
   const fetchEntries = async () => {
@@ -96,7 +102,7 @@ export default function LocalResearchEditorPage() {
             setStatus(draft.status || "draft");
             setSummary(draft.summary || "");
             setContent(draft.content || "");
-            setSelectedSlug(draft.slug || null);
+            updateSelectedSlug(draft.slug || null);
             setHasRestoredDraft(true);
             setMessage("Restored unsaved draft from local storage.");
             setLoading(false);
@@ -105,7 +111,7 @@ export default function LocalResearchEditorPage() {
         } catch {}
       }
 
-      if (loadedEntries.length > 0 && !selectedSlug && !hasRestoredDraft) {
+      if (loadedEntries.length > 0 && !selectedSlugRef.current && !hasRestoredDraft) {
         loadEntryIntoForm(loadedEntries[0]);
       } else if (loadedEntries.length === 0 && !hasRestoredDraft) {
         handleNewEntry();
@@ -128,8 +134,12 @@ export default function LocalResearchEditorPage() {
       return;
     }
 
+    if (!title.trim() && !content.trim()) {
+      return;
+    }
+
     const currentDraft = {
-      slug,
+      slug: selectedSlugRef.current || "",
       title,
       project,
       tagsInput,
@@ -149,31 +159,33 @@ export default function LocalResearchEditorPage() {
         autoSaveToDisk(currentDraft);
       }
     }, 2500);
-  }, [title, project, tagsInput, status, summary, content, slug]);
+  }, [title, project, tagsInput, status, summary, content]);
 
   // Handle Tab close / refresh warning
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Always store current state to localStorage before unload
-      const draft = {
-        slug,
-        title,
-        project,
-        tagsInput,
-        status,
-        summary,
-        content,
-        updatedAt: new Date().toISOString(),
-      };
-      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
+      if (title.trim() || content.trim()) {
+        const draft = {
+          slug: selectedSlugRef.current || "",
+          title,
+          project,
+          tagsInput,
+          status,
+          summary,
+          content,
+          updatedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
+      }
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [slug, title, project, tagsInput, status, summary, content]);
+  }, [title, project, tagsInput, status, summary, content]);
 
   const loadEntryIntoForm = (entry: ResearchEntry) => {
-    setSelectedSlug(entry.slug);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    updateSelectedSlug(entry.slug);
     setSlug(entry.slug);
     setTitle(entry.title);
     setProject(entry.project || "failure-recovery-benchmark");
@@ -184,7 +196,8 @@ export default function LocalResearchEditorPage() {
   };
 
   const handleNewEntry = () => {
-    setSelectedSlug(null);
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    updateSelectedSlug(null);
     setSlug("");
     setTitle("");
     setProject("failure-recovery-benchmark");
@@ -195,16 +208,18 @@ export default function LocalResearchEditorPage() {
     localStorage.removeItem(LOCAL_STORAGE_KEY);
   };
 
-  const computeSlug = (targetTitle: string, currentSelectedSlug: string | null) => {
-    if (currentSelectedSlug && currentSelectedSlug.trim() !== "") {
-      return currentSelectedSlug;
+  const computeSlug = (targetTitle: string) => {
+    const currentSlug = selectedSlugRef.current;
+    if (currentSlug && currentSlug.trim() !== "") {
+      return currentSlug;
     }
     const today = new Date().toISOString().split("T")[0];
-    const cleanTitle = (targetTitle || "new-note")
+    const cleanTitle = (targetTitle || "")
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-|-$/g, "");
-    return `${today}-${cleanTitle || "note"}`;
+    const slugBody = cleanTitle || `note-${Date.now().toString(36)}`;
+    return `${today}-${slugBody}`;
   };
 
   const autoSaveToDisk = async (draftData: any) => {
@@ -215,7 +230,7 @@ export default function LocalResearchEditorPage() {
         .map((t: string) => t.trim())
         .filter(Boolean);
 
-      const targetSlug = computeSlug(draftData.title, selectedSlug);
+      const targetSlug = computeSlug(draftData.title);
 
       const payload = {
         slug: targetSlug,
@@ -236,7 +251,7 @@ export default function LocalResearchEditorPage() {
       if (res.ok) {
         const data = await res.json();
         if (data.slug) {
-          setSelectedSlug(data.slug);
+          updateSelectedSlug(data.slug);
           setSlug(data.slug);
         }
         setAutoSaveStatus("Auto-saved to disk");
@@ -262,7 +277,7 @@ export default function LocalResearchEditorPage() {
         .map((t) => t.trim())
         .filter(Boolean);
 
-      const targetSlug = computeSlug(title, selectedSlug);
+      const targetSlug = computeSlug(title);
 
       const payload = {
         slug: targetSlug,
@@ -286,7 +301,7 @@ export default function LocalResearchEditorPage() {
       setMessage(`Entry saved successfully to research/entries/${data.slug}.md!`);
       setAutoSaveStatus("Saved to disk");
       localStorage.removeItem(LOCAL_STORAGE_KEY);
-      setSelectedSlug(data.slug);
+      updateSelectedSlug(data.slug);
       setSlug(data.slug);
       await fetchEntries();
     } catch (err: any) {

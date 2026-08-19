@@ -19,6 +19,13 @@ export const metadata: Metadata = {
 
 const BLUR_FADE_DELAY = 0.04;
 
+const PROJECT_DISPLAY_NAMES: Record<string, string> = {
+  "tbench-harbor": "T-Bench / Harbor Framework",
+  "cli-agent-failure-recovery": "CLI Agent Failure & Recovery Research",
+  "handshake-ai-tbench": "T-Bench / Harbor Framework",
+  "failure-recovery-benchmark": "Failure Recovery Benchmark",
+};
+
 export default async function ResearchPage() {
   // Filter strictly for published entries
   const publishedEntries = allResearch.filter((item) => item.status === "published");
@@ -67,7 +74,7 @@ export default async function ResearchPage() {
           ) : (
             projects.map((projectSlug, pIndex) => {
               const projectEntries = sortedEntries.filter((e) => e.project === projectSlug);
-              const projectTitle = projectSlug.replace(/-/g, " ");
+              const projectTitle = PROJECT_DISPLAY_NAMES[projectSlug] ?? projectSlug.replace(/-/g, " ");
 
               return (
                 <BlurFade key={projectSlug} delay={BLUR_FADE_DELAY * (1.5 + pIndex * 0.5)}>
