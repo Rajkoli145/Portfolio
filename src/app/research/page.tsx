@@ -90,13 +90,13 @@ export default async function ResearchPage() {
 
                     {/* Entries Grid / List */}
                     <div className="grid grid-cols-1 gap-3">
-                      {projectEntries.map((entry) => {
+                      {projectEntries.map((entry, entryIndex) => {
                         const slug = entry._meta.path.replace(/\.(md|mdx)$/, "");
                         const formattedDate = (entry.createdAt || entry.publishedAt || "2026-07-27").split("T")[0];
 
                         return (
                           <Link
-                            key={entry._meta.path}
+                            key={`${entry._meta.filePath}-${entryIndex}`}
                             href={`/research/${slug}`}
                             className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-xl border bg-background hover:bg-muted/60 hover:border-amber-500/40 transition-all group"
                           >
