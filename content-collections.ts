@@ -32,7 +32,7 @@ const chapters = defineCollection({
 const research = defineCollection({
     name: "research",
     directory: "research/entries",
-    include: "**/*.{md,mdx}",
+    include: "*.{md,mdx}",
     schema: z.object({
         title: z.string(),
         createdAt: z.string().optional(),
