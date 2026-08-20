@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Send } from "lucide-react";
 
 // ── Network layout ──────────────────────────────────────────────────────────
 const VW = 700;
@@ -97,6 +97,39 @@ const AGENTS: Record<string, { label: string; qa: { q: string; a: string }[] }> 
     ],
   },
 };
+
+// ── Keyword matcher ─────────────────────────────────────────────────────────
+const KEYWORD_MAP: { keys: string[]; agentId: string; qIndex: number }[] = [
+  { keys: ["project", "built", "build", "make", "create"],        agentId: "builder",    qIndex: 0 },
+  { keys: ["stack", "tech", "technolog", "language", "framework"], agentId: "builder",    qIndex: 1 },
+  { keys: ["demo", "live", "deploy", "url", "link"],               agentId: "builder",    qIndex: 2 },
+  { keys: ["building", "current", "now", "rn", "working on"],      agentId: "builder",    qIndex: 3 },
+  { keys: ["research", "publish", "log", "paper"],                 agentId: "researcher", qIndex: 0 },
+  { keys: ["topic", "cover", "area", "subject", "field"],          agentId: "researcher", qIndex: 1 },
+  { keys: ["tbench", "harbor", "benchmark", "t-bench"],            agentId: "researcher", qIndex: 2 },
+  { keys: ["handbook", "book", "agent system"],                    agentId: "researcher", qIndex: 3 },
+  { keys: ["work", "experience", "job", "intern", "company"],      agentId: "career",     qIndex: 0 },
+  { keys: ["skill", "strong", "best at", "good at", "expert"],     agentId: "career",     qIndex: 1 },
+  { keys: ["open", "opportunit", "hire", "available", "remote"],   agentId: "career",     qIndex: 2 },
+  { keys: ["achiev", "win", "proud", "award", "accomplishment"],   agentId: "career",     qIndex: 3 },
+];
+
+function matchQuestion(input: string): { agentId: string; item: { q: string; a: string } } {
+  const lower = input.toLowerCase();
+  for (const entry of KEYWORD_MAP) {
+    if (entry.keys.some(k => lower.includes(k))) {
+      const agent = AGENTS[entry.agentId];
+      return { agentId: entry.agentId, item: agent.qa[entry.qIndex] };
+    }
+  }
+  return {
+    agentId: "career",
+    item: {
+      q: input,
+      a: "Great question — that's not something I've covered here yet. Reach me directly at koliraj911@gmail.com or linkedin.com/in/raj-koli-626008318 and I'll answer it personally.",
+    },
+  };
+}
 
 // ── Typewriter ──────────────────────────────────────────────────────────────
 function useTypewriter(text: string, active: boolean, speed = 14) {
@@ -242,9 +275,18 @@ export default function AgentsPage() {
   const [activeAgentId, setActiveAgentId] = useState<string | null>(null);
   const [activeQ, setActiveQ] = useState<{ q: string; a: string } | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
+  const [customInput, setCustomInput] = useState("");
   const answerRef = useRef<HTMLDivElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const { out, done } = useTypewriter(activeQ?.a ?? "", phase === "answer");
+
+  const handleCustomSubmit = () => {
+    const q = customInput.trim();
+    if (!q) return;
+    const { agentId, item } = matchQuestion(q);
+    setCustomInput("");
+    handleQ(agentId, { ...item, q });
+  };
 
   const handleQ = (agentId: string, item: { q: string; a: string }) => {
     if (phase !== "idle" && phase !== "answer") return;
@@ -352,6 +394,30 @@ export default function AgentsPage() {
               </div>
             ))}
           </div>
+        </BlurFade>
+
+        {/* Custom input */}
+        <BlurFade delay={0.16}>
+          <form
+            onSubmit={(e) => { e.preventDefault(); handleCustomSubmit(); }}
+            className="flex gap-2 mb-8"
+          >
+            <input
+              value={customInput}
+              onChange={(e) => setCustomInput(e.target.value)}
+              placeholder="Or type your own question..."
+              disabled={phase === "activating" || phase === "processing" || phase === "retreating"}
+              className="flex-1 rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-foreground/10 disabled:opacity-40 transition-all"
+            />
+            <button
+              type="submit"
+              disabled={!customInput.trim() || phase === "activating" || phase === "processing" || phase === "retreating"}
+              className="rounded-xl border border-border bg-foreground text-background px-4 py-2.5 flex items-center gap-1.5 text-sm font-medium hover:opacity-90 disabled:opacity-30 transition-all"
+            >
+              <Send className="size-3.5" />
+              Ask
+            </button>
+          </form>
         </BlurFade>
 
         {/* Answer */}
