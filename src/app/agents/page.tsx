@@ -140,7 +140,7 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
   }, []);
 
   return (
-    <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full" style={{ height: "clamp(220px, 42vw, 360px)" }}>
+    <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full text-foreground" style={{ height: "clamp(220px, 42vw, 360px)" }}>
       <defs>
         {/* Node glow filter */}
         <filter id="ng" x="-80%" y="-80%" width="260%" height="260%">
@@ -165,7 +165,7 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
         { x: 580, label: "OUTPUT" },
       ].map(l => (
         <text key={l.label} x={l.x} y={22} textAnchor="middle"
-          fontSize="7" fill="white" fillOpacity={0.2}
+          fontSize="7" fill="currentColor" fillOpacity={0.2}
           fontFamily="system-ui" fontWeight="600" letterSpacing="2">
           {l.label}
         </text>
@@ -181,7 +181,7 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
             key={e.id}
             d={e.path}
             fill="none"
-            stroke="white"
+            stroke="currentColor"
             strokeWidth={active ? "0.6" : "0.4"}
             strokeOpacity={active ? 0.18 : 0.09}
             style={{ transition: "stroke-opacity 0.7s, stroke-width 0.7s" }}
@@ -196,7 +196,7 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
           <g key={s.edgeId}>
             <circle
               r={active ? "1.4" : "0.9"}
-              fill="white"
+              fill="currentColor"
               opacity={active ? 0.7 : 0.25}
               filter="url(#sg)"
               style={{ transition: "opacity 0.5s, r 0.5s" }}
@@ -226,11 +226,11 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
               {/* Outer pulse ring for active agent */}
               {isActive && (
                 <>
-                  <circle cx={layer.x} cy={n.y} r={r + 8} fill="white" fillOpacity={0.03} stroke="white" strokeOpacity={0.12} strokeWidth="0.5">
+                  <circle cx={layer.x} cy={n.y} r={r + 8} fill="currentColor" fillOpacity={0.03} stroke="currentColor" strokeOpacity={0.12} strokeWidth="0.5">
                     <animate attributeName="r" values={`${r+6};${r+14};${r+6}`} dur="2s" repeatCount="indefinite" />
                     <animate attributeName="stroke-opacity" values="0.12;0.03;0.12" dur="2s" repeatCount="indefinite" />
                   </circle>
-                  <circle cx={layer.x} cy={n.y} r={r + 3} fill="none" stroke="white" strokeOpacity={0.25} strokeWidth="0.6">
+                  <circle cx={layer.x} cy={n.y} r={r + 3} fill="none" stroke="currentColor" strokeOpacity={0.25} strokeWidth="0.6">
                     <animate attributeName="r" values={`${r+2};${r+6};${r+2}`} dur="1.5s" repeatCount="indefinite" />
                   </circle>
                 </>
@@ -241,7 +241,7 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
                 x={layer.x - r} y={n.y - r}
                 width={r * 2} height={r * 2}
                 rx={isAgent ? 5 : 3}
-                fill="white"
+                fill="currentColor"
                 fillOpacity={isActive ? 0.92 : isAgent ? 0.5 : 0.22}
                 filter={isAgent ? "url(#ng)" : undefined}
                 style={{ transition: "fill-opacity 0.5s" }}
@@ -253,7 +253,7 @@ function NetworkSVG({ activeAgentId }: { activeAgentId: string | null }) {
                   x={layer.x} y={n.y + r + 11}
                   textAnchor="middle"
                   fontSize={isAgent ? "9" : "7"}
-                  fill="white"
+                  fill="currentColor"
                   fillOpacity={isActive ? 0.9 : 0.4}
                   fontFamily="system-ui"
                   fontWeight={isActive ? "700" : "400"}
@@ -282,14 +282,14 @@ export default function AgentsPage() {
   };
 
   return (
-    <div className="min-h-screen pb-32" style={{ background: "#080810" }}>
+    <div className="min-h-screen pb-32 bg-background">
       <div className="max-w-4xl mx-auto px-6 pt-16 sm:pt-24">
 
         <BlurFade delay={0.04}>
           <div className="text-center mb-12">
-            <p className="text-[10px] tracking-[0.25em] uppercase text-white/25 mb-3 font-medium">Neural Agent Network</p>
-            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white/90">Ask About Me</h1>
-            <p className="text-xs text-white/25 mt-3 tracking-wide">select a question — watch the network activate</p>
+            <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground/60 mb-3 font-medium">Neural Agent Network</p>
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-foreground">Ask About Me</h1>
+            <p className="text-xs text-muted-foreground/60 mt-3 tracking-wide">select a question — watch the network activate</p>
           </div>
         </BlurFade>
 
@@ -305,7 +305,7 @@ export default function AgentsPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-10">
             {Object.entries(AGENTS).map(([id, agent]) => (
               <div key={id}>
-                <p className="text-[9px] tracking-[0.22em] uppercase text-white/30 mb-3 font-semibold">{agent.label} Agent</p>
+                <p className="text-[9px] tracking-[0.22em] uppercase text-muted-foreground/60 mb-3 font-semibold">{agent.label} Agent</p>
                 <div className="flex flex-col gap-1.5">
                   {agent.qa.map(item => {
                     const isActive = activeAgentId === id && activeQ?.q === item.q;
@@ -316,8 +316,8 @@ export default function AgentsPage() {
                         className={cn(
                           "text-left text-[11px] leading-snug px-3 py-2 rounded-lg border transition-all duration-300",
                           isActive
-                            ? "border-white/25 bg-white/10 text-white/90"
-                            : "border-white/6 bg-white/2 text-white/35 hover:text-white/65 hover:border-white/12 hover:bg-white/5"
+                            ? "border-foreground/20 bg-foreground/8 text-foreground"
+                            : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 hover:bg-muted"
                         )}
                       >
                         {item.q}
@@ -333,14 +333,14 @@ export default function AgentsPage() {
         {/* Answer */}
         {activeQ && (
           <BlurFade delay={0} key={activeQ.q}>
-            <div className="rounded-2xl border border-white/8 bg-white/3 px-7 py-6">
-              <p className="text-[9px] uppercase tracking-[0.22em] text-white/25 mb-4 font-semibold">
+            <div className="rounded-2xl border border-border bg-card px-7 py-6">
+              <p className="text-[9px] uppercase tracking-[0.22em] text-muted-foreground/60 mb-4 font-semibold">
                 {AGENTS[activeAgentId!]?.label} · response
               </p>
-              <p className="text-sm sm:text-[15px] leading-relaxed text-white/75 font-light">
+              <p className="text-sm sm:text-[15px] leading-relaxed text-foreground/80 font-light">
                 {out}
                 {!done && (
-                  <span className="inline-block w-[2px] h-[13px] bg-white/50 align-middle ml-0.5 animate-pulse" />
+                  <span className="inline-block w-[2px] h-[13px] bg-foreground/50 align-middle ml-0.5 animate-pulse" />
                 )}
               </p>
             </div>
