@@ -98,46 +98,246 @@ const AGENTS: Record<string, { label: string; qa: { q: string; a: string }[] }> 
   },
 };
 
-// ── Keyword matcher ─────────────────────────────────────────────────────────
-const INTRO_QA = {
-  q: "Who are you?",
-  a: "I'm Raj Koli — a software engineer focused on backend systems, AI agent infrastructure, and developer tooling. I build full-stack apps, REST APIs, CLI tools, and AI pipelines. Currently doing AI evaluation work, contributing to open source, and authoring The Agent Systems Handbook. Ask me anything about my projects, research, or experience.",
+// ── Intent engine ────────────────────────────────────────────────────────────
+const P = {
+  name: "Raj Koli",
+  role: "software engineer focused on backend systems, AI agent infrastructure, and developer tooling",
+  email: "koliraj911@gmail.com",
+  linkedin: "linkedin.com/in/raj-koli-626008318",
+  github: "github.com/Rajkoli145",
+  projects: ["FreelancerFlow", "EduStory", "macOS Portfolio", "DealVault Escrow", "Almost Friday", "AI Founder Intelligence"],
+  activeBuilds: ["DealVault Escrow", "Almost Friday", "AI Founder Intelligence"],
+  liveUrls: ["freelancer-flow-seven.vercel.app → FreelancerFlow", "edu-story.vercel.app → EduStory", "rajkoli.vercel.app → macOS Portfolio"],
+  currentRoles: ["AI Evaluation Specialist at Handshake AI (Jul 2026–present)", "AI Benchmark Contributor at Parsewave (Jun 2026–present)"],
+  openSource: ["RustChain", "Hiero SDK"],
+  stack: ["React", "Next.js", "TypeScript", "Node.js", "MongoDB", "Python", "Docker", "Bash"],
+  researchCount: 13,
+  researchUrl: "rajkoli-27.vercel.app/research",
+  bookTitle: "The Agent Systems Handbook",
+  researchTopics: ["AI agent evaluation", "systems security", "cryptography", "network forensics", "hardware debugging", "orbital mechanics", "compiler theory", "reverse engineering"],
+  wins: [
+    "PR merged into Hiero SDK official v0.2.2 release",
+    "RustChain CLI bounty awarded on first PR submission",
+    "Paid Parsewave benchmark task passing full technical review",
+  ],
+  school: "ITM Skills University — BTech CSE (2024–2028)",
 };
 
-const KEYWORD_MAP: { keys: string[]; agentId: string; qIndex: number }[] = [
-  { keys: ["project", "built", "build", "make", "create"],        agentId: "builder",    qIndex: 0 },
-  { keys: ["stack", "tech", "technolog", "language", "framework"], agentId: "builder",    qIndex: 1 },
-  { keys: ["demo", "live", "deploy", "url", "link"],               agentId: "builder",    qIndex: 2 },
-  { keys: ["building", "current", "now", "rn", "working on"],      agentId: "builder",    qIndex: 3 },
-  { keys: ["research", "publish", "log", "paper"],                 agentId: "researcher", qIndex: 0 },
-  { keys: ["topic", "cover", "area", "subject", "field"],          agentId: "researcher", qIndex: 1 },
-  { keys: ["tbench", "harbor", "benchmark", "t-bench"],            agentId: "researcher", qIndex: 2 },
-  { keys: ["handbook", "book", "agent system"],                    agentId: "researcher", qIndex: 3 },
-  { keys: ["work", "experience", "job", "intern", "company"],      agentId: "career",     qIndex: 0 },
-  { keys: ["skill", "strong", "best at", "good at", "expert"],     agentId: "career",     qIndex: 1 },
-  { keys: ["open", "opportunit", "hire", "available", "remote"],   agentId: "career",     qIndex: 2 },
-  { keys: ["achiev", "win", "proud", "award", "accomplishment"],   agentId: "career",     qIndex: 3 },
+function rnd<T>(arr: T[]): T { return arr[Math.floor(Math.random() * arr.length)]; }
+function rndN<T>(arr: T[], n: number): T[] { return [...arr].sort(() => Math.random() - 0.5).slice(0, n); }
+
+interface Intent {
+  id: string;
+  agentId: "builder" | "researcher" | "career";
+  tokens: string[];
+  phrases: string[];
+  weight: number;
+  templates: (() => string)[];
+}
+
+const INTENTS: Intent[] = [
+  {
+    id: "greeting", agentId: "builder",
+    tokens: ["hi", "hey", "hello", "sup", "yo", "hii", "name", "who"],
+    phrases: ["who are you", "who r u", "who ru", "introduce", "about you", "about raj", "tell me about yourself", "tell me about you", "your name", "ur name", "what's your", "whats your"],
+    weight: 1,
+    templates: [
+      () => `I'm ${P.name} — a ${P.role}. Currently ${P.currentRoles[0]} and building ${rndN(P.projects, 2).join(" + ")} in parallel. Ask me anything.`,
+      () => `${P.name} here. Software engineer specialising in backend systems and AI agent infra. ${P.projects.length} active projects, ${P.researchCount} research logs, 6 roles across open source and contract work.`,
+      () => `Software engineer building APIs, CLIs, and agent infrastructure. Right now I'm ${P.currentRoles[0]}. Contributed to ${P.openSource.join(" and ")}, shipped ${P.projects.length} projects, authoring ${P.bookTitle}.`,
+    ],
+  },
+  {
+    id: "projects", agentId: "builder",
+    tokens: ["project", "built", "build", "make", "create", "ship", "shipped", "portfolio"],
+    phrases: ["what have you built", "show me your work", "your projects", "what did you make"],
+    weight: 1,
+    templates: [
+      () => `${P.projects.length} projects — ${rndN(P.projects, 3).join(", ")}, and more. Highlights: FreelancerFlow (fullstack freelancer platform, JWT + invoice pipeline), EduStory (AI storytelling w/ OpenAI), macOS Portfolio (vanilla JS desktop sim, zero deps). Most are live or in active development.`,
+      () => `Recent builds: FreelancerFlow → full invoice + client management platform / EduStory → AI story generation with NextAuth / DealVault Escrow → TypeScript state machine for secure transactions / ${rnd(["Almost Friday → collaborative team app", "AI Founder Intelligence → LLM market signal aggregator"])}. Stack varies per project.`,
+      () => `I've shipped ${P.projects.length} projects across the full stack. Strongest: FreelancerFlow (REST API + JWT + MongoDB), macOS Portfolio (pure vanilla JS, zero frameworks), DealVault (TypeScript state machine). Active on ${rndN(P.activeBuilds, 2).join(" + ")} right now.`,
+    ],
+  },
+  {
+    id: "stack", agentId: "builder",
+    tokens: ["stack", "tech", "technolog", "language", "framework", "tool", "use"],
+    phrases: ["what do you use", "what language", "your tools", "your tech stack"],
+    weight: 1,
+    templates: [
+      () => `Primary: ${P.stack.slice(0, 4).join(", ")}. Also: ${P.stack.slice(4).join(", ")}. Comfortable across the full stack — frontend, backend, infra, and AI pipelines.`,
+      () => `Full-stack + AI infra: React/Next.js/TypeScript on frontend — Node.js + MongoDB + Express on backend — Python for AI pipelines — Docker + Bash for tooling. Strong preference for TypeScript and type-safe APIs.`,
+      () => `Depends on the job. Web → Next.js + TypeScript. APIs → Node.js + Express + MongoDB. AI pipelines → Python. Infra → Docker + systemd + Bash. I pick what ships fastest without accumulating debt.`,
+    ],
+  },
+  {
+    id: "demos", agentId: "builder",
+    tokens: ["demo", "live", "deploy", "url", "link", "visit", "see", "view", "website"],
+    phrases: ["can i see", "where can i see", "show me a demo", "live demo"],
+    weight: 1,
+    templates: [
+      () => `Live: ${P.liveUrls.join(" / ")}. ${rnd(P.activeBuilds)} + the others are still in active development.`,
+      () => `3 live now: ${P.liveUrls.join(" — ")}. DealVault Escrow and Almost Friday don't have public URLs yet — still building.`,
+    ],
+  },
+  {
+    id: "current", agentId: "builder",
+    tokens: ["now", "current", "working", "rn", "today", "lately", "recent", "latest"],
+    phrases: ["what are you working on", "what are you building", "what's new", "what's next"],
+    weight: 1,
+    templates: [
+      () => `Right now: ${P.activeBuilds.join(", ")}. Running all three in parallel on top of AI evaluation work at Handshake AI.`,
+      () => `Active: ${rndN(P.activeBuilds, 2).join(" + ")}. Also doing benchmark contributions at Parsewave and evaluation work at Handshake AI. Busy.`,
+    ],
+  },
+  {
+    id: "research", agentId: "researcher",
+    tokens: ["research", "publish", "log", "paper", "write", "wrote"],
+    phrases: ["what research", "research logs", "published work", "your papers", "what have you published"],
+    weight: 1,
+    templates: [
+      () => `${P.researchCount} research logs live at ${P.researchUrl} — ZFS forensics, AES-CBC padding oracle, ECDSA nonce bias, Verilog FIFO debugging, orbital mechanics simulation, network C2 forensics, acoustic localisation, VM bytecode exploitation, and more. All hands-on benchmark tasks.`,
+      () => `Published ${P.researchCount} research logs covering ${rndN(P.researchTopics, 4).join(", ")}. Find them at ${P.researchUrl}. Deep technical write-ups from real benchmark environments.`,
+      () => `${P.researchCount} hands-on logs across ${P.researchTopics.length} domains. From cracking ECDSA keys to recovering ZFS pools to debugging async FIFOs in Verilog. All at ${P.researchUrl}.`,
+    ],
+  },
+  {
+    id: "topics", agentId: "researcher",
+    tokens: ["topic", "subject", "cover", "area", "field", "domain", "about"],
+    phrases: ["what do you research", "research areas", "what topics do you cover"],
+    weight: 1,
+    templates: [
+      () => `AI agent evaluation, systems security (crypto attacks, reverse engineering), compiler theory, network forensics, hardware debugging in Verilog, orbital mechanics, autonomous software systems. ${P.researchCount} hands-on logs.`,
+      () => `Research spans: ${rndN(P.researchTopics, 5).join(" / ")} / and more. All practical — real benchmark tasks, not theory.`,
+    ],
+  },
+  {
+    id: "tbench", agentId: "researcher",
+    tokens: ["tbench", "harbor", "benchmark", "terminal", "evaluation", "eval"],
+    phrases: ["t-bench", "what is harbor", "terminal bench", "agent evaluation"],
+    weight: 2,
+    templates: [
+      () => `T-Bench / Harbor is a framework for evaluating AI agents on real engineering tasks — debugging, security audits, data pipelines, systems analysis. I've completed ${P.researchCount} tasks, each documented with full findings at ${P.researchUrl}.`,
+      () => `Terminal benchmark framework — AI agents get real engineering problems (debug a Verilog FIFO, recover a ZFS pool, crack ECDSA keys) and get evaluated on correctness. I've done ${P.researchCount} tasks and documented every one.`,
+    ],
+  },
+  {
+    id: "book", agentId: "researcher",
+    tokens: ["book", "handbook", "writing", "author", "guide", "publish"],
+    phrases: ["agent systems handbook", "what are you writing", "your book", "the handbook"],
+    weight: 2,
+    templates: [
+      () => `${P.bookTitle} — a research-driven guide covering modern AI agent architectures: memory, planning, evaluation, tool use, multi-agent coordination. Deep in progress. Grounded in real evaluation work, not tutorial-level fluff.`,
+      () => `I'm authoring ${P.bookTitle}. Covers how production AI agents actually work — memory systems, planning loops, tool use, evaluation frameworks, autonomous software systems. Research-backed.`,
+    ],
+  },
+  {
+    id: "work", agentId: "career",
+    tokens: ["work", "job", "intern", "company", "experience", "employ", "role", "position", "career"],
+    phrases: ["where have you worked", "work history", "your experience", "work experience"],
+    weight: 1,
+    templates: [
+      () => `Timeline: Handshake AI → AI eval specialist (Jul 2026–present) / Parsewave → AI benchmark contributor (Jun 2026) / RustChain → open source CLI, bounty winner / La Tanda → TypeScript SDK / Hiero SDK → Python contributor v0.2.2 / Unified Mentor → frontend intern (4 months).`,
+      () => `6 roles: ${P.currentRoles[0]}, plus ${rnd(["open source contributions to " + P.openSource.join(" and "), "TypeScript SDK dev at La Tanda", "Python contributor to Hiero SDK v0.2.2"])}. Mix of contract, open source, and internship.`,
+    ],
+  },
+  {
+    id: "skills", agentId: "career",
+    tokens: ["skill", "strong", "best", "expert", "speciali", "capabilit", "good"],
+    phrases: ["what are you good at", "your strengths", "strongest skill", "best at"],
+    weight: 1,
+    templates: [
+      () => `Backend systems + AI agent infra. REST APIs, CLI tooling, Linux automation, evaluation pipelines. Can go fullstack when needed. TypeScript is where I'm sharpest.`,
+      () => `Strongest in: backend architecture, AI pipeline design, CLI tooling, open-source contribution workflows. Comfortable across ${rndN(P.stack, 4).join(", ")}. Ship fast, maintain quality.`,
+      () => `Backend first, but fullstack capable. Best at designing APIs that don't break, CLI tools that work across platforms, and AI pipelines that produce consistent output. ${rnd(P.stack)} is probably my favourite right now.`,
+    ],
+  },
+  {
+    id: "availability", agentId: "career",
+    tokens: ["open", "hire", "available", "opportunit", "remote", "freelance", "contract", "looking"],
+    phrases: ["are you available", "open to work", "can i hire you", "are you looking"],
+    weight: 1,
+    templates: [
+      () => `Always open to the right thing. Remote preferred. Interesting problems only — AI infra, backend systems, developer tooling. Reach me at ${P.email} or ${P.linkedin}.`,
+      () => `Open to remote contract or full-time roles in backend, AI infrastructure, or developer tooling. Not chasing just any job — reach out: ${P.email}.`,
+    ],
+  },
+  {
+    id: "achievements", agentId: "career",
+    tokens: ["achiev", "win", "proud", "award", "accomplishment", "bounty", "milestone", "notable"],
+    phrases: ["biggest win", "what are you proud of", "notable achievement", "best accomplishment"],
+    weight: 1,
+    templates: [
+      () => `Biggest wins: ${P.wins.join(" / ")}.`,
+      () => `${rnd(P.wins)} hit hardest. Also: ${rnd(P.wins)} and ${P.researchCount} research logs published on T-Bench.`,
+    ],
+  },
+  {
+    id: "education", agentId: "career",
+    tokens: ["school", "study", "college", "universit", "degree", "education", "student", "learn"],
+    phrases: ["where did you study", "your education", "your degree", "where did you go to school"],
+    weight: 1,
+    templates: [
+      () => `${P.school}. Most of what I know came from building real things, not coursework. The portfolio is the proof.`,
+      () => `Pursuing BTech in Computer Science at ITM Skills University (2024–2028). Learning by shipping — side projects and open source have taught me more than any lecture.`,
+    ],
+  },
+  {
+    id: "contact", agentId: "career",
+    tokens: ["contact", "reach", "email", "message", "connect", "dm", "chat", "talk"],
+    phrases: ["how do i reach you", "can i contact you", "get in touch", "how to contact"],
+    weight: 1,
+    templates: [
+      () => `Best way: ${P.email}. Also on LinkedIn at ${P.linkedin} and GitHub at ${P.github}.`,
+      () => `Email me at ${P.email} or connect on LinkedIn (${P.linkedin}). GitHub is ${P.github} if you want to see the code directly.`,
+    ],
+  },
+  {
+    id: "location", agentId: "career",
+    tokens: ["locat", "where", "based", "countr", "cit", "timezone", "india"],
+    phrases: ["where are you based", "where do you live", "where are you from"],
+    weight: 1,
+    templates: [
+      () => `Based in India. Work fully remote. Available across most timezones for async collaboration.`,
+      () => `India-based, fully remote. Time zone flexible for async work. Most of my roles and contributions have been distributed teams.`,
+    ],
+  },
 ];
+
+function tokenize(s: string): string[] {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").split(/\s+/).filter(Boolean);
+}
+
+function scoreIntent(lower: string, toks: string[], intent: Intent): number {
+  let s = 0;
+  for (const phrase of intent.phrases) {
+    if (lower.includes(phrase)) s += 6 * intent.weight;
+  }
+  for (const iToken of intent.tokens) {
+    if (toks.some(t => t.includes(iToken) || (iToken.includes(t) && t.length >= 3))) {
+      s += 2 * intent.weight;
+    }
+  }
+  return s;
+}
 
 function matchQuestion(input: string): { agentId: string; item: { q: string; a: string } } {
   const lower = input.toLowerCase().trim();
-  const greetings = ["hi", "hey", "hello", "hii", "hiii", "yo", "sup", "who are you", "who r u", "who ru", "introduce", "about you", "about raj", "tell me about"];
-  if (greetings.some(g => lower.includes(g))) {
-    return { agentId: "builder", item: { ...INTRO_QA, q: input } };
+  const toks = tokenize(lower);
+  let best: Intent | null = null;
+  let bestScore = 0;
+  for (const intent of INTENTS) {
+    const s = scoreIntent(lower, toks, intent);
+    if (s > bestScore) { bestScore = s; best = intent; }
   }
-  for (const entry of KEYWORD_MAP) {
-    if (entry.keys.some(k => lower.includes(k))) {
-      const agent = AGENTS[entry.agentId];
-      return { agentId: entry.agentId, item: agent.qa[entry.qIndex] };
-    }
+  if (best && bestScore >= 2) {
+    return { agentId: best.agentId, item: { q: input, a: rnd(best.templates)() } };
   }
-  return {
-    agentId: "career",
-    item: {
-      q: input,
-      a: "Great question — that's not something I've covered here yet. Reach me directly at koliraj911@gmail.com or linkedin.com/in/raj-koli-626008318 and I'll answer it personally.",
-    },
-  };
+  const fallbacks = [
+    `That's outside what I've covered here. Try asking about my ${rnd(["projects", "research", "tech stack", "work history", "current builds"])} — or reach me directly at ${P.email}.`,
+    `Good question — not in my dataset here. Hit me at ${P.email} and I'll answer properly. Or ask about my projects, research, or career.`,
+    `Haven't covered that specifically. Ask me about ${rnd(["my tech stack", "research logs", "open source work", "current projects", "career timeline"])} — or contact me at ${P.email}.`,
+  ];
+  return { agentId: "career", item: { q: input, a: rnd(fallbacks) } };
 }
 
 // ── Typewriter ──────────────────────────────────────────────────────────────
