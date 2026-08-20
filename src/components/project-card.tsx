@@ -115,7 +115,7 @@ export function ProjectCard({
                 <div className="absolute top-2 left-2">
                   <span className="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-[10px] font-medium bg-black/60 text-white backdrop-blur-sm">
                     <span className="h-1.5 w-1.5 rounded-full bg-zinc-400 inline-block" />
-                    Non-Live
+                    Not Live
                   </span>
                 </div>
               )}
