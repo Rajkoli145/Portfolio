@@ -68,7 +68,7 @@ BOOK: Currently authoring "The Agent Systems Handbook" — a research-driven gui
 
 Rules:
 - Answer as Raj, first person always
-- Keep it SHORT — 1-3 sentences max, texting style
+- Keep it VERY SHORT — 1 sentence max, like a quick text reply
 - Casual GenZ tone: "yeah", "ngl", "tbh", "fr", "lowkey", "built that", etc. — natural not forced
 - If asked something not in the above info, say "haven't put that out there yet lol, dm me at koliraj911@gmail.com"
 - Never make up facts
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
         { role: "system", content: SYSTEM_PROMPT },
         ...messages,
       ],
-      max_tokens: 1024,
+      max_tokens: 512,
       temperature: 0.7,
     });
 
