@@ -242,30 +242,26 @@ export default function AgentsPage() {
   const [activeAgentId, setActiveAgentId] = useState<string | null>(null);
   const [activeQ, setActiveQ] = useState<{ q: string; a: string } | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
-  const [pendingQ, setPendingQ] = useState<{ agentId: string; item: { q: string; a: string } } | null>(null);
   const answerRef = useRef<HTMLDivElement>(null);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const { out, done } = useTypewriter(activeQ?.a ?? "", phase === "answer");
 
   const handleQ = (agentId: string, item: { q: string; a: string }) => {
     if (phase !== "idle" && phase !== "answer") return;
-    setPendingQ({ agentId, item });
+    timers.current.forEach(clearTimeout);
     setActiveAgentId(agentId);
     setActiveQ(null);
     setPhase("activating");
-  };
-
-  useEffect(() => {
-    if (phase === "activating") {
-      const t1 = setTimeout(() => setPhase("processing"), 220);
-      const t2 = setTimeout(() => setPhase("retreating"), 900);
-      const t3 = setTimeout(() => {
+    timers.current = [
+      setTimeout(() => setPhase("processing"), 220),
+      setTimeout(() => setPhase("retreating"), 900),
+      setTimeout(() => {
         setPhase("answer");
-        if (pendingQ) setActiveQ(pendingQ.item);
+        setActiveQ(item);
         setTimeout(() => answerRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
-      }, 1300);
-      return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
-    }
-  }, [phase]);
+      }, 1300),
+    ];
+  };
 
   // Network container transform — zooms forward then retreats
   const networkTransform = (() => {
