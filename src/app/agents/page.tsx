@@ -99,6 +99,11 @@ const AGENTS: Record<string, { label: string; qa: { q: string; a: string }[] }> 
 };
 
 // ── Keyword matcher ─────────────────────────────────────────────────────────
+const INTRO_QA = {
+  q: "Who are you?",
+  a: "I'm Raj Koli — a software engineer focused on backend systems, AI agent infrastructure, and developer tooling. I build full-stack apps, REST APIs, CLI tools, and AI pipelines. Currently doing AI evaluation work, contributing to open source, and authoring The Agent Systems Handbook. Ask me anything about my projects, research, or experience.",
+};
+
 const KEYWORD_MAP: { keys: string[]; agentId: string; qIndex: number }[] = [
   { keys: ["project", "built", "build", "make", "create"],        agentId: "builder",    qIndex: 0 },
   { keys: ["stack", "tech", "technolog", "language", "framework"], agentId: "builder",    qIndex: 1 },
@@ -115,7 +120,11 @@ const KEYWORD_MAP: { keys: string[]; agentId: string; qIndex: number }[] = [
 ];
 
 function matchQuestion(input: string): { agentId: string; item: { q: string; a: string } } {
-  const lower = input.toLowerCase();
+  const lower = input.toLowerCase().trim();
+  const greetings = ["hi", "hey", "hello", "hii", "hiii", "yo", "sup", "who are you", "who r u", "who ru", "introduce", "about you", "about raj", "tell me about"];
+  if (greetings.some(g => lower.includes(g))) {
+    return { agentId: "builder", item: { ...INTRO_QA, q: input } };
+  }
   for (const entry of KEYWORD_MAP) {
     if (entry.keys.some(k => lower.includes(k))) {
       const agent = AGENTS[entry.agentId];
