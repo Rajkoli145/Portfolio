@@ -74,7 +74,7 @@ const AGENTS: Record<string, { label: string; qa: { q: string; a: string }[] }> 
     qa: [
       { q: "What projects have you built?", a: "6 projects — FreelancerFlow (fullstack freelancer platform w/ JWT + invoice pipeline), EduStory (AI storytelling w/ OpenAI), macOS Portfolio (vanilla JS desktop sim, zero deps), DealVault Escrow (TypeScript state machine), Almost Friday (team collab app), AI Founder Intelligence (LLM market analysis). Most are live or in active development." },
       { q: "What's your tech stack?", a: "React + Next.js + TypeScript on the frontend / Node.js + MongoDB + Express on the backend / Python for AI pipelines / Docker + Bash for infra. Comfortable across the full stack." },
-      { q: "Any live demos?", a: "freelancer-flow-seven.vercel.app → FreelancerFlow / edu-story.vercel.app → EduStory / rajkoli.vercel.app → macOS portfolio. DealVault + Almost Friday are still in active development." },
+      { q: "Any live demos?", a: "freelancer-flow-seven.vercel.app → FreelancerFlow / edu-story.vercel.app → EduStory / rajkoli.vercel.app → macOS Portfolio (standalone vanilla JS project). DealVault + Almost Friday are still in active development." },
       { q: "What are you building now?", a: "DealVault Escrow (production TypeScript escrow platform), Almost Friday (collaborative fullstack with a team), and AI Founder Intelligence (startup market signal aggregator). All running in parallel." },
     ],
   },
@@ -107,7 +107,7 @@ const P = {
   github: "github.com/Rajkoli145",
   projects: ["FreelancerFlow", "EduStory", "macOS Portfolio", "DealVault Escrow", "Almost Friday", "AI Founder Intelligence"],
   activeBuilds: ["DealVault Escrow", "Almost Friday", "AI Founder Intelligence"],
-  liveUrls: ["freelancer-flow-seven.vercel.app → FreelancerFlow", "edu-story.vercel.app → EduStory", "rajkoli.vercel.app → macOS Portfolio"],
+  liveUrls: ["freelancer-flow-seven.vercel.app → FreelancerFlow", "edu-story.vercel.app → EduStory", "rajkoli.vercel.app → macOS Portfolio (standalone)"],
   currentRoles: ["AI Evaluation Specialist at Handshake AI (Jul 2026–present)", "AI Benchmark Contributor at Parsewave (Jun 2026–present)"],
   openSource: ["RustChain", "Hiero SDK"],
   stack: ["React", "Next.js", "TypeScript", "Node.js", "MongoDB", "Python", "Docker", "Bash"],

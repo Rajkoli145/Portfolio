@@ -12,7 +12,7 @@ import { Docker } from "@/components/ui/svgs/docker";
 export const DATA = {
   name: "Raj Koli",
   initials: "RK",
-  url: "https://rajkoli.vercel.app",
+  url: "https://rajkoli-27.vercel.app",
   location: "India",
   locationLink: "https://www.google.com/maps/place/India",
   description:
@@ -275,7 +275,7 @@ export const DATA = {
       ],
       links: [
         {
-          type: "Demo",
+          type: "Standalone Site",
           href: "https://rajkoli.vercel.app",
           icon: <Icons.globe className="size-3" />,
         },
