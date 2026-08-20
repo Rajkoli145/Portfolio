@@ -85,27 +85,43 @@ export function ProjectCard({
             <div className="w-full h-48 bg-muted" />
           )}
         </Link>
-        {links && links.filter(l => l.href).length > 0 && (
-          <div className="absolute top-2 right-2 flex flex-wrap gap-2">
-            {links.filter(l => l.href).map((link, idx) => (
-              <Link
-                href={link.href}
-                key={idx}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Badge
-                  className="flex items-center gap-1.5 text-xs bg-black text-white hover:bg-black/90"
-                  variant="default"
-                >
-                  {link.icon}
-                  {link.type}
-                </Badge>
-              </Link>
-            ))}
-          </div>
-        )}
+        {(() => {
+          const validLinks = links?.filter(l => l.href) ?? [];
+          const hasLiveDemo = links?.some(l => l.type === "Demo" && l.href);
+          return (
+            <>
+              {validLinks.length > 0 && (
+                <div className="absolute top-2 right-2 flex flex-wrap gap-2">
+                  {validLinks.map((link, idx) => (
+                    <Link
+                      href={link.href}
+                      key={idx}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Badge
+                        className="flex items-center gap-1.5 text-xs bg-black text-white hover:bg-black/90"
+                        variant="default"
+                      >
+                        {link.icon}
+                        {link.type}
+                      </Badge>
+                    </Link>
+                  ))}
+                </div>
+              )}
+              {!hasLiveDemo && (
+                <div className="absolute top-2 left-2">
+                  <span className="inline-flex items-center gap-1 rounded-sm px-1.5 py-0.5 text-[10px] font-medium bg-black/60 text-white backdrop-blur-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-zinc-400 inline-block" />
+                    Non-Live
+                  </span>
+                </div>
+              )}
+            </>
+          );
+        })()}
       </div>
       <div className="p-6 flex flex-col gap-3 flex-1">
         <div className="flex items-start justify-between gap-2">
