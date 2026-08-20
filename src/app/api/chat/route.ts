@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
     const completion = await groq.chat.completions.create({
-      model: "qwen/qwen3.6-27b",
+      model: "groq/compound-mini",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         ...messages,
