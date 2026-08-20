@@ -327,7 +327,7 @@ export default function AgentsPage() {
                 </p>
                 <div className="flex flex-col gap-1.5">
                   {agent.qa.map(item => {
-                    const isSelected = activeAgentId === id && (activeQ?.q === item.q || pendingQ?.item.q === item.q);
+                    const isSelected = activeAgentId === id && activeQ?.q === item.q;
                     return (
                       <button
                         key={item.q}
