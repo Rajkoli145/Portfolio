@@ -61,9 +61,6 @@ export default function AgentsPage() {
             <span>AI Agent</span>
           </div>
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Ask About Me</h1>
-          <p className="text-base text-muted-foreground max-w-md">
-            Powered by Llama 3 — ask anything about my projects, experience, research, or skills.
-          </p>
         </div>
       </BlurFade>
 
