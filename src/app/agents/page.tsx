@@ -3,281 +3,341 @@
 import { useState, useEffect, useRef } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { cn } from "@/lib/utils";
-import { Terminal, CheckCircle2, Loader2, Zap } from "lucide-react";
 
-const AGENTS = [
-  {
-    id: "builder",
-    name: "builder-bot",
-    label: "Builder Bot",
-    role: "projects & stack",
-    color: "border-cyan-500/60",
-    headerBg: "bg-cyan-500/10",
-    textColor: "text-cyan-400",
-    ringColor: "ring-cyan-500/30",
-    glowColor: "shadow-cyan-500/10",
-    dotColor: "bg-cyan-400",
-    steps: [
-      "indexing repositories...",
-      "reading package.json files...",
-      "analyzing deployment configs...",
-      "compiling response...",
-    ],
-    qa: [
-      { q: "ls -la ~/projects", label: "What projects did you build?", a: "built 6 projects — FreelancerFlow (fullstack freelancer platform, JWT + invoice pipeline), EduStory (AI storytelling w/ OpenAI), macOS Portfolio (vanilla JS desktop sim, zero deps), DealVault Escrow (TypeScript state machine), Almost Friday (team collab app), AI Founder Intelligence (LLM market analysis). most are live or in active dev 🔥" },
-      { q: "cat tech-stack.json", label: "What's your main tech stack?", a: "react + next.js + typescript frontend / node.js + mongodb + express backend / python for AI pipelines / docker + bash for infra. fullstack and comfortable across the whole thing tbh" },
-      { q: "open --live-demos", label: "Any live demos?", a: "freelancer-flow-seven.vercel.app → FreelancerFlow / edu-story.vercel.app → EduStory / rajkoli.vercel.app → macOS portfolio. DealVault + Almost Friday still cooking 👀" },
-      { q: "git status --current", label: "What are you building rn?", a: "DealVault Escrow (TypeScript escrow platform), Almost Friday (collab fullstack w/ team), AI Founder Intelligence (startup market signal aggregator). all in active dev simultaneously" },
-    ],
-  },
-  {
-    id: "researcher",
-    name: "research-bot",
-    label: "Research Bot",
-    role: "logs & benchmarks",
-    color: "border-violet-500/60",
-    headerBg: "bg-violet-500/10",
-    textColor: "text-violet-400",
-    ringColor: "ring-violet-500/30",
-    glowColor: "shadow-violet-500/10",
-    dotColor: "bg-violet-400",
-    steps: [
-      "mounting research volume...",
-      "parsing 13 benchmark entries...",
-      "cross-referencing findings...",
-      "compiling response...",
-    ],
-    qa: [
-      { q: "cat research/index.md", label: "What research have you published?", a: "13 logs live at rajkoli-27.vercel.app/research — ZFS forensics, AES-CBC padding oracle, ECDSA nonce bias attacks, Verilog FIFO debugging, orbital mechanics simulation, network C2 forensics, acoustic localisation, vm bytecode exploitation, and more. all hands-on benchmark tasks" },
-      { q: "grep -r topics ./logs", label: "What topics do you research?", a: "AI agent evaluation, systems security (crypto attacks, reverse engineering), compiler theory, network forensics, hardware debugging in Verilog, orbital mechanics, and autonomous software systems. pretty wide ngl 🔬" },
-      { q: "man tbench-harbor", label: "What's T-Bench / Harbor?", a: "terminal-bench framework for evaluating AI agents on real software engineering tasks — debugging, security audits, data pipelines, systems analysis. i've completed 13 tasks across it, each documented with full findings" },
-      { q: "cat handbook/readme.md", label: "What's the Agent Systems Handbook?", a: "book i'm writing on modern AI agent architectures — memory, planning, evaluation, tool use, multi-agent coordination. research-driven not theoretical. deep in progress 📖" },
-    ],
-  },
-  {
-    id: "career",
-    name: "career-bot",
-    label: "Career Bot",
-    role: "work & experience",
-    color: "border-emerald-500/60",
-    headerBg: "bg-emerald-500/10",
-    textColor: "text-emerald-400",
-    ringColor: "ring-emerald-500/30",
-    glowColor: "shadow-emerald-500/10",
-    dotColor: "bg-emerald-400",
-    steps: [
-      "loading work history...",
-      "scanning 6 positions...",
-      "analyzing achievements...",
-      "compiling response...",
-    ],
-    qa: [
-      { q: "cat resume/experience.json", label: "Where have you worked?", a: "Handshake AI → AI eval specialist (Jul 2026–present) / Parsewave → AI benchmark contributor (Jun 2026–present) / RustChain → open source CLI contributor, bounty winner / La Tanda → TypeScript SDK dev / Hiero SDK → Python contributor, v0.2.2 release / Unified Mentor → frontend intern (4 months)" },
-      { q: "top --skills", label: "What's your strongest skill?", a: "backend systems + AI agent infra — REST APIs, CLI tooling, linux automation, evaluation pipelines. but comfortable fullstack and can ship across the whole stack tbh" },
-      { q: "ping opportunities", label: "Are you open to work?", a: "yeah always open to the right thing — remote preferred, interesting problems only. hit me at koliraj911@gmail.com or linkedin.com/in/raj-koli-626008318" },
-      { q: "git log --achievements", label: "What's your biggest achievement?", a: "PR merged into Hiero SDK official v0.2.2 release + awarded a bounty on first RustChain PR. open source wins hit different fr 🏆" },
-    ],
-  },
+// ── Network topology (SVG viewBox 0 0 100 50) ──────────────────────────────
+const NODES = [
+  { id: "i1",       x: 4,   y: 18, r: 1.2, type: "io"    },
+  { id: "i2",       x: 4,   y: 38, r: 1.2, type: "io"    },
+  { id: "builder",  x: 20,  y: 14, r: 4.2, type: "agent", label: "Builder",  agentId: "builder"    },
+  { id: "h1",       x: 18,  y: 34, r: 1.8, type: "hidden" },
+  { id: "h2",       x: 36,  y: 22, r: 2.2, type: "hidden" },
+  { id: "h3",       x: 34,  y: 42, r: 1.6, type: "hidden" },
+  { id: "research", x: 52,  y: 14, r: 4.2, type: "agent", label: "Research", agentId: "researcher" },
+  { id: "h4",       x: 54,  y: 38, r: 2.0, type: "hidden" },
+  { id: "h5",       x: 68,  y: 26, r: 1.8, type: "hidden" },
+  { id: "career",   x: 80,  y: 14, r: 4.2, type: "agent", label: "Career",   agentId: "career"     },
+  { id: "h6",       x: 78,  y: 38, r: 1.6, type: "hidden" },
+  { id: "o1",       x: 96,  y: 20, r: 1.2, type: "io"    },
+  { id: "o2",       x: 96,  y: 38, r: 1.2, type: "io"    },
 ];
 
-function useTypewriter(text: string, active: boolean, speed = 14) {
-  const [displayed, setDisplayed] = useState("");
-  const [done, setDone] = useState(false);
+const EDGES = [
+  { id: "e1",  from: "i1",       to: "builder"  },
+  { id: "e2",  from: "i2",       to: "h1"       },
+  { id: "e3",  from: "builder",  to: "h1"       },
+  { id: "e4",  from: "builder",  to: "h2"       },
+  { id: "e5",  from: "h1",       to: "h3"       },
+  { id: "e6",  from: "h1",       to: "h2"       },
+  { id: "e7",  from: "h2",       to: "research" },
+  { id: "e8",  from: "h3",       to: "h4"       },
+  { id: "e9",  from: "research", to: "h4"       },
+  { id: "e10", from: "research", to: "h5"       },
+  { id: "e11", from: "research", to: "career"   },
+  { id: "e12", from: "h4",       to: "h6"       },
+  { id: "e13", from: "h5",       to: "career"   },
+  { id: "e14", from: "career",   to: "h6"       },
+  { id: "e15", from: "career",   to: "o1"       },
+  { id: "e16", from: "h6",       to: "o2"       },
+];
 
+const SIGNAL_CONFIGS = [
+  { edgeId: "e1",  dur: 3.2, begin: 0    },
+  { edgeId: "e2",  dur: 4.1, begin: 1.5  },
+  { edgeId: "e3",  dur: 2.8, begin: 0.8  },
+  { edgeId: "e4",  dur: 3.6, begin: 2.2  },
+  { edgeId: "e5",  dur: 4.4, begin: 0.3  },
+  { edgeId: "e6",  dur: 2.9, begin: 3.1  },
+  { edgeId: "e7",  dur: 3.3, begin: 1.0  },
+  { edgeId: "e8",  dur: 4.0, begin: 2.7  },
+  { edgeId: "e9",  dur: 3.1, begin: 0.5  },
+  { edgeId: "e10", dur: 2.7, begin: 1.8  },
+  { edgeId: "e11", dur: 3.8, begin: 0.9  },
+  { edgeId: "e12", dur: 4.2, begin: 3.4  },
+  { edgeId: "e13", dur: 3.0, begin: 2.0  },
+  { edgeId: "e14", dur: 3.5, begin: 1.2  },
+  { edgeId: "e15", dur: 2.6, begin: 0.4  },
+  { edgeId: "e16", dur: 4.3, begin: 2.9  },
+];
+
+// ── Agent Q&A data ──────────────────────────────────────────────────────────
+const AGENTS: Record<string, { label: string; color: string; qa: { q: string; a: string }[] }> = {
+  builder: {
+    label: "Builder",
+    color: "#e2e8f0",
+    qa: [
+      { q: "What projects have you built?", a: "6 projects — FreelancerFlow (fullstack freelancer platform, JWT + invoice pipeline), EduStory (AI storytelling w/ OpenAI), macOS Portfolio (vanilla JS desktop sim, zero deps), DealVault Escrow (TypeScript state machine), Almost Friday (team collab app), AI Founder Intelligence (LLM market analysis). most are live or in active dev" },
+      { q: "What's your tech stack?", a: "react + next.js + typescript frontend / node.js + mongodb + express backend / python for AI pipelines / docker + bash for infra. comfortable across the full stack" },
+      { q: "Any live demos?", a: "freelancer-flow-seven.vercel.app → FreelancerFlow / edu-story.vercel.app → EduStory / rajkoli.vercel.app → macOS portfolio. DealVault + Almost Friday still in progress" },
+      { q: "What are you building right now?", a: "DealVault Escrow (TypeScript escrow platform), Almost Friday (collab fullstack with a team), AI Founder Intelligence (startup market signal aggregator). all in active development simultaneously" },
+    ],
+  },
+  researcher: {
+    label: "Research",
+    color: "#e2e8f0",
+    qa: [
+      { q: "What research have you published?", a: "13 logs live at rajkoli-27.vercel.app/research — ZFS forensics, AES-CBC padding oracle, ECDSA nonce bias attacks, Verilog FIFO debugging, orbital mechanics simulation, network C2 forensics, acoustic localisation, VM bytecode exploitation and more. all hands-on benchmark tasks" },
+      { q: "What topics do you cover?", a: "AI agent evaluation, systems security (crypto attacks, reverse engineering), compiler theory, network forensics, hardware debugging in Verilog, orbital mechanics, autonomous software systems. wide range" },
+      { q: "What's T-Bench / Harbor?", a: "terminal-bench framework for evaluating AI agents on real software engineering tasks — debugging, security audits, data pipelines, systems analysis. completed 13 tasks across it, each documented with full findings" },
+      { q: "What's the Agent Systems Handbook?", a: "book on modern AI agent architectures — memory, planning, evaluation, tool use, multi-agent coordination. research-driven, not theoretical fluff. deep in progress" },
+    ],
+  },
+  career: {
+    label: "Career",
+    color: "#e2e8f0",
+    qa: [
+      { q: "Where have you worked?", a: "Handshake AI → AI eval specialist (Jul 2026–present) / Parsewave → AI benchmark contributor (Jun 2026–present) / RustChain → open source CLI contributor, bounty winner / La Tanda → TypeScript SDK dev / Hiero SDK → Python contributor, v0.2.2 release / Unified Mentor → frontend intern (4 months)" },
+      { q: "What's your strongest skill?", a: "backend systems + AI agent infra — REST APIs, CLI tooling, Linux automation, evaluation pipelines. comfortable fullstack and can ship across the entire stack" },
+      { q: "Are you open to opportunities?", a: "yeah, always open to the right thing. remote preferred, interesting problems only. reach me at koliraj911@gmail.com or linkedin.com/in/raj-koli-626008318" },
+      { q: "What's your biggest win?", a: "PR merged into Hiero SDK official v0.2.2 release + awarded a bounty on first RustChain PR submission. also a paid benchmark contribution at Parsewave that passed full technical review" },
+    ],
+  },
+};
+
+// ── Typewriter hook ─────────────────────────────────────────────────────────
+function useTypewriter(text: string, speed = 16) {
+  const [out, setOut] = useState("");
+  const [done, setDone] = useState(false);
   useEffect(() => {
-    setDisplayed("");
-    setDone(false);
-    if (!text || !active) return;
+    setOut(""); setDone(false);
+    if (!text) return;
     let i = 0;
     const id = setInterval(() => {
       i++;
-      setDisplayed(text.slice(0, i));
+      setOut(text.slice(0, i));
       if (i >= text.length) { clearInterval(id); setDone(true); }
     }, speed);
     return () => clearInterval(id);
-  }, [text, active]);
-
-  return { displayed, done };
+  }, [text]);
+  return { out, done };
 }
 
-function ProcessingSteps({ steps, onDone, textColor }: { steps: string[]; onDone: () => void; textColor: string }) {
-  const [current, setCurrent] = useState(0);
-  const [done, setDone] = useState<number[]>([]);
-
-  useEffect(() => {
-    if (current >= steps.length) { onDone(); return; }
-    const t = setTimeout(() => {
-      setDone((d) => [...d, current]);
-      setCurrent((c) => c + 1);
-    }, 420);
-    return () => clearTimeout(t);
-  }, [current, steps.length]);
+// ── SVG Network ─────────────────────────────────────────────────────────────
+function Network({ activeAgentId }: { activeAgentId: string | null }) {
+  const nodeMap = Object.fromEntries(NODES.map(n => [n.id, n]));
 
   return (
-    <div className="flex flex-col gap-1">
-      {steps.map((step, i) => {
-        const isDone = done.includes(i);
-        const isActive = current === i;
-        if (i > current) return null;
+    <svg
+      viewBox="0 0 100 50"
+      className="w-full"
+      style={{ height: "clamp(200px, 38vw, 340px)" }}
+      preserveAspectRatio="xMidYMid meet"
+    >
+      <defs>
+        <filter id="glow-agent" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="1.8" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="glow-signal" x="-200%" y="-200%" width="500%" height="500%">
+          <feGaussianBlur stdDeviation="0.5" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        {EDGES.map(e => {
+          const a = nodeMap[e.from]; const b = nodeMap[e.to];
+          return (
+            <path
+              key={`path-${e.id}`}
+              id={`path-${e.id}`}
+              d={`M${a.x},${a.y} L${b.x},${b.y}`}
+              fill="none"
+            />
+          );
+        })}
+      </defs>
+
+      {/* Edges */}
+      {EDGES.map(e => {
+        const a = nodeMap[e.from]; const b = nodeMap[e.to];
+        const isActive = activeAgentId && (
+          a.agentId === activeAgentId || b.agentId === activeAgentId
+        );
         return (
-          <div key={step} className="flex items-center gap-2 text-xs font-mono">
-            {isDone ? (
-              <CheckCircle2 className={cn("size-3 shrink-0", textColor)} />
-            ) : (
-              <Loader2 className="size-3 shrink-0 text-muted-foreground animate-spin" />
-            )}
-            <span className={isDone ? "text-muted-foreground" : "text-foreground"}>{step}</span>
-            {isDone && <span className="ml-auto text-muted-foreground/40 text-[10px]">{(i + 1) * 0.4}s</span>}
-          </div>
+          <line
+            key={e.id}
+            x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+            stroke="white"
+            strokeWidth="0.18"
+            strokeOpacity={isActive ? 0.28 : 0.1}
+            style={{ transition: "stroke-opacity 0.6s ease" }}
+          />
         );
       })}
-    </div>
+
+      {/* Traveling signals */}
+      {SIGNAL_CONFIGS.map(cfg => {
+        const edge = EDGES.find(e => e.id === cfg.edgeId)!;
+        const a = nodeMap[edge.from]; const b = nodeMap[edge.to];
+        const isActive = activeAgentId && (
+          a.agentId === activeAgentId || b.agentId === activeAgentId
+        );
+        return (
+          <circle
+            key={cfg.edgeId}
+            r="0.6"
+            fill="white"
+            opacity={isActive ? 0.85 : 0.35}
+            filter="url(#glow-signal)"
+            style={{ transition: "opacity 0.5s ease" }}
+          >
+            <animateMotion
+              dur={`${isActive ? cfg.dur * 0.55 : cfg.dur}s`}
+              repeatCount="indefinite"
+              begin={`${cfg.begin}s`}
+            >
+              <mpath href={`#path-${cfg.edgeId}`} />
+            </animateMotion>
+          </circle>
+        );
+      })}
+
+      {/* Nodes */}
+      {NODES.map(n => {
+        const isActiveAgent = n.type === "agent" && n.agentId === activeAgentId;
+        const isAgent = n.type === "agent";
+
+        return (
+          <g key={n.id}>
+            {isActiveAgent && (
+              <>
+                <circle
+                  cx={n.x} cy={n.y} r={n.r + 3}
+                  fill="white" fillOpacity={0.04}
+                  stroke="white" strokeOpacity={0.12} strokeWidth="0.2"
+                >
+                  <animate attributeName="r" values={`${n.r+2};${n.r+4.5};${n.r+2}`} dur="2.4s" repeatCount="indefinite" />
+                  <animate attributeName="fill-opacity" values="0.04;0.01;0.04" dur="2.4s" repeatCount="indefinite" />
+                </circle>
+                <circle
+                  cx={n.x} cy={n.y} r={n.r + 1.2}
+                  fill="none"
+                  stroke="white" strokeOpacity={0.2} strokeWidth="0.25"
+                >
+                  <animate attributeName="r" values={`${n.r+1};${n.r+2.5};${n.r+1}`} dur="1.8s" repeatCount="indefinite" />
+                </circle>
+              </>
+            )}
+
+            <circle
+              cx={n.x} cy={n.y} r={n.r}
+              fill={isActiveAgent ? "white" : isAgent ? "white" : "white"}
+              fillOpacity={
+                isActiveAgent ? 0.95 :
+                isAgent ? 0.55 :
+                n.type === "io" ? 0.25 :
+                0.3
+              }
+              filter={isAgent ? "url(#glow-agent)" : undefined}
+              style={{ transition: "fill-opacity 0.5s ease" }}
+            />
+
+            {isAgent && (
+              <text
+                x={n.x}
+                y={n.y + n.r + 2.4}
+                textAnchor="middle"
+                fontSize="2.2"
+                fill="white"
+                fillOpacity={isActiveAgent ? 0.9 : 0.45}
+                fontFamily="system-ui, sans-serif"
+                fontWeight={isActiveAgent ? "600" : "400"}
+                style={{ transition: "fill-opacity 0.5s ease" }}
+              >
+                {n.label}
+              </text>
+            )}
+          </g>
+        );
+      })}
+    </svg>
   );
 }
 
+// ── Page ────────────────────────────────────────────────────────────────────
 export default function AgentsPage() {
-  const [activeAgent, setActiveAgent] = useState<string | null>(null);
-  const [activeQ, setActiveQ] = useState<{ q: string; label: string; a: string } | null>(null);
-  const [phase, setPhase] = useState<"idle" | "processing" | "answer">("idle");
-  const termRef = useRef<HTMLDivElement>(null);
+  const [activeAgentId, setActiveAgentId] = useState<string | null>(null);
+  const [activeQ, setActiveQ] = useState<{ q: string; a: string } | null>(null);
+  const answerRef = useRef<HTMLDivElement>(null);
+  const { out, done } = useTypewriter(activeQ?.a ?? "");
 
-  const agent = AGENTS.find((a) => a.id === activeAgent);
-  const { displayed, done: typeDone } = useTypewriter(activeQ?.a ?? "", phase === "answer");
-
-  const handleQ = (agentId: string, item: { q: string; label: string; a: string }) => {
-    setActiveAgent(agentId);
+  const handleQ = (agentId: string, item: { q: string; a: string }) => {
+    setActiveAgentId(agentId);
     setActiveQ(item);
-    setPhase("processing");
-    setTimeout(() => termRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 80);
+    setTimeout(() => answerRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 120);
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-12 pb-32 px-6 sm:py-24">
-      <BlurFade delay={0.04}>
-        <div className="flex flex-col items-center text-center gap-3 mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium">
-            <Zap className="size-3.5" />
-            <span>AI Agents</span>
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Meet Raj's AI Crew</h1>
-          <p className="text-sm text-muted-foreground max-w-md">
-            Run a command. Watch the agent work. Get the answer.
-          </p>
-        </div>
-      </BlurFade>
+    <div
+      className="min-h-screen pb-32"
+      style={{ background: "radial-gradient(ellipse at 50% 0%, #0f0f1a 0%, #080810 60%, #050508 100%)" }}
+    >
+      <div className="max-w-5xl mx-auto px-6 pt-16 sm:pt-24">
 
-      {/* Agent terminal cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-        {AGENTS.map((ag, i) => {
-          const isActive = activeAgent === ag.id;
-          return (
-            <BlurFade key={ag.id} delay={0.08 + i * 0.06}>
-              <div className={cn(
-                "rounded-xl border bg-[#0d0d0d] overflow-hidden transition-all duration-300 shadow-lg",
-                ag.glowColor,
-                isActive ? ag.color : "border-border/40 hover:border-border/80"
-              )}>
-                {/* Terminal title bar */}
-                <div className={cn("flex items-center gap-2 px-4 py-2.5 border-b border-border/40", isActive ? ag.headerBg : "bg-muted/5")}>
-                  <div className="flex gap-1.5">
-                    <div className="size-2.5 rounded-full bg-red-500/60" />
-                    <div className="size-2.5 rounded-full bg-yellow-500/60" />
-                    <div className="size-2.5 rounded-full bg-green-500/60" />
-                  </div>
-                  <div className="flex items-center gap-1.5 ml-1">
-                    <Terminal className={cn("size-3", ag.textColor)} />
-                    <span className={cn("text-[11px] font-mono font-semibold", ag.textColor)}>{ag.name}</span>
-                  </div>
-                  <div className="ml-auto flex items-center gap-1.5">
-                    <span className={cn("size-1.5 rounded-full animate-pulse", ag.dotColor)} />
-                    <span className="text-[10px] font-mono text-muted-foreground">{ag.role}</span>
-                  </div>
-                </div>
-
-                {/* Commands */}
-                <div className="p-3 flex flex-col gap-1">
-                  {ag.qa.map((item) => {
-                    const isSelected = activeQ?.q === item.q && activeAgent === ag.id;
-                    return (
-                      <button
-                        key={item.q}
-                        onClick={() => handleQ(ag.id, item)}
-                        className={cn(
-                          "text-left font-mono text-[11px] px-3 py-2 rounded-lg border transition-all group",
-                          isSelected
-                            ? cn("border-opacity-60 bg-muted/30", ag.color)
-                            : "border-border/30 hover:border-border/60 bg-transparent hover:bg-muted/10"
-                        )}
-                      >
-                        <span className={cn("mr-1.5", ag.textColor)}>$</span>
-                        <span className="text-muted-foreground group-hover:text-foreground transition-colors">{item.q}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            </BlurFade>
-          );
-        })}
-      </div>
-
-      {/* Terminal output */}
-      {activeAgent && activeQ && agent && (
-        <BlurFade delay={0} key={`${activeAgent}-${activeQ.q}`}>
-          <div
-            ref={termRef}
-            className={cn(
-              "rounded-xl border bg-[#0a0a0a] overflow-hidden shadow-xl transition-all",
-              agent.glowColor,
-              agent.color
-            )}
-          >
-            {/* Title bar */}
-            <div className={cn("flex items-center gap-2 px-4 py-2.5 border-b border-border/40", agent.headerBg)}>
-              <div className="flex gap-1.5">
-                <div className="size-2.5 rounded-full bg-red-500/60" />
-                <div className="size-2.5 rounded-full bg-yellow-500/60" />
-                <div className="size-2.5 rounded-full bg-green-500/60" />
-              </div>
-              <Terminal className={cn("size-3 ml-1", agent.textColor)} />
-              <span className={cn("text-[11px] font-mono font-semibold", agent.textColor)}>{agent.name} — output</span>
-              <span className="ml-auto text-[10px] font-mono text-muted-foreground">{activeQ.label}</span>
-            </div>
-
-            <div className="p-5 font-mono text-xs space-y-4">
-              {/* Query line */}
-              <div>
-                <span className={cn("mr-2", agent.textColor)}>$</span>
-                <span className="text-foreground">{activeQ.q}</span>
-              </div>
-
-              {/* Processing steps */}
-              {(phase === "processing" || phase === "answer") && (
-                <div className="pl-4 border-l border-border/30 space-y-1">
-                  <ProcessingSteps
-                    steps={agent.steps}
-                    textColor={agent.textColor}
-                    onDone={() => setPhase("answer")}
-                  />
-                </div>
-              )}
-
-              {/* Answer */}
-              {phase === "answer" && (
-                <div className="space-y-1">
-                  <div className="text-muted-foreground/50 text-[10px] uppercase tracking-widest mb-2">— response —</div>
-                  <p className={cn("leading-relaxed", agent.textColor)}>
-                    {displayed}
-                    {!typeDone && (
-                      <span className="animate-pulse inline-block w-[2px] h-[11px] bg-current align-middle ml-0.5" />
-                    )}
-                  </p>
-                </div>
-              )}
-            </div>
+        <BlurFade delay={0.04}>
+          <div className="text-center mb-10">
+            <p className="text-[11px] font-medium tracking-[0.2em] uppercase text-white/30 mb-3">Neural Agent Network</p>
+            <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-white/90">
+              Ask About Me
+            </h1>
+            <p className="text-sm text-white/30 mt-3">select a question — watch the network respond</p>
           </div>
         </BlurFade>
-      )}
+
+        {/* Neural network */}
+        <BlurFade delay={0.08}>
+          <div className="mb-10 px-2">
+            <Network activeAgentId={activeAgentId} />
+          </div>
+        </BlurFade>
+
+        {/* Question columns */}
+        <BlurFade delay={0.12}>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+            {Object.entries(AGENTS).map(([id, agent]) => (
+              <div key={id} className="flex flex-col gap-2">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-white/35 mb-1 text-center">
+                  {agent.label} Agent
+                </p>
+                {agent.qa.map(item => {
+                  const isActive = activeAgentId === id && activeQ?.q === item.q;
+                  return (
+                    <button
+                      key={item.q}
+                      onClick={() => handleQ(id, item)}
+                      className={cn(
+                        "text-left text-xs px-3.5 py-2.5 rounded-lg border transition-all duration-300",
+                        isActive
+                          ? "border-white/30 bg-white/10 text-white"
+                          : "border-white/8 bg-white/3 text-white/45 hover:text-white/70 hover:border-white/15 hover:bg-white/6"
+                      )}
+                    >
+                      {item.q}
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </BlurFade>
+
+        {/* Answer */}
+        {activeQ && (
+          <BlurFade delay={0} key={activeQ.q}>
+            <div
+              ref={answerRef}
+              className="rounded-2xl border border-white/10 bg-white/4 backdrop-blur-sm px-7 py-6"
+            >
+              <p className="text-[10px] uppercase tracking-[0.2em] text-white/25 mb-4">
+                {AGENTS[activeAgentId!]?.label} · response
+              </p>
+              <p className="text-sm sm:text-base leading-relaxed text-white/80 font-light">
+                {out}
+                {!done && (
+                  <span className="inline-block w-[2px] h-[14px] bg-white/60 align-middle ml-0.5 animate-pulse" />
+                )}
+              </p>
+            </div>
+          </BlurFade>
+        )}
+      </div>
     </div>
   );
 }
