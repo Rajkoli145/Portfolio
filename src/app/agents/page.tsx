@@ -1,156 +1,242 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, Sparkles, Loader2 } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
-import type { Metadata } from "next";
+import { Hammer, FlaskConical, Briefcase, ChevronRight, Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const SUGGESTIONS = [
-  "What projects have you built?",
-  "Tell me about your research logs",
-  "What's your tech stack?",
-  "Where have you worked?",
-  "Are you open to opportunities?",
-  "What is the Agent Systems Handbook?",
+const AGENTS = [
+  {
+    id: "builder",
+    name: "Builder Bot",
+    role: "Projects & Stack",
+    icon: Hammer,
+    color: "from-blue-500/20 to-cyan-500/20",
+    border: "hover:border-blue-500/50 data-[active=true]:border-blue-500/70",
+    glow: "shadow-blue-500/20",
+    dot: "bg-blue-400",
+    accent: "text-blue-400",
+    badge: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    qa: [
+      {
+        q: "What projects have you built?",
+        a: "built 6 projects — FreelancerFlow (freelancer platform w/ JWT + invoice pipeline), EduStory (AI storytelling w/ OpenAI), macOS Portfolio (vanilla JS desktop sim, zero deps), DealVault Escrow (TypeScript escrow platform), Almost Friday (team fullstack app), and AI Founder Intelligence (LLM market analysis). most are live or in active dev 🔥",
+      },
+      {
+        q: "What's your main tech stack?",
+        a: "react + next.js + typescript on the frontend, node.js + mongodb + express on backend, python for AI pipelines, docker + bash for infra stuff. lowkey comfortable across the whole stack tbh",
+      },
+      {
+        q: "Any live demos?",
+        a: "yeah — FreelancerFlow at freelancer-flow-seven.vercel.app, EduStory at edu-story.vercel.app, and the macOS portfolio at rajkoli.vercel.app. DealVault + Almost Friday still cooking 👀",
+      },
+      {
+        q: "What are you building right now?",
+        a: "DealVault Escrow (production TypeScript escrow platform), Almost Friday (collab fullstack w/ a team), and AI Founder Intelligence (market signal aggregator for founders). all in active dev rn",
+      },
+    ],
+  },
+  {
+    id: "researcher",
+    name: "Research Bot",
+    role: "Logs & Benchmarks",
+    icon: FlaskConical,
+    color: "from-violet-500/20 to-purple-500/20",
+    border: "hover:border-violet-500/50 data-[active=true]:border-violet-500/70",
+    glow: "shadow-violet-500/20",
+    dot: "bg-violet-400",
+    accent: "text-violet-400",
+    badge: "bg-violet-500/10 text-violet-400 border-violet-500/20",
+    qa: [
+      {
+        q: "What research have you published?",
+        a: "13 research logs live at rajkoli-27.vercel.app/research — covers ZFS forensics, AES-CBC padding oracle, ECDSA nonce bias attacks, Verilog FIFO debugging, orbital mechanics simulation, network C2 forensics, acoustic source localisation and more. all hands-on benchmark tasks",
+      },
+      {
+        q: "What topics do you research?",
+        a: "AI agent evaluation, systems security (crypto attacks, reverse engineering), compiler theory, network forensics, hardware debugging (Verilog), orbital mechanics, and autonomous software systems. pretty wide range ngl 🔬",
+      },
+      {
+        q: "What's the T-Bench / Harbor Framework?",
+        a: "terminal-bench framework for evaluating AI agents on real software engineering tasks — debugging, security audits, systems analysis. i've done 13 tasks across it covering security, hardware, data pipelines, and more",
+      },
+      {
+        q: "What is the Agent Systems Handbook?",
+        a: "book i'm writing covering modern AI agent architectures — memory, planning, evaluation, tool use, multi-agent coordination. research-driven, not theoretical fluff. still in progress but it's getting deep 📖",
+      },
+    ],
+  },
+  {
+    id: "career",
+    name: "Career Bot",
+    role: "Work & Experience",
+    icon: Briefcase,
+    color: "from-emerald-500/20 to-green-500/20",
+    border: "hover:border-emerald-500/50 data-[active=true]:border-emerald-500/70",
+    glow: "shadow-emerald-500/20",
+    dot: "bg-emerald-400",
+    accent: "text-emerald-400",
+    badge: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+    qa: [
+      {
+        q: "Where have you worked?",
+        a: "Handshake AI (AI eval specialist, Jul 2026–present), Parsewave (AI benchmark contributor, Jun 2026–present), RustChain (open source CLI contributor, bounty winner), La Tanda (TypeScript SDK dev), Hiero SDK (Python contributor, v0.2.2 release), Unified Mentor (frontend intern, 4 months)",
+      },
+      {
+        q: "What's your strongest skill?",
+        a: "backend systems + AI agent infra honestly — REST APIs, CLI tooling, linux automation, evaluation pipelines. but i'm comfortable fullstack and can ship across the whole thing",
+      },
+      {
+        q: "Are you open to opportunities?",
+        a: "yeah always open to the right thing — remote preferred, interesting problems only. hit me at koliraj911@gmail.com or linkedin.com/in/raj-koli-626008318",
+      },
+      {
+        q: "What's your biggest achievement?",
+        a: "tbh getting a PR merged into Hiero SDK's official v0.2.2 release + awarded a bounty on my first RustChain PR submission. open source wins hit different fr",
+      },
+    ],
+  },
 ];
 
-interface Message {
-  role: "user" | "assistant";
-  content: string;
+function useTypewriter(text: string, speed = 18) {
+  const [displayed, setDisplayed] = useState("");
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    setDisplayed("");
+    setDone(false);
+    if (!text) return;
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setDisplayed(text.slice(0, i));
+      if (i >= text.length) {
+        clearInterval(interval);
+        setDone(true);
+      }
+    }, speed);
+    return () => clearInterval(interval);
+  }, [text, speed]);
+
+  return { displayed, done };
 }
 
 export default function AgentsPage() {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const [activeAgent, setActiveAgent] = useState<string | null>(null);
+  const [activeAnswer, setActiveAnswer] = useState("");
+  const [activeQ, setActiveQ] = useState("");
+  const answerRef = useRef<HTMLDivElement>(null);
+  const { displayed, done } = useTypewriter(activeAnswer);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, loading]);
-
-  const send = async (text: string) => {
-    if (!text.trim() || loading) return;
-    const userMsg: Message = { role: "user", content: text.trim() };
-    const next = [...messages, userMsg];
-    setMessages(next);
-    setInput("");
-    setLoading(true);
-
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
-      });
-      const data = await res.json();
-      setMessages([...next, { role: "assistant", content: data.reply ?? data.error ?? "Something went wrong." }]);
-    } catch {
-      setMessages([...next, { role: "assistant", content: "Network error — try again." }]);
-    } finally {
-      setLoading(false);
-    }
+  const handleQ = (agentId: string, q: string, a: string) => {
+    setActiveAgent(agentId);
+    setActiveQ(q);
+    setActiveAnswer(a);
+    setTimeout(() => answerRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 100);
   };
 
+  const agent = AGENTS.find((a) => a.id === activeAgent);
+
   return (
-    <div className="max-w-2xl mx-auto py-12 pb-32 px-6 sm:py-24">
+    <div className="max-w-5xl mx-auto py-12 pb-32 px-6 sm:py-24">
       <BlurFade delay={0.04}>
-        <div className="flex flex-col items-center text-center gap-3 mb-10">
+        <div className="flex flex-col items-center text-center gap-3 mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-medium">
-            <Sparkles className="size-3.5" />
-            <span>AI Agent</span>
+            <Zap className="size-3.5" />
+            <span>AI Agents</span>
           </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Ask About Me</h1>
+          <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Meet Raj's AI Crew</h1>
+          <p className="text-sm text-muted-foreground max-w-md">
+            Pick an agent. Ask a question. Get an answer instantly.
+          </p>
         </div>
       </BlurFade>
 
-      {/* Chat window */}
-      <BlurFade delay={0.08}>
-        <div className="rounded-2xl border bg-card shadow-sm overflow-hidden flex flex-col" style={{ minHeight: 420 }}>
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-4" style={{ maxHeight: 480 }}>
-            {messages.length === 0 && (
-              <div className="flex flex-col items-center justify-center h-48 gap-3 text-center">
-                <Bot className="size-10 text-muted-foreground/40" />
-                <p className="text-sm text-muted-foreground">Start a conversation below or pick a suggestion.</p>
-              </div>
-            )}
-            {messages.map((msg, i) => (
-              <div key={i} className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                {msg.role === "assistant" && (
-                  <div className="size-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
-                    <Bot className="size-3.5 text-primary" />
-                  </div>
+      {/* Agent Cards Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        {AGENTS.map((agent, i) => {
+          const Icon = agent.icon;
+          const isActive = activeAgent === agent.id;
+          return (
+            <BlurFade key={agent.id} delay={0.08 + i * 0.06}>
+              <div
+                data-active={isActive}
+                className={cn(
+                  "rounded-2xl border bg-card p-5 flex flex-col gap-4 transition-all duration-300 cursor-default",
+                  `shadow-lg ${agent.glow}`,
+                  agent.border,
+                  isActive && `bg-gradient-to-br ${agent.color}`
                 )}
-                <div className={`rounded-2xl px-4 py-2.5 max-w-[80%] text-sm leading-relaxed ${
-                  msg.role === "user"
-                    ? "bg-primary text-primary-foreground rounded-br-sm"
-                    : "bg-muted text-foreground rounded-bl-sm"
-                }`}>
-                  {msg.content}
-                </div>
-                {msg.role === "user" && (
-                  <div className="size-7 rounded-full bg-secondary border flex items-center justify-center shrink-0 mt-0.5">
-                    <User className="size-3.5 text-muted-foreground" />
-                  </div>
-                )}
-              </div>
-            ))}
-            {loading && (
-              <div className="flex gap-3 justify-start">
-                <div className="size-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                  <Bot className="size-3.5 text-primary" />
-                </div>
-                <div className="bg-muted rounded-2xl rounded-bl-sm px-4 py-3 flex items-center gap-1.5">
-                  <Loader2 className="size-3.5 animate-spin text-muted-foreground" />
-                  <span className="text-xs text-muted-foreground">Thinking…</span>
-                </div>
-              </div>
-            )}
-            <div ref={bottomRef} />
-          </div>
-
-          {/* Input */}
-          <div className="border-t p-4">
-            <form
-              onSubmit={(e) => { e.preventDefault(); send(input); }}
-              className="flex gap-2"
-            >
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything…"
-                className="flex-1 rounded-xl border bg-background px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 placeholder:text-muted-foreground"
-                disabled={loading}
-              />
-              <button
-                type="submit"
-                disabled={loading || !input.trim()}
-                className="rounded-xl bg-primary text-primary-foreground px-4 py-2.5 flex items-center gap-1.5 text-sm font-medium hover:bg-primary/90 disabled:opacity-40 transition-colors"
               >
-                <Send className="size-3.5" />
-                Send
-              </button>
-            </form>
-          </div>
-        </div>
-      </BlurFade>
+                {/* Agent header */}
+                <div className="flex items-center gap-3">
+                  <div className={cn("size-10 rounded-xl flex items-center justify-center bg-gradient-to-br", agent.color, "border border-border")}>
+                    <Icon className={cn("size-5", agent.accent)} />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="font-bold text-sm">{agent.name}</span>
+                      <span className={cn("relative flex size-1.5")}>
+                        <span className={cn("animate-ping absolute inline-flex h-full w-full rounded-full opacity-75", agent.dot)} />
+                        <span className={cn("relative inline-flex rounded-full size-1.5", agent.dot)} />
+                      </span>
+                    </div>
+                    <span className={cn("text-[10px] font-medium px-1.5 py-0.5 rounded border", agent.badge)}>
+                      {agent.role}
+                    </span>
+                  </div>
+                </div>
 
-      {/* Suggestion chips */}
-      <BlurFade delay={0.12}>
-        <div className="mt-5 flex flex-wrap gap-2 justify-center">
-          {SUGGESTIONS.map((s) => (
-            <button
-              key={s}
-              onClick={() => send(s)}
-              disabled={loading}
-              className="px-3 py-1.5 rounded-full border border-border bg-card text-xs text-muted-foreground hover:text-foreground hover:border-primary/40 hover:bg-muted transition-all disabled:opacity-40"
-            >
-              {s}
-            </button>
-          ))}
-        </div>
-      </BlurFade>
+                {/* Questions */}
+                <div className="flex flex-col gap-1.5">
+                  {agent.qa.map((item) => (
+                    <button
+                      key={item.q}
+                      onClick={() => handleQ(agent.id, item.q, item.a)}
+                      className={cn(
+                        "text-left text-xs px-3 py-2 rounded-lg border border-border/60 bg-background/60 hover:bg-muted transition-all flex items-center gap-2 group",
+                        activeQ === item.q && activeAgent === agent.id && `border-opacity-100 bg-muted`
+                      )}
+                    >
+                      <ChevronRight className={cn("size-3 shrink-0 transition-transform group-hover:translate-x-0.5", agent.accent)} />
+                      <span className="text-muted-foreground group-hover:text-foreground transition-colors">{item.q}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </BlurFade>
+          );
+        })}
+      </div>
+
+      {/* Answer area */}
+      {activeAgent && (
+        <BlurFade delay={0}>
+          <div
+            ref={answerRef}
+            className={cn(
+              "rounded-2xl border bg-card p-6 shadow-lg transition-all",
+              agent && `shadow-lg ${agent.glow}`
+            )}
+          >
+            <div className="flex items-center gap-2 mb-4 pb-3 border-b">
+              {agent && (
+                <>
+                  <div className={cn("size-6 rounded-lg flex items-center justify-center bg-gradient-to-br", agent.color)}>
+                    {agent && <agent.icon className={cn("size-3.5", agent.accent)} />}
+                  </div>
+                  <span className="text-xs font-semibold">{agent.name}</span>
+                  <span className="text-xs text-muted-foreground ml-auto font-mono">{activeQ}</span>
+                </>
+              )}
+            </div>
+            <p className="text-sm leading-relaxed text-foreground font-mono">
+              {displayed}
+              {!done && <span className="animate-pulse ml-0.5 inline-block w-[2px] h-[14px] bg-primary align-middle" />}
+            </p>
+          </div>
+        </BlurFade>
+      )}
     </div>
   );
 }
