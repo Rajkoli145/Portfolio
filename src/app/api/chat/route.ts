@@ -90,12 +90,15 @@ export async function POST(req: NextRequest) {
         { role: "system", content: SYSTEM_PROMPT },
         ...messages,
       ],
-      max_tokens: 300,
+      max_tokens: 1024,
       temperature: 0.7,
     });
 
     const raw = completion.choices[0]?.message?.content ?? "Sorry, I couldn't generate a response.";
-    const reply = raw.replace(/<think>[\s\S]*?<\/think>/g, "").trim();
+    const reply = raw
+      .replace(/<think>[\s\S]*?<\/think>/g, "")
+      .replace(/<think>[\s\S]*/g, "")
+      .trim();
     return NextResponse.json({ reply });
   } catch (err: any) {
     return NextResponse.json({ error: err.message ?? "Something went wrong" }, { status: 500 });
