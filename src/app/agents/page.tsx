@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import BlurFade from "@/components/magicui/blur-fade";
 import { cn } from "@/lib/utils";
-import { ChevronRight, Send } from "lucide-react";
+import { ChevronDown, ChevronRight, Send } from "lucide-react";
 
 // ── Network layout ──────────────────────────────────────────────────────────
 const VW = 700;
@@ -485,6 +485,7 @@ export default function AgentsPage() {
   const [activeQ, setActiveQ] = useState<{ q: string; a: string } | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
   const [customInput, setCustomInput] = useState("");
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
   const answerRef = useRef<HTMLDivElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const { out, done } = useTypewriter(activeQ?.a ?? "", phase === "answer");
@@ -535,7 +536,7 @@ export default function AgentsPage() {
           <div className="text-center mb-10">
             <p className="text-[10px] tracking-[0.25em] uppercase text-muted-foreground/50 mb-3 font-semibold">Neural Agent Network</p>
             <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight">Ask About Me</h1>
-            <p className="text-xs text-muted-foreground/50 mt-3 tracking-wide">select a question — watch the network activate</p>
+            <p className="text-xs text-muted-foreground/50 mt-3 tracking-wide">type anything or explore agent categories below</p>
           </div>
         </BlurFade>
 
@@ -568,40 +569,60 @@ export default function AgentsPage() {
           )}
         </div>
 
-        {/* Questions */}
+        {/* Questions — collapsible categories */}
         <BlurFade delay={0.12}>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
-            {Object.entries(AGENTS).map(([id, agent]) => (
-              <div key={id}>
-                <p className="text-[9px] tracking-[0.2em] uppercase text-muted-foreground/50 mb-2.5 font-semibold pl-1">
-                  {agent.label} Agent
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  {agent.qa.map(item => {
-                    const isSelected = activeAgentId === id && activeQ?.q === item.q;
-                    return (
-                      <button
-                        key={item.q}
-                        onClick={() => handleQ(id, item)}
-                        disabled={phase === "activating" || phase === "processing" || phase === "retreating"}
-                        className={cn(
-                          "text-left text-[11px] leading-snug px-3.5 py-2.5 rounded-xl border transition-all duration-300 flex items-center gap-2 group",
-                          isSelected
-                            ? "border-foreground/25 bg-foreground/8 text-foreground"
-                            : "border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
-                        )}
-                      >
-                        <ChevronRight className={cn(
-                          "size-3 shrink-0 transition-transform",
-                          isSelected ? "translate-x-0.5 text-foreground" : "text-muted-foreground/40 group-hover:translate-x-0.5"
-                        )} />
-                        {item.q}
-                      </button>
-                    );
-                  })}
+          <div className="flex flex-col gap-2 mb-10">
+            {Object.entries(AGENTS).map(([id, agent]) => {
+              const isOpen = openCategory === id;
+              const busy = phase === "activating" || phase === "processing" || phase === "retreating";
+              return (
+                <div key={id} className="rounded-xl border border-border overflow-hidden">
+                  <button
+                    onClick={() => setOpenCategory(isOpen ? null : id)}
+                    className="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-muted/50 transition-colors"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <span className={cn(
+                        "h-1.5 w-1.5 rounded-full",
+                        id === "builder" ? "bg-blue-500" : id === "researcher" ? "bg-violet-500" : "bg-emerald-500"
+                      )} />
+                      <span className="text-[11px] font-semibold tracking-wide text-foreground/80">{agent.label} Agent</span>
+                      <span className="text-[10px] text-muted-foreground/40">{agent.qa.length} questions</span>
+                    </div>
+                    <ChevronDown className={cn(
+                      "size-3.5 text-muted-foreground/40 transition-transform duration-200",
+                      isOpen && "rotate-180"
+                    )} />
+                  </button>
+                  {isOpen && (
+                    <div className="flex flex-col gap-1 px-3 pb-3">
+                      {agent.qa.map(item => {
+                        const isSelected = activeAgentId === id && activeQ?.q === item.q;
+                        return (
+                          <button
+                            key={item.q}
+                            onClick={() => handleQ(id, item)}
+                            disabled={busy}
+                            className={cn(
+                              "text-left text-[11px] leading-snug px-3 py-2 rounded-lg border transition-all duration-200 flex items-center gap-2 group",
+                              isSelected
+                                ? "border-foreground/20 bg-foreground/6 text-foreground"
+                                : "border-border/60 text-muted-foreground hover:text-foreground hover:border-foreground/15 hover:bg-muted/60 disabled:opacity-40 disabled:cursor-not-allowed"
+                            )}
+                          >
+                            <ChevronRight className={cn(
+                              "size-3 shrink-0 transition-transform",
+                              isSelected ? "translate-x-0.5 text-foreground" : "text-muted-foreground/30 group-hover:translate-x-0.5"
+                            )} />
+                            {item.q}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </BlurFade>
 
