@@ -1,7 +1,7 @@
 ---
 title: "Multi-Agent Negotiation Referee — Baseline-Calibrated LLM Bargaining Evaluation"
-createdAt: "2026-08-23T17:33:12.078Z"
-updatedAt: "2026-08-23T17:33:12.231Z"
+createdAt: "2026-08-23T17:33:23.181Z"
+updatedAt: "2026-08-23T17:33:23.280Z"
 project: "multi-agent-negotiation-eval"
 tags:
   - "ai-agents"
