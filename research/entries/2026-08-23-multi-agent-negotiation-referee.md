@@ -1,7 +1,7 @@
 ---
 title: "Multi-Agent Negotiation Referee — Baseline-Calibrated LLM Bargaining Evaluation"
-createdAt: "2026-08-23T17:28:55.619Z"
-updatedAt: "2026-08-23T17:28:56.243Z"
+createdAt: "2026-08-23T17:33:12.078Z"
+updatedAt: "2026-08-23T17:33:12.231Z"
 project: "multi-agent-negotiation-eval"
 tags:
   - "ai-agents"
@@ -122,7 +122,7 @@ summary: ""
     - **Pareto distance** = "did they find the smartest deal, or leave value on the table?"
     - **Nash distance** = "out of the smart deals, did they land on the fair one, or did someone dominate?"
     - Put together, these two numbers let you judge a negotiation's *quality*, not just whether it happened.
-status: "published"
+status: "draft"
 summary: ""
 ---
 
