@@ -1,205 +1,106 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import fs from "node:fs";
+import path from "node:path";
+import { z } from "zod";
+import { isEditorUnlocked, isSameOrigin } from "@/lib/editor-auth";
+import { formatFrontmatter, parseFrontmatter, resolveEntryPath } from "@/lib/research-files";
 
 const ENTRIES_DIR = path.join(process.cwd(), "research", "entries");
+const entrySchema = z.object({
+  slug: z.string().optional(),
+  title: z.string().trim().min(1),
+  createdAt: z.string().optional(),
+  project: z.string().default("failure-recovery-benchmark"),
+  tags: z.array(z.string()).default(["research-notes"]),
+  notes: z.array(z.string()).default([]),
+  status: z.enum(["draft", "published"]).default("draft"),
+  summary: z.string().default(""),
+  content: z.string().default(""),
+});
 
-function ensureDirectory() {
-  if (!fs.existsSync(ENTRIES_DIR)) {
-    fs.mkdirSync(ENTRIES_DIR, { recursive: true });
-  }
-}
-
-function parseFrontmatter(rawContent: string) {
-  const match = rawContent.match(/^---[\s\S]*?---/);
-  if (!match) {
-    return { metadata: {}, body: rawContent };
-  }
-
-  const frontmatterBlock = match[0];
-  const body = rawContent.replace(frontmatterBlock, "").trim();
-  const yamlLines = frontmatterBlock.replace(/^---/, "").replace(/---$/, "").trim().split("\n");
-
-  const metadata: Record<string, any> = {};
-  let currentKey = "";
-  let inArray = false;
-
-  yamlLines.forEach((line) => {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#")) return;
-
-    if (trimmed.startsWith("- ") && currentKey && inArray) {
-      if (!Array.isArray(metadata[currentKey])) {
-        metadata[currentKey] = [];
-      }
-      metadata[currentKey].push(trimmed.replace(/^- /, "").replace(/["']/g, "").trim());
-      return;
-    }
-
-    const colonIdx = line.indexOf(":");
-    if (colonIdx !== -1) {
-      const key = line.slice(0, colonIdx).trim();
-      let value = line.slice(colonIdx + 1).trim();
-      currentKey = key;
-
-      if (!value) {
-        inArray = true;
-        metadata[key] = [];
-        return;
-      }
-
-      inArray = false;
-      // Strip quotes if present
-      if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-        value = value.slice(1, -1);
-      }
-
-      metadata[key] = value;
-    }
-  });
-
-  return { metadata, body };
-}
-
-function formatFrontmatter(metadata: Record<string, any>) {
-  let yaml = "---\n";
-  yaml += `title: "${metadata.title || "Untitled"}"\n`;
-  yaml += `createdAt: "${metadata.createdAt || new Date().toISOString()}"\n`;
-  yaml += `updatedAt: "${new Date().toISOString()}"\n`;
-  yaml += `project: "${metadata.project || "failure-recovery-benchmark"}"\n`;
-
-  const tags = Array.isArray(metadata.tags)
-    ? metadata.tags
-    : typeof metadata.tags === "string"
-    ? metadata.tags.split(",").map((t: string) => t.trim()).filter(Boolean)
-    : ["research-notes"];
-
-  yaml += `tags:\n`;
-  tags.forEach((tag: string) => {
-    yaml += `  - "${tag}"\n`;
-  });
-
-  yaml += `status: "${metadata.status === "draft" ? "draft" : "published"}"\n`;
-  yaml += `summary: "${(metadata.summary || "").replace(/"/g, '\\"')}"\n`;
-  yaml += "---\n\n";
-
-  return yaml;
+async function accessError(request?: Request) {
+  if (process.env.NODE_ENV !== "development") return NextResponse.json({ error: "Local editor API is only available in development mode." }, { status: 403 });
+  if (request && !isSameOrigin(request)) return NextResponse.json({ error: "Invalid origin" }, { status: 403 });
+  if (!await isEditorUnlocked()) return NextResponse.json({ error: "Editor is locked." }, { status: 401 });
 }
 
 export async function GET() {
-  if (process.env.NODE_ENV !== "development") {
-    return NextResponse.json(
-      { error: "Local editor API is only available in development mode." },
-      { status: 403 }
-    );
-  }
-
-  ensureDirectory();
-
+  const denied = await accessError();
+  if (denied) return denied;
   try {
-    const files = fs.readdirSync(ENTRIES_DIR).filter((f) => f.endsWith(".md") || f.endsWith(".mdx"));
-
-    const entries = files.map((filename) => {
-      const filePath = path.join(ENTRIES_DIR, filename);
-      const rawContent = fs.readFileSync(filePath, "utf8");
-      const { metadata, body } = parseFrontmatter(rawContent);
-
-      const slug = filename.replace(/\.(md|mdx)$/, "");
-
+    fs.mkdirSync(ENTRIES_DIR, { recursive: true });
+    const entries = fs.readdirSync(ENTRIES_DIR).filter(file => /\.mdx?$/.test(file)).map(filename => {
+      const { metadata, body } = parseFrontmatter(fs.readFileSync(resolveEntryPath(ENTRIES_DIR, filename), "utf8"));
+      const slug = filename.replace(/\.mdx?$/, "");
       return {
-        slug,
-        filename,
+        slug, filename,
         title: metadata.title || slug.replace(/-/g, " "),
         createdAt: metadata.createdAt || metadata.publishedAt || new Date().toISOString(),
         updatedAt: metadata.updatedAt || metadata.createdAt || new Date().toISOString(),
         project: metadata.project || "failure-recovery-benchmark",
         tags: Array.isArray(metadata.tags) ? metadata.tags : ["research-notes"],
+        notes: Array.isArray(metadata.notes) ? metadata.notes : [],
         status: metadata.status || "published",
         summary: metadata.summary || "",
         content: body,
       };
     });
-
-    // Sort entries by createdAt descending
-    entries.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-
+    entries.sort((a, b) => new Date(String(b.createdAt)).getTime() - new Date(String(a.createdAt)).getTime());
     return NextResponse.json({ entries });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: "Unable to read research entries." }, { status: 500 });
   }
 }
 
-export async function POST(req: Request) {
-  if (process.env.NODE_ENV !== "development") {
-    return NextResponse.json(
-      { error: "Local editor API is only available in development mode." },
-      { status: 403 }
-    );
-  }
-
-  ensureDirectory();
-
+export async function POST(request: Request) {
+  const denied = await accessError(request);
+  if (denied) return denied;
   try {
-    const body = await req.json();
-    const { slug: rawSlug, title, project, tags, status, summary, content } = body;
-
-    if (!title) {
-      return NextResponse.json({ error: "Title is required" }, { status: 400 });
+    const parsed = entrySchema.safeParse(await request.json());
+    if (!parsed.success) return NextResponse.json({ error: "Invalid entry fields." }, { status: 400 });
+    const entry = parsed.data;
+    let filePath: string;
+    try {
+      filePath = resolveEntryPath(ENTRIES_DIR, entry.slug || entry.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
+    } catch {
+      return NextResponse.json({ error: "Invalid entry slug." }, { status: 400 });
     }
-
-    const slug = (rawSlug || title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")) + ".md";
-    const filePath = path.join(ENTRIES_DIR, slug.endsWith(".md") ? slug : `${slug}.md`);
-
+    fs.mkdirSync(ENTRIES_DIR, { recursive: true });
+    const existing = fs.existsSync(filePath) ? parseFrontmatter(fs.readFileSync(filePath, "utf8")).metadata : {};
     const now = new Date().toISOString();
-    const frontmatter = formatFrontmatter({
-      title,
-      createdAt: body.createdAt || now,
+    const metadata = {
+      ...existing,
+      title: entry.title,
+      createdAt: existing.createdAt || entry.createdAt || now,
       updatedAt: now,
-      project: project || "failure-recovery-benchmark",
-      tags: tags || ["research-notes"],
-      status: status || "draft",
-      summary: summary || "",
-    });
-
-    const fileContent = frontmatter + (content || "");
-    fs.writeFileSync(filePath, fileContent, "utf8");
-
-    return NextResponse.json({ success: true, slug: path.basename(filePath, ".md") });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+      project: entry.project,
+      tags: entry.tags,
+      notes: entry.notes,
+      status: entry.status,
+      summary: entry.summary,
+    };
+    fs.writeFileSync(filePath, formatFrontmatter(metadata) + entry.content, "utf8");
+    return NextResponse.json({ success: true, slug: path.basename(filePath).replace(/\.mdx?$/, "") });
+  } catch {
+    return NextResponse.json({ error: "Unable to save research entry." }, { status: 500 });
   }
 }
 
-export async function PUT(req: Request) {
-  return POST(req);
-}
+export async function PUT(request: Request) { return POST(request); }
 
-export async function DELETE(req: Request) {
-  if (process.env.NODE_ENV !== "development") {
-    return NextResponse.json(
-      { error: "Local editor API is only available in development mode." },
-      { status: 403 }
-    );
-  }
-
+export async function DELETE(request: Request) {
+  const denied = await accessError(request);
+  if (denied) return denied;
+  const slug = new URL(request.url).searchParams.get("slug");
+  if (!slug) return NextResponse.json({ error: "Slug is required" }, { status: 400 });
+  let filePath: string;
+  try { filePath = resolveEntryPath(ENTRIES_DIR, slug); }
+  catch { return NextResponse.json({ error: "Invalid entry slug." }, { status: 400 }); }
   try {
-    const { searchParams } = new URL(req.url);
-    const slug = searchParams.get("slug");
-
-    if (!slug) {
-      return NextResponse.json({ error: "Slug is required" }, { status: 400 });
-    }
-
-    const filename = slug.endsWith(".md") || slug.endsWith(".mdx") ? slug : `${slug}.md`;
-    const filePath = path.join(ENTRIES_DIR, filename);
-
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      return NextResponse.json({ success: true });
-    } else {
-      return NextResponse.json({ error: "File not found" }, { status: 404 });
-    }
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    if (!fs.existsSync(filePath)) return NextResponse.json({ error: "File not found" }, { status: 404 });
+    fs.unlinkSync(filePath);
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Unable to delete research entry." }, { status: 500 });
   }
 }

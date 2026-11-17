@@ -40,6 +40,7 @@ const research = defineCollection({
         updatedAt: z.string().optional(),
         project: z.string().default("failure-recovery-benchmark"),
         tags: z.array(z.string()).default(["research-notes"]),
+        notes: z.array(z.string()).optional().default([]),
         status: z.enum(["draft", "published"]).default("published"),
         summary: z.string().optional(),
         content: z.string(),

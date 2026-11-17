@@ -1,7 +1,7 @@
 ---
 title: "ECDSA Nonce Bias Attack — Private Key Recovery & ECIES Decryption"
-createdAt: "2026-07-15T10:00:00.000Z"
-updatedAt: "2026-07-15T10:00:00.000Z"
+createdAt: "2026-08-23T10:17:53.106Z"
+updatedAt: "2026-08-23T10:17:53.106Z"
 project: "tbench-harbor"
 tags:
   - "security"

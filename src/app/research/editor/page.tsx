@@ -22,7 +22,20 @@ import {
   Minimize2,
   RefreshCw,
   Check,
+  Lock,
+  LogOut,
+  Rocket,
+  NotebookPen,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 interface ResearchEntry {
   slug: string;
@@ -34,6 +47,7 @@ interface ResearchEntry {
   status: "draft" | "published";
   summary: string;
   content: string;
+  notes?: string[];
 }
 
 const LOCAL_STORAGE_KEY = "research_editor_unsaved_draft";
@@ -47,7 +61,35 @@ export default function LocalResearchEditorPage() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isMaximized, setIsMaximized] = useState(false);
-  const [hasRestoredDraft, setHasRestoredDraft] = useState(false);
+  const hasRestoredDraft = useRef(false);
+
+  const [authed, setAuthed] = useState<boolean | null>(null);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [authenticating, setAuthenticating] = useState(false);
+  const [publishing, setPublishing] = useState(false);
+
+  const [modal, setModal] = useState<{
+    open: boolean;
+    type: "confirm" | "alert";
+    title: string;
+    message: string;
+    confirmLabel?: string;
+    destructive?: boolean;
+    onConfirm?: () => void;
+  }>({ open: false, type: "alert", title: "", message: "" });
+
+  const showAlert = (title: string, message: string) =>
+    setModal({ open: true, type: "alert", title, message });
+
+  const showConfirm = (
+    title: string,
+    message: string,
+    onConfirm: () => void,
+    confirmLabel = "Confirm",
+    destructive = false
+  ) =>
+    setModal({ open: true, type: "confirm", title, message, onConfirm, confirmLabel, destructive });
 
   // Filters
   const [statusFilter, setStatusFilter] = useState<string>("all");
@@ -63,18 +105,106 @@ export default function LocalResearchEditorPage() {
   const [status, setStatus] = useState<"draft" | "published">("draft");
   const [summary, setSummary] = useState("");
   const [content, setContent] = useState("");
+  const [notes, setNotes] = useState<string[]>([]);
 
-  const isInitialMount = useRef(true);
+  const skipAutosaveRef = useRef(true);
   const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null);
   const selectedSlugRef = useRef<string | null>(null);
 
-  const updateSelectedSlug = (newSlug: string | null) => {
+  const updateSelectedSlug = useCallback((newSlug: string | null) => {
     selectedSlugRef.current = newSlug;
     setSelectedSlug(newSlug);
-  };
+  }, []);
+
+  const loadEntryIntoForm = useCallback((entry: ResearchEntry) => {
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    skipAutosaveRef.current = true;
+    updateSelectedSlug(entry.slug);
+    setSlug(entry.slug);
+    setTitle(entry.title);
+    setProject(entry.project || "failure-recovery-benchmark");
+    setTagsInput(Array.isArray(entry.tags) ? entry.tags.join(", ") : "");
+    setStatus(entry.status || "draft");
+    setSummary(entry.summary || "");
+    setContent(entry.content || "");
+    setNotes(Array.isArray(entry.notes) ? entry.notes : []);
+  }, [updateSelectedSlug]);
+
+  const handleNewEntry = useCallback(() => {
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    skipAutosaveRef.current = true;
+    updateSelectedSlug(null);
+    setSlug("");
+    setTitle("");
+    setProject("failure-recovery-benchmark");
+    setTagsInput("research-notes, experiment-log");
+    setStatus("draft");
+    setSummary("");
+    setContent("");
+    setNotes([]);
+    localStorage.removeItem(LOCAL_STORAGE_KEY);
+  }, [updateSelectedSlug]);
+
+  const computeSlug = useCallback((targetTitle: string) => {
+    const currentSlug = selectedSlugRef.current;
+    if (currentSlug && currentSlug.trim() !== "") {
+      return currentSlug;
+    }
+    const today = new Date().toISOString().split("T")[0];
+    const cleanTitle = (targetTitle || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "");
+    const slugBody = cleanTitle || `note-${Date.now().toString(36)}`;
+    return `${today}-${slugBody}`;
+  }, []);
+
+  const autoSaveToDisk = useCallback(async (draftData: { title: string; project: string; tagsInput: string; status: "draft" | "published"; summary: string; content: string; notes: string[] }) => {
+    const originalSlug = selectedSlugRef.current;
+    try {
+      setAutoSaveStatus("Auto-saving...");
+      const parsedTags = (draftData.tagsInput || "")
+        .split(",")
+        .map((t: string) => t.trim())
+        .filter(Boolean);
+
+      const targetSlug = computeSlug(draftData.title);
+
+      const payload = {
+        slug: targetSlug,
+        title: draftData.title || "Untitled Note",
+        project: draftData.project,
+        tags: parsedTags,
+        notes: draftData.notes,
+        status: draftData.status,
+        summary: draftData.summary,
+        content: draftData.content,
+      };
+
+      const res = await fetch("/api/research/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error("Autosave failed");
+      if (selectedSlugRef.current !== originalSlug) return;
+      if (res.ok) {
+        const data = await res.json();
+        if (data.slug) {
+          updateSelectedSlug(data.slug);
+          setSlug(data.slug);
+        }
+        setAutoSaveStatus("Auto-saved to disk");
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+      }
+    } catch {
+      setAutoSaveStatus("Saved to localStorage");
+    }
+  }, [computeSlug, updateSelectedSlug]);
 
   // Load entries from server API
-  const fetchEntries = async () => {
+  const fetchEntries = useCallback(async () => {
     try {
       setLoading(true);
       const res = await fetch("/api/research/entries");
@@ -91,7 +221,7 @@ export default function LocalResearchEditorPage() {
 
       // Check if there is an unsaved draft in localStorage
       const savedDraftRaw = localStorage.getItem(LOCAL_STORAGE_KEY);
-      if (savedDraftRaw && !hasRestoredDraft) {
+      if (savedDraftRaw && !hasRestoredDraft.current) {
         try {
           const draft = JSON.parse(savedDraftRaw);
           if (draft.title || draft.content) {
@@ -102,8 +232,10 @@ export default function LocalResearchEditorPage() {
             setStatus(draft.status || "draft");
             setSummary(draft.summary || "");
             setContent(draft.content || "");
+            setNotes(Array.isArray(draft.notes) ? draft.notes : []);
+            skipAutosaveRef.current = false;
             updateSelectedSlug(draft.slug || null);
-            setHasRestoredDraft(true);
+            hasRestoredDraft.current = true;
             setMessage("Restored unsaved draft from local storage.");
             setLoading(false);
             return;
@@ -111,26 +243,67 @@ export default function LocalResearchEditorPage() {
         } catch {}
       }
 
-      if (loadedEntries.length > 0 && !selectedSlugRef.current && !hasRestoredDraft) {
+      if (loadedEntries.length > 0 && !selectedSlugRef.current && !hasRestoredDraft.current) {
         loadEntryIntoForm(loadedEntries[0]);
-      } else if (loadedEntries.length === 0 && !hasRestoredDraft) {
+      } else if (loadedEntries.length === 0 && !hasRestoredDraft.current) {
         handleNewEntry();
       }
+      hasRestoredDraft.current = true;
     } catch (err: any) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  };
+  }, [handleNewEntry, loadEntryIntoForm, updateSelectedSlug]);
 
   useEffect(() => {
-    fetchEntries();
+    fetch("/api/editor-auth")
+      .then((res) => res.json())
+      .then((data) => setAuthed(data.unlocked === true))
+      .catch(() => setAuthed(false));
   }, []);
+
+  useEffect(() => {
+    if (authed === true) {
+      fetchEntries();
+    }
+  }, [authed, fetchEntries]);
+
+  const handleAuth = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!passwordInput.trim()) return;
+    setAuthenticating(true);
+    setAuthError(null);
+    try {
+      const res = await fetch("/api/editor-auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password: passwordInput }),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setAuthed(true);
+        setPasswordInput("");
+      } else {
+        setAuthError(data.error || "Authentication failed");
+      }
+    } catch {
+      setAuthError("Network error");
+    } finally {
+      setAuthenticating(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    await fetch("/api/editor-auth", { method: "DELETE" });
+    setAuthed(false);
+  };
 
   // Save current form state to localStorage automatically on edit
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
+    if (authed !== true || loading) return;
+    if (skipAutosaveRef.current) {
+      skipAutosaveRef.current = false;
       return;
     }
 
@@ -146,6 +319,7 @@ export default function LocalResearchEditorPage() {
       status,
       summary,
       content,
+      notes,
       updatedAt: new Date().toISOString(),
     };
 
@@ -159,11 +333,14 @@ export default function LocalResearchEditorPage() {
         autoSaveToDisk(currentDraft);
       }
     }, 2500);
-  }, [title, project, tagsInput, status, summary, content]);
+    return () => {
+      if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    };
+  }, [authed, loading, title, project, tagsInput, status, summary, content, notes, autoSaveToDisk]);
 
   // Handle Tab close / refresh warning
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    const handleBeforeUnload = () => {
       if (title.trim() || content.trim()) {
         const draft = {
           slug: selectedSlugRef.current || "",
@@ -173,6 +350,7 @@ export default function LocalResearchEditorPage() {
           status,
           summary,
           content,
+          notes,
           updatedAt: new Date().toISOString(),
         };
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
@@ -181,90 +359,12 @@ export default function LocalResearchEditorPage() {
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [title, project, tagsInput, status, summary, content]);
-
-  const loadEntryIntoForm = (entry: ResearchEntry) => {
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    updateSelectedSlug(entry.slug);
-    setSlug(entry.slug);
-    setTitle(entry.title);
-    setProject(entry.project || "failure-recovery-benchmark");
-    setTagsInput(Array.isArray(entry.tags) ? entry.tags.join(", ") : "");
-    setStatus(entry.status || "draft");
-    setSummary(entry.summary || "");
-    setContent(entry.content || "");
-  };
-
-  const handleNewEntry = () => {
-    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
-    updateSelectedSlug(null);
-    setSlug("");
-    setTitle("");
-    setProject("failure-recovery-benchmark");
-    setTagsInput("research-notes, experiment-log");
-    setStatus("draft");
-    setSummary("");
-    setContent("");
-    localStorage.removeItem(LOCAL_STORAGE_KEY);
-  };
-
-  const computeSlug = (targetTitle: string) => {
-    const currentSlug = selectedSlugRef.current;
-    if (currentSlug && currentSlug.trim() !== "") {
-      return currentSlug;
-    }
-    const today = new Date().toISOString().split("T")[0];
-    const cleanTitle = (targetTitle || "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-|-$/g, "");
-    const slugBody = cleanTitle || `note-${Date.now().toString(36)}`;
-    return `${today}-${slugBody}`;
-  };
-
-  const autoSaveToDisk = async (draftData: any) => {
-    try {
-      setAutoSaveStatus("Auto-saving...");
-      const parsedTags = (draftData.tagsInput || "")
-        .split(",")
-        .map((t: string) => t.trim())
-        .filter(Boolean);
-
-      const targetSlug = computeSlug(draftData.title);
-
-      const payload = {
-        slug: targetSlug,
-        title: draftData.title || "Untitled Note",
-        project: draftData.project,
-        tags: parsedTags,
-        status: draftData.status,
-        summary: draftData.summary,
-        content: draftData.content,
-      };
-
-      const res = await fetch("/api/research/entries", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        if (data.slug) {
-          updateSelectedSlug(data.slug);
-          setSlug(data.slug);
-        }
-        setAutoSaveStatus("Auto-saved to disk");
-        localStorage.removeItem(LOCAL_STORAGE_KEY);
-      }
-    } catch {
-      setAutoSaveStatus("Saved to localStorage");
-    }
-  };
+  }, [title, project, tagsInput, status, summary, content, notes]);
 
   const handleSave = async () => {
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
     if (!title.trim()) {
-      alert("Title is required.");
+      showAlert("Title Required", "Please enter a title before saving.");
       return;
     }
 
@@ -284,6 +384,7 @@ export default function LocalResearchEditorPage() {
         title,
         project,
         tags: parsedTags,
+        notes,
         status,
         summary,
         content,
@@ -305,7 +406,7 @@ export default function LocalResearchEditorPage() {
       setSlug(data.slug);
       await fetchEntries();
     } catch (err: any) {
-      alert(`Error saving entry: ${err.message}`);
+      showAlert("Save Failed", err.message);
     } finally {
       setSaving(false);
     }
@@ -313,23 +414,101 @@ export default function LocalResearchEditorPage() {
 
   const handleDelete = async () => {
     if (!selectedSlug) return;
-    if (!confirm(`Are you sure you want to delete research/entries/${selectedSlug}.md?`)) {
+    showConfirm(
+      "Delete Entry",
+      `Are you sure you want to delete research/entries/${selectedSlug}.md? This cannot be undone.`,
+      async () => {
+        try {
+          const res = await fetch(`/api/research/entries?slug=${selectedSlug}`, {
+            method: "DELETE",
+          });
+          if (!res.ok) throw new Error("Failed to delete file");
+
+          setMessage(`Deleted entry ${selectedSlug}.md`);
+          localStorage.removeItem(LOCAL_STORAGE_KEY);
+          setSelectedSlug(null);
+          await fetchEntries();
+          handleNewEntry();
+        } catch (err: any) {
+          showAlert("Delete Failed", err.message);
+        }
+      },
+      "Delete",
+      true
+    );
+  };
+
+  const handlePublish = async () => {
+    if (!selectedSlug) {
+      showAlert("No Entry Selected", "Select an entry to publish first.");
       return;
     }
+    showConfirm(
+      "Publish to Live Site",
+      `Publish "${title}"? This will set status to "published", git commit, and push — Vercel redeploys automatically.`,
+      async () => {
+        try {
+          if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+          setPublishing(true);
+          setMessage(null);
 
+          const saveRes = await fetch("/api/research/entries", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slug: selectedSlug, title, project, tags: tagsInput.split(",").map((t) => t.trim()).filter(Boolean), notes, status, summary, content }),
+          });
+          if (!saveRes.ok) throw new Error("Failed to save before publishing");
+
+          const pubRes = await fetch("/api/research/publish", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ slug: selectedSlug }),
+          });
+          const pubData = await pubRes.json();
+          if (!pubRes.ok) throw new Error(pubData.error || "Publishing failed");
+
+          if (pubData.warning) {
+            showAlert("Push Warning", `Published locally but push failed: ${pubData.detail || pubData.warning}`);
+          } else if (pubData.error) {
+            throw new Error(pubData.error);
+          } else {
+            setMessage(pubData.message || `Published "${selectedSlug}" and pushed to git.`);
+            setStatus("published");
+          }
+          await fetchEntries();
+        } catch (err: any) {
+          showAlert("Publish Failed", err.message);
+        } finally {
+          setPublishing(false);
+        }
+      },
+      "Publish",
+      false
+    );
+  };
+
+  const addNote = () => setNotes([...notes, ""]);
+
+  const updateNote = (i: number, value: string) =>
+    setNotes(notes.map((n, idx) => (idx === i ? value : n)));
+
+  const removeNote = (i: number) => setNotes(notes.filter((_, idx) => idx !== i));
+
+  const saveNotes = async () => {
+    if (autoSaveTimerRef.current) clearTimeout(autoSaveTimerRef.current);
+    if (!selectedSlug || !title.trim()) return;
     try {
-      const res = await fetch(`/api/research/entries?slug=${selectedSlug}`, {
-        method: "DELETE",
+      const parsedTags = tagsInput.split(",").map((t) => t.trim()).filter(Boolean);
+      const response = await fetch("/api/research/entries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug: selectedSlug, title, project, tags: parsedTags, notes: notes.filter((n) => n.trim()), status, summary, content }),
       });
-      if (!res.ok) throw new Error("Failed to delete file");
-
-      setMessage(`Deleted entry ${selectedSlug}.md`);
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-      setSelectedSlug(null);
+      if (!response.ok) throw new Error("Unable to save notes");
+      setMessage(`Notes saved for "${selectedSlug}".`);
       await fetchEntries();
-      handleNewEntry();
     } catch (err: any) {
-      alert(`Error deleting entry: ${err.message}`);
+      showAlert("Notes Save Failed", err.message);
     }
   };
 
@@ -351,6 +530,80 @@ export default function LocalResearchEditorPage() {
     }
     return true;
   });
+
+  if (authed === null) {
+    return (
+      <div className="max-w-2xl mx-auto py-24 px-6 text-center">
+        <div className="rounded-2xl border bg-card p-8 space-y-4 shadow-sm">
+          <RefreshCw className="size-8 text-muted-foreground mx-auto animate-spin" />
+          <p className="text-sm text-muted-foreground">Checking editor access…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authed) {
+    return (
+      <div className="max-w-md mx-auto py-24 px-6">
+        <form
+          onSubmit={handleAuth}
+          className="rounded-2xl border bg-card p-8 space-y-6 shadow-sm"
+        >
+          <div className="space-y-3 text-center">
+            <div className="inline-flex items-center justify-center size-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+              <Lock className="size-6" />
+            </div>
+            <h1 className="text-xl font-bold text-foreground">Editor Locked</h1>
+            <p className="text-sm text-muted-foreground">
+              Enter the editor password to manage and publish research logs.
+            </p>
+          </div>
+
+          <div className="space-y-2">
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Editor password"
+              autoFocus
+              className="w-full text-sm px-4 py-2.5 rounded-xl border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-amber-500/40"
+            />
+            {authError && (
+              <p className="text-xs text-red-500 flex items-center gap-1.5">
+                <AlertCircle className="size-3.5" />
+                {authError}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={authenticating || !passwordInput.trim()}
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
+          >
+            {authenticating ? (
+              <>
+                <RefreshCw className="size-4 animate-spin" />
+                <span>Unlocking…</span>
+              </>
+            ) : (
+              <>
+                <Lock className="size-4" />
+                <span>Unlock Editor</span>
+              </>
+            )}
+          </button>
+
+          <Link
+            href="/research"
+            className="block text-center text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            ← Back to Research Log
+          </Link>
+        </form>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -414,6 +667,15 @@ export default function LocalResearchEditorPage() {
               <Save className="size-4" />
               <span>{saving ? "Saving..." : "Save Entry"}</span>
             </button>
+            <button
+              onClick={handlePublish}
+              disabled={publishing || !selectedSlug}
+              title={selectedSlug ? "Publish to live site (git commit + push)" : "Select an entry to publish"}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-sm disabled:opacity-50"
+            >
+              <Rocket className="size-4" />
+              <span>{publishing ? "Publishing..." : "Publish"}</span>
+            </button>
             {selectedSlug && (
               <button
                 onClick={handleDelete}
@@ -422,6 +684,13 @@ export default function LocalResearchEditorPage() {
                 <Trash2 className="size-4" />
               </button>
             )}
+            <button
+              onClick={handleLogout}
+              title="Lock editor"
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium border border-border bg-background hover:bg-muted transition-colors"
+            >
+              <LogOut className="size-4" />
+            </button>
           </div>
         </div>
 
@@ -720,9 +989,117 @@ export default function LocalResearchEditorPage() {
                 </div>
               </div>
             </div>
+
+            {/* Notes Editor Section */}
+            {!isMaximized && (
+              <div className="rounded-2xl border bg-card p-5 space-y-4 shadow-sm">
+                <div className="flex items-center justify-between border-b pb-3">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-foreground">
+                    <NotebookPen className="size-4 text-primary" />
+                    <span>Notes for this Entry</span>
+                    {notes.length > 0 && (
+                      <span className="ml-1 px-1.5 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold">
+                        {notes.length}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={addNote}
+                      disabled={!selectedSlug}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-border bg-background hover:bg-muted transition-colors disabled:opacity-50"
+                    >
+                      <Plus className="size-3.5" />
+                      <span>Add Note</span>
+                    </button>
+                    {notes.length > 0 && (
+                      <button
+                        onClick={saveNotes}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
+                        <Save className="size-3.5" />
+                        <span>Save Notes</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  {notes.length === 0 ? (
+                    <p className="text-xs text-muted-foreground text-center py-6">
+                      No notes for this entry yet. Click &ldquo;Add Note&rdquo; to create one.
+                    </p>
+                  ) : (
+                    notes.map((note, i) => (
+                      <div key={i} className="flex gap-2 items-start">
+                        <span className="text-[10px] font-mono font-bold text-muted-foreground mt-3 shrink-0 w-6">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <textarea
+                          value={note}
+                          onChange={(e) => updateNote(i, e.target.value)}
+                          placeholder="Write a note for this research log... (markdown supported)"
+                          rows={3}
+                          className="flex-1 text-xs p-3 rounded-lg border bg-background text-foreground focus:outline-none focus:ring-1 focus:ring-primary resize-y"
+                        />
+                        <button
+                          onClick={() => removeNote(i)}
+                          className="p-2 rounded-lg text-muted-foreground hover:text-red-500 hover:bg-red-500/10 transition-colors shrink-0 mt-1"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </BlurFade>
+
+      <Dialog
+        open={modal.open}
+        onOpenChange={(open) => setModal((m) => ({ ...m, open }))}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {modal.destructive ? (
+                <AlertCircle className="size-5 text-red-500" />
+              ) : modal.type === "confirm" ? (
+                <Rocket className="size-5 text-emerald-500" />
+              ) : (
+                <AlertCircle className="size-5 text-amber-500" />
+              )}
+              {modal.title}
+            </DialogTitle>
+            <DialogDescription className="whitespace-pre-line">
+              {modal.message}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-2">
+            {modal.type === "confirm" && (
+              <Button
+                variant="outline"
+                onClick={() => setModal((m) => ({ ...m, open: false }))}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              variant={modal.destructive ? "destructive" : "default"}
+              onClick={() => {
+                const cb = modal.onConfirm;
+                setModal((m) => ({ ...m, open: false }));
+                if (cb) cb();
+              }}
+            >
+              {modal.type === "confirm" ? modal.confirmLabel || "Confirm" : "OK"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -5,7 +5,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
 [![Deployment](https://img.shields.io/badge/Deploy-Vercel-black?style=flat-square&logo=vercel)](https://vercel.com)
 
-Personal portfolio, interactive engineering hub, and automated publishing platform built by **Raj Koli**. Software engineer focused on backend systems, AI agent infrastructure, developer tooling, and research monographs.
+Personal portfolio, interactive engineering hub, and automated publishing platform built by **Raj Koli**. AI engineer focused on LLM applications, agent evaluation, developer tooling, and research monographs.
 
 🌐 **Live Website:** [rajkoli.vercel.app](https://rajkoli.vercel.app)
 
@@ -13,10 +13,12 @@ Personal portfolio, interactive engineering hub, and automated publishing platfo
 
 ## 💡 Key Features
 
-### 📚 Automated Multi-Handbook Publishing Engine
-A custom pre-build pipeline (`fetch-book.js`) automatically clones, parses, and syncs MDX chapters from dedicated GitHub research repositories on every build:
-- **[Startup Research Handbook](https://github.com/Rajkoli145/startup-research-handbook)**: A 13-chapter living guide for researching real problems, customer pain points, and market gaps.
-- **[The Autonomous Organization Handbook](https://github.com/Rajkoli145/Autonomous-Organization-Handbook)**: A multi-year research monograph investigating autonomous AI agent architectures, organizational dynamics, and governance.
+### 📚 MDX Handbook Library
+Handbook content is stored in `content/book` and compiled by Content Collections during development and builds:
+- **Software Engineering & Product Development Handbook**: 15 chapters from problem discovery through production engineering, including an evidence-bounded AgentBench case study.
+- **Startup Research Handbook**: 13 chapters on researching problems, customer needs, and market gaps.
+
+Each handbook has an independent table of contents, direct chapter URLs, and previous/next navigation at `/book`.
 
 ### 🎨 Custom Design System & Themes
 - **Interactive Dock Navigation**: macOS-style bottom dock with smooth hover effects, tooltips, and responsive layout.
@@ -47,7 +49,7 @@ A custom pre-build pipeline (`fetch-book.js`) automatically clones, parses, and 
 | **State Management** | Zustand (with LocalStorage persistence) |
 | **Content Processing** | `@content-collections/core`, `@content-collections/mdx`, Remark GFM, Shiki |
 | **Icons & Media** | Lucide React, Radix Icons, TMDB API, Spotify Embeds |
-| **Build Pipeline** | Custom Node.js git sync script (`fetch-book.js`) |
+| **Build Pipeline** | Next.js build with Content Collections MDX compilation |
 | **Deployment** | Vercel CI/CD |
 
 ---
@@ -55,14 +57,14 @@ A custom pre-build pipeline (`fetch-book.js`) automatically clones, parses, and 
 ## 📁 Repository Structure
 
 ```
-├── content/                     # MDX files compiled during prebuild
-│   ├── book/                    # Startup Research Handbook chapters
-│   └── agent-book/              # Autonomous Organization Handbook chapters
+├── content/book/                # Startup Research Handbook chapters
+│   └── software-engineering/     # Software Engineering handbook chapters
+├── research/entries/            # Research logs with metadata and optional notes
 ├── src/
 │   ├── app/                     # Next.js App Router pages & API routes
 │   │   ├── book/                # Handbooks overview & MDX reader routes
 │   │   ├── github/              # Engineering journey & contribution stats
-│   │   ├── notes/               # Personal notes widget
+│   │   ├── research/            # Research log, article reader, and local editor
 │   │   ├── spotify/             # Music player interface
 │   │   ├── netflix/             # Movie watchlist section
 │   │   └── api/                 # Access verification & contact endpoints
@@ -71,7 +73,6 @@ A custom pre-build pipeline (`fetch-book.js`) automatically clones, parses, and 
 │   ├── store/                   # Zustand settings & theme state
 │   └── lib/                     # Utilities & custom Markdown plugins
 ├── content-collections.ts       # MDX collection definitions
-├── fetch-book.js                # Multi-repo GitHub sync pre-build script
 └── package.json
 ```
 
@@ -80,7 +81,7 @@ A custom pre-build pipeline (`fetch-book.js`) automatically clones, parses, and 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18.0.0 or higher
+- Node.js 20.9.0 or higher (Node.js 22 recommended)
 - `npm` or `pnpm`
 
 ### Installation
@@ -96,22 +97,39 @@ A custom pre-build pipeline (`fetch-book.js`) automatically clones, parses, and 
    npm install
    ```
 
-3. **Sync Handbooks (Optional Manual Sync):**
-   ```bash
-   node fetch-book.js
-   ```
-
-4. **Start the local development server:**
+3. **Start the local development server:**
    ```bash
    npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-5. **Build for production:**
+4. **Build for production:**
    ```bash
    npm run build
    ```
-   *(Runs `fetch-book.js` automatically before compiling static pages).*
+   Content Collections compiles the local MDX chapters and research entries as part of the build.
+
+---
+
+
+## Local Research Editor
+
+Set `EDITOR_PASSWORD` to a strong password in your untracked `.env.local`, then restart `npm run dev` and open `/research/editor`. There is no default password. The editor and its write/publish APIs are available only in development mode. Authentication uses a signed, HTTP-only session cookie that expires after 12 hours; changing the password invalidates existing sessions.
+
+Entries support Markdown notes separately from the article body. Autosave and manual save preserve these notes and the original creation date. The **Publish** action sets the selected entry to published, commits only its file, and pushes the current branch using your local Git credentials. Review your entry and branch before confirming publication. A failed push is reported separately from a failed commit.
+
+Verification commands:
+
+```bash
+npm run lint
+npx tsc --noEmit
+node --test tests/research-editor.test.mjs
+# With the development server running:
+node --test tests/handbooks.test.mjs
+npm run build
+```
+
+Research-editor tests use temporary files and a fake Git executor; they never commit or push.
 
 ---
 

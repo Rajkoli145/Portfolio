@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, FlaskConical, Calendar, Tag, FolderGit2 } from "lucide-react";
 import { MDXContent } from "@content-collections/mdx/react";
 import type { Metadata } from "next";
+import { NotesSection } from "@/components/notes-section";
 
 export async function generateStaticParams() {
   return allResearch
@@ -102,7 +103,12 @@ export default async function ResearchEntryPage(props: {
           )}
         </div>
 
-        {/* Entry Article Body */}
+        {/* Notes Section — separate from research log body */}
+        {entry.notes && entry.notes.length > 0 && (
+          <NotesSection notes={entry.notes} />
+        )}
+
+        {/* Research Log Body */}
         <article className="prose prose-neutral dark:prose-invert max-w-none prose-h2:mt-10 prose-h2:mb-4 prose-h3:mt-8 prose-h3:mb-3">
           <MDXContent code={entry.mdx} />
         </article>
