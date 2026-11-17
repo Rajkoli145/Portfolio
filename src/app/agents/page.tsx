@@ -90,7 +90,7 @@ const AGENTS: Record<string, { label: string; qa: { q: string; a: string }[] }> 
   career: {
     label: "Career",
     qa: [
-      { q: "Where have you worked?", a: "Handshake AI → AI eval specialist (Jul 2026–present) / Parsewave → AI benchmark contributor (Jun 2026–present) / RustChain → open source CLI, bounty winner / La Tanda → TypeScript SDK dev / Hiero SDK → Python contributor v0.2.2 / Unified Mentor → frontend intern (4 months)." },
+      { q: "Where have you worked?", a: "Mercor → AI evaluation contractor (Oct 2026–present) / Handshake AI → AI eval specialist (Jul–Sep 2026) / Parsewave → AI benchmark contributor (Dec 2025–Jul 2026) / RustChain → open source CLI, bounty winner / La Tanda → TypeScript SDK dev / Hiero SDK → Python contributor v0.2.2 / Unified Mentor → frontend intern (4 months)." },
       { q: "What's your strongest skill?", a: "Backend systems + AI agent infra — REST APIs, CLI tooling, Linux automation, evaluation pipelines. Comfortable fullstack and can ship across the entire stack." },
       { q: "Are you open to opportunities?", a: "Always open to the right thing. Remote preferred, interesting problems only. Reach me at koliraj911@gmail.com or linkedin.com/in/raj-koli-626008318." },
       { q: "What's your biggest win?", a: "PR merged into Hiero SDK official v0.2.2 release + awarded a bounty on first RustChain PR. Also a paid benchmark at Parsewave that passed full technical review." },
@@ -101,14 +101,14 @@ const AGENTS: Record<string, { label: string; qa: { q: string; a: string }[] }> 
 // ── Intent engine ────────────────────────────────────────────────────────────
 const P = {
   name: "Raj Koli",
-  role: "software engineer focused on backend systems, AI agent infrastructure, and developer tooling",
+  role: "AI engineer focused on LLM applications, agent evaluation, and developer tooling",
   email: "koliraj911@gmail.com",
   linkedin: "linkedin.com/in/raj-koli-626008318",
   github: "github.com/Rajkoli145",
   projects: ["FreelancerFlow", "EduStory", "macOS Portfolio", "DealVault Escrow", "Almost Friday", "AI Founder Intelligence"],
   activeBuilds: ["DealVault Escrow", "Almost Friday", "AI Founder Intelligence"],
   liveUrls: ["freelancer-flow-seven.vercel.app → FreelancerFlow", "edu-story.vercel.app → EduStory", "rajkoli.vercel.app → macOS Portfolio (standalone)"],
-  currentRoles: ["AI Evaluation Specialist at Handshake AI (Jul 2026–present)", "AI Benchmark Contributor at Parsewave (Jun 2026–present)"],
+  currentRoles: ["AI Evaluation Contractor at Mercor (Oct 2026–present)"],
   openSource: ["RustChain", "Hiero SDK"],
   stack: ["React", "Next.js", "TypeScript", "Node.js", "MongoDB", "Python", "Docker", "Bash"],
   researchCount: 13,
@@ -143,8 +143,8 @@ const INTENTS: Intent[] = [
     weight: 1,
     templates: [
       () => `I'm ${P.name} — a ${P.role}. Currently ${P.currentRoles[0]} and building ${rndN(P.projects, 2).join(" + ")} in parallel. Ask me anything.`,
-      () => `${P.name} here. Software engineer specialising in backend systems and AI agent infra. ${P.projects.length} active projects, ${P.researchCount} research logs, 6 roles across open source and contract work.`,
-      () => `Software engineer building APIs, CLIs, and agent infrastructure. Right now I'm ${P.currentRoles[0]}. Contributed to ${P.openSource.join(" and ")}, shipped ${P.projects.length} projects, authoring ${P.bookTitle}.`,
+      () => `${P.name} here. AI engineer specialising in LLM applications, agent evaluation, and developer tooling. ${P.projects.length} active projects, ${P.researchCount} research logs, 7 roles across open source, freelance work, and internships.`,
+      () => `AI engineer building LLM applications, APIs, CLIs, and agent infrastructure. Right now I'm ${P.currentRoles[0]}. Contributed to ${P.openSource.join(" and ")}, shipped ${P.projects.length} projects, authoring ${P.bookTitle}.`,
     ],
   },
   {
@@ -185,8 +185,8 @@ const INTENTS: Intent[] = [
     phrases: ["what are you working on", "what are you building", "what's new", "what's next"],
     weight: 1,
     templates: [
-      () => `Right now: ${P.activeBuilds.join(", ")}. Running all three in parallel on top of AI evaluation work at Handshake AI.`,
-      () => `Active: ${rndN(P.activeBuilds, 2).join(" + ")}. Also doing benchmark contributions at Parsewave and evaluation work at Handshake AI. Busy.`,
+      () => `Right now: ${P.activeBuilds.join(", ")}. Running all three in parallel on top of AI evaluation work at Mercor.`,
+      () => `Active: ${rndN(P.activeBuilds, 2).join(" + ")}. Also doing AI evaluation work at Mercor, following earlier roles at Handshake AI and Parsewave.`,
     ],
   },
   {
@@ -236,8 +236,8 @@ const INTENTS: Intent[] = [
     phrases: ["where have you worked", "work history", "your experience", "work experience"],
     weight: 1,
     templates: [
-      () => `Timeline: Handshake AI → AI eval specialist (Jul 2026–present) / Parsewave → AI benchmark contributor (Jun 2026) / RustChain → open source CLI, bounty winner / La Tanda → TypeScript SDK / Hiero SDK → Python contributor v0.2.2 / Unified Mentor → frontend intern (4 months).`,
-      () => `6 roles: ${P.currentRoles[0]}, plus ${rnd(["open source contributions to " + P.openSource.join(" and "), "TypeScript SDK dev at La Tanda", "Python contributor to Hiero SDK v0.2.2"])}. Mix of contract, open source, and internship.`,
+      () => `Timeline: Mercor → AI evaluation contractor (Oct 2026–present) / Handshake AI → AI eval specialist (Jul–Sep 2026) / Parsewave → AI benchmark contributor (Dec 2025–Jul 2026) / RustChain → open source CLI, bounty winner / La Tanda → TypeScript SDK / Hiero SDK → Python contributor v0.2.2 / Unified Mentor → frontend intern (4 months).`,
+      () => `7 roles: ${P.currentRoles[0]}, plus ${rnd(["open source contributions to " + P.openSource.join(" and "), "TypeScript SDK dev at La Tanda", "Python contributor to Hiero SDK v0.2.2"])}. Mix of contract, open source, and internship.`,
     ],
   },
   {
@@ -353,7 +353,7 @@ function useTypewriter(text: string, active: boolean, speed = 14) {
       if (i >= text.length) { clearInterval(id); setDone(true); }
     }, speed);
     return () => clearInterval(id);
-  }, [text, active]);
+  }, [text, active, speed]);
   return { out, done };
 }
 

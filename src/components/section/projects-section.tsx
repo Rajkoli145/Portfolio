@@ -3,6 +3,7 @@ import { ProjectCard } from "@/components/project-card";
 import { DATA } from "@/data/resume";
 
 const BLUR_FADE_DELAY = 0.04;
+const FEATURED_PROJECTS = ["EduStory", "AI Founder Intelligence"];
 
 export default function ProjectsSection() {
     return (
@@ -23,16 +24,23 @@ export default function ProjectsSection() {
                         />
                     </div>
                     <div className="flex flex-col gap-y-3 items-center justify-center">
-                        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Check out my latest work</h2>
+                        <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl">Selected projects</h2>
                         <p className="text-muted-foreground md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed text-balance text-center">
-                            I&apos;ve worked on a variety of projects, from simple
-                            websites to complex web applications. Here are a few of my
-                            favorites.
+                            Selected work in AI applications, agent evaluation, and
+                            production software systems.
                         </p>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 max-w-[800px] mx-auto auto-rows-fr">
-                    {DATA.projects.map((project, id) => (
+                    {[...DATA.projects]
+                        .sort((a, b) => {
+                            const aIndex = FEATURED_PROJECTS.indexOf(a.title);
+                            const bIndex = FEATURED_PROJECTS.indexOf(b.title);
+                            const aRank = aIndex === -1 ? FEATURED_PROJECTS.length : aIndex;
+                            const bRank = bIndex === -1 ? FEATURED_PROJECTS.length : bIndex;
+                            return aRank - bRank;
+                        })
+                        .map((project, id) => (
                         <BlurFade
                             key={project.title}
                             delay={BLUR_FADE_DELAY * 12 + id * 0.05}
@@ -51,7 +59,7 @@ export default function ProjectsSection() {
                                 contribution={"contribution" in project ? (project as any).contribution : undefined}
                             />
                         </BlurFade>
-                    ))}
+                        ))}
                 </div>
             </div>
         </section>

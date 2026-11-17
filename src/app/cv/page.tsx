@@ -35,7 +35,7 @@ export default function ResumePage() {
             <div>
               <h1 className="text-3xl font-extrabold tracking-tight">Raj Koli — Resume</h1>
               <p className="text-sm text-muted-foreground mt-1 max-w-xl">
-                Software Engineer focused on backend systems, AI agent infrastructure, and developer tooling.
+                AI Engineer focused on LLM applications, agent evaluation, and developer tooling.
               </p>
             </div>
 

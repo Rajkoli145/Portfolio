@@ -16,9 +16,9 @@ export const DATA = {
   location: "India",
   locationLink: "https://www.google.com/maps/place/India",
   description:
-    "Software engineer focused on backend systems, AI agent infrastructure, and developer tooling.",
+    "AI engineer focused on LLM applications, agent evaluation, and developer tooling.",
   summary:
-    "Software engineer focused on backend systems, AI agent infrastructure, and developer tooling. Experienced in building full-stack applications, REST APIs, Linux automation, CLI tools, and production-ready workflows. Active open-source contributor in AI agent evaluation and terminal benchmarking. Currently authoring The Agent Systems Handbook, a research-driven guide covering modern AI agent architectures, memory, planning, evaluation, and autonomous software systems.",
+    "Software developer and AI evaluation professional with experience assessing AI-generated technical content and terminal-based software engineering tasks through Mercor and Handshake. Developed reproducible AI benchmark tasks at Parsewave, contributed to open-source developer tooling, and built web applications and student-focused AI projects.",
   avatarUrl: "/me.png",
   spotifyPlaylistUrl: "https://open.spotify.com/playlist/77SfoFRDHeoiRXeOxWYMBZ",
   movies: [
@@ -60,6 +60,9 @@ export const DATA = {
     { name: "Python", icon: Python },
     { name: "MongoDB", icon: Mongodb },
     { name: "Docker", icon: Docker },
+    { name: "OpenAI API" },
+    { name: "LLM Evaluation" },
+    { name: "AI Agents" },
     { name: "Bash/Shell", icon: Icons.terminal },
     { name: "Tailwind CSS", icon: Icons.tailwindcss },
   ],
@@ -113,16 +116,28 @@ export const DATA = {
 
   work: [
     {
+      company: "Mercor",
+      href: "https://www.mercor.com/",
+      badges: ["Freelance"],
+      location: "Remote",
+      title: "AI Evaluation Contractor",
+      logoUrl: "/mercor.png",
+      start: "Oct 2026",
+      end: "Present",
+      description:
+        "Create and evaluate AI-generated technical content; assess correctness, reasoning, and instruction following using structured evaluation guidelines.",
+    },
+    {
       company: "Handshake AI",
       href: "https://joinhandshake.com/",
-      badges: ["Contract"],
+      badges: ["Freelance"],
       location: "Remote",
       title: "AI Evaluation Specialist",
       logoUrl: "/handshake.png",
       start: "Jul 2026",
-      end: "Present",
+      end: "Sep 2026",
       description:
-        "Working on AI model evaluation across software engineering tasks, including debugging, code generation, reasoning, and real-world development workflows",
+        "Evaluated AI models on terminal-based engineering tasks involving debugging, code generation, and reasoning; supplied structured assessment feedback.",
     },
     {
       company: "Parsewave",
@@ -131,10 +146,10 @@ export const DATA = {
       location: "Remote",
       title: "AI Benchmark Contributor",
       logoUrl: "/parsewave.png",
-      start: "Jun 2026",
-      end: "Present",
+      start: "Dec 2025",
+      end: "Jul 2026",
       description:
-        "Designed and completed Terminal-Bench style benchmark tasks for AI agents in a structured evaluation environment. Developed deterministic task environments, automated validation workflows, and reproducible evaluation artifacts for model assessment. Successfully completed a paid benchmark contribution that passed technical review and quality evaluation.",
+        "Designed Terminal-Bench-style tasks and deterministic evaluation environments; completed a contribution that passed technical review.",
     },
     {
       company: "Unified Mentor",
@@ -143,10 +158,10 @@ export const DATA = {
       location: "Remote",
       title: "Frontend Developer Intern",
       logoUrl: "/unifiedmentor.png",
-      start: "Sep 2024",
-      end: "Dec 2024",
+      start: "Sep 2025",
+      end: "Dec 2025",
       description:
-        "Refactored UI into modular, reusable React components adopted across the entire codebase. Reviewed and merged pull requests per sprint, maintaining code quality standards across the team. Shipped iterative product features across a 4-month engagement, consistently meeting sprint deadlines.",
+        "Refactored React UI into reusable components and participated in pull-request reviews within Agile sprints.",
     },
     {
       company: "RustChain",
