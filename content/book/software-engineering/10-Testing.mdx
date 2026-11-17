@@ -1,0 +1,73 @@
+---
+title: "Software Testing & Quality Assurance"
+summary: "Choose tests that verify meaningful behavior across unit, integration, and complete user workflows."
+---
+
+## Tests are evidence for specific claims
+
+A green suite does not prove a product works in every situation. It shows that particular checks passed under particular conditions. Good testing starts by deciding which claims need evidence and which failures would matter to users.
+
+For an evaluator, the central claim is not simply “the command exits.” It is that task inputs are interpreted correctly, execution is bounded, verification outcomes are classified honestly, reports identify the inputs, and resources are cleaned up. Each claim needs checks at the boundary where it could fail.
+
+Acceptance criteria describe required behavior. Tests are one way to evaluate those criteria. Some criteria, such as whether a first-time user understands an installation error, also require observation or manual review.
+
+## Use different test levels for different risks
+
+Unit tests exercise a small piece of behavior without its expensive dependencies. A task parser can be tested against missing fields, invalid types, and unsupported schema versions. A result classifier can be tested against known execution outcomes. These checks should be fast enough to run while editing.
+
+Integration tests exercise cooperating parts: reading real task files, writing reports, invoking the actual container boundary, or checking an API against a database. They find failures that isolated functions cannot reveal, such as an incorrect working directory or a report that truncates during serialization.
+
+End-to-end tests follow a user-visible journey. For a CLI, install or invoke the real entry point in a clean environment, run a deterministic fixture, and inspect the resulting report and exit status. For a Next.js UI, open the page, perform the workflow, and verify the visible result. A small number of well-chosen end-to-end checks can protect critical paths without making every detail expensive to test.
+
+## Start from acceptance scenarios
+
+For a proposed report contract:
+
+```python
+# Illustrative pytest-style test for a proposed API, not an AgentBench test result.
+def test_failed_verification_is_not_reported_as_success(tmp_path):
+    result = run_fixture("failing-verifier", output_dir=tmp_path)
+    report = read_report(result.report_path)
+
+    assert report["status"] == "verification_failed"
+    assert report["verification"]["exit_code"] != 0
+    assert report["task"]["revision"] == FIXTURE_REVISION
+    assert source_workspace_is_unchanged()
+```
+
+This verifies a user-relevant contract across execution, reporting, and isolation. It is more informative than asserting that an internal helper was called once. The function names are proposed test interfaces, not existing implementation claims.
+
+Add separate cases for a passing verifier, timeout, missing image, malformed task, report-write failure, and cancellation. Do not turn every test into a giant scenario; isolate the reason for failure so diagnostics remain useful.
+
+## Build fixtures that control uncertainty
+
+A fixture is a known starting state. For an evaluator, use a tiny repository with a pinned revision, deterministic checks, and deliberately passing and failing variants. Keep external model behavior out of the core regression suite. Otherwise a provider outage or nondeterministic answer can obscure a defect in your own lifecycle code.
+
+Use mocks or fakes at boundaries you cannot reasonably exercise on every run, such as a billable provider API. A fake adapter can deterministically succeed, fail, or time out. Still test the actual adapter against its real boundary in a separate, controlled integration check; a fake proves your assumption about the contract, not that the provider meets it.
+
+Avoid mocking away the behavior under test. If you mock both the report writer and the file reader, the test cannot detect an invalid JSON file. If you replace Docker in every test, you have no evidence about container cleanup.
+
+## Regression testing protects discovered behavior
+
+When a user reports a defect, first reproduce it under controlled conditions. Add a regression check that fails for the faulty behavior and passes after the fix. Record the fixture and conditions so the test remains understandable.
+
+Flaky tests are unreliable evidence. Investigate shared state, timing assumptions, network access, and order dependence. Use synchronization or bounded polling for asynchronous state rather than arbitrary sleeps. Quarantining a flaky test can restore useful feedback temporarily, but retain an owner and a repair task.
+
+Run inexpensive checks on each change and expensive environment tests where they provide enough value. Keep test commands documented and failure output actionable. Coverage can reveal unexercised areas, but a high percentage does not establish meaningful assertions or a correct product specification.
+
+## Common mistakes and tradeoffs
+
+Tests that copy implementation logic can agree with the same bug. Snapshotting every large output makes reviews noisy and can encourage automatic approval. Assert stable contracts and critical content; snapshot selectively when a whole structured output is itself the contract.
+
+Overtesting incidental markup can slow harmless UI improvements. Undertesting route boundaries can ship broken links. Match the test to the consequence: verify navigation and content identity, then use targeted visual review for layout.
+
+## Practical exercise
+
+Choose three acceptance criteria and map each to the cheapest credible check. Write a deterministic passing fixture, a failed-verification fixture, and a timeout fixture. Identify which dependencies should be real and which can be fake. Explain one claim your tests still cannot establish.
+
+## Key takeaways
+
+- Treat tests as evidence for explicit behavior claims.
+- Use unit, integration, and end-to-end checks at appropriate boundaries.
+- Control nondeterminism with fixtures and selective fakes.
+- Add regression checks for observed failures and investigate flaky evidence.

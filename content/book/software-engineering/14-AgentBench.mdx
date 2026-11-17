@@ -1,0 +1,155 @@
+---
+title: "Case Study: Building AgentBench"
+summary: "Apply the lifecycle to a proposed local-first coding-agent evaluator, with explicit evidence boundaries and a practical engineering plan."
+---
+
+## What this case study can establish
+
+AgentBench is the author's ongoing project, described as a local-first developer tool for evaluating AI coding agents against reproducible software engineering tasks. That description establishes the intended product direction. It does not establish that a CLI, runner, verifier, or release has been implemented.
+
+No AgentBench source checkout, test output, release record, or benchmark measurements were supplied for this handbook. Consequently, the architecture, schemas, commands, and milestones below are **proposed designs and learning examples**. No functionality is marked implemented. The correct status is “implementation not verified from the available evidence,” which does not mean that no work exists elsewhere.
+
+| Area | Status in this case study | Evidence needed to mark implemented |
+| --- | --- | --- |
+| Product direction | Provided by the author | Existing description |
+| Python CLI and task loader | Proposed; implementation unverified | Source, entry point, valid/invalid task demonstrations |
+| Docker execution and cleanup | Proposed; implementation unverified | Runner source and lifecycle checks on supported hosts |
+| Verification engine and JSON reports | Proposed; implementation unverified | Contract, fixtures, report samples, check results |
+| Agent adapters and reproducible comparisons | Proposed; implementation unverified | Integration source and recorded repeated trials |
+| Tests, releases, adoption, performance | No results established here | Actual run output, release records, and measured observations |
+
+Update this table only with attributable evidence such as a repository revision, a reproducible command, and its observed result. A merged interface definition alone does not prove end-to-end behavior.
+
+## Problem definition and target developers
+
+The working hypothesis is that developers comparing coding agents spend effort assembling tasks, resetting repositories, running agents, and interpreting results, while inconsistent inputs make conclusions difficult to trust. The intended early user is a developer who wants to evaluate a small set of trusted tasks locally and inspect the evidence directly.
+
+This is a discovery hypothesis, not a claim based on completed interviews. Investigate the last real comparison a target developer attempted. Which inputs changed? What was retained? Could they explain a different result? Distinguish individual experimentation from research-scale benchmarking and enterprise evaluation, because those audiences impose different requirements.
+
+The intended outcome is a completed, inspectable evaluation with identifiable inputs and an honest status. A broad public leaderboard is outside the proposed first scope.
+
+## Existing solutions and the proposed gap
+
+[SWE-bench](https://www.swebench.com/) provides repository issue-resolution evaluation. [BigCodeBench](https://github.com/bigcode-project/bigcodebench) provides functional code-generation evaluation. Handwritten scripts are another practical alternative. These are adjacent tools and comparison points; their existence does not prove an unmet market or AgentBench's superiority.
+
+The proposed differentiation to investigate is a manageable local workflow for custom engineering tasks with explicit verification and portable reports. Test that hypothesis by attempting the same small workflow with existing tools. Record versioned observations about task authoring, isolation, setup burden, and report interpretation. Do not assume that another tool lacks a feature simply because it targets a different primary use case.
+
+## Proposed MVP scope
+
+Start with one supported host setup, trusted tasks, one repository style, and one agent integration. A first useful release would validate the task, prepare a disposable workspace at a fixed revision, execute within a deadline, run a trusted verifier, save a versioned JSON report, and clean up resources on success and failure.
+
+Defer remote workers, accounts, billing, a browser dashboard, and broad adapter compatibility. Keep timeout classification, source protection, input identity, and diagnostic failures inside the MVP because they make the evaluation meaningful.
+
+Success criteria should concern a real user's ability to install the tool, run a fixture, repeat it with controlled inputs, and interpret a report without editing the evaluator. These are proposed pilot criteria. No completed pilot or success rate is claimed.
+
+## Proposed Python CLI architecture
+
+A candidate package structure keeps orchestration separate from mechanisms:
+
+```text
+agentbench/
+  cli.py           # arguments, presentation, exit-code mapping
+  tasks.py         # schema validation and path policy
+  coordinator.py   # run lifecycle, deadlines, cleanup ownership
+  workspace.py     # disposable repository preparation
+  adapters/        # agent-specific interfaces
+  execution.py     # container lifecycle and resource limits
+  verification.py  # trusted checks and outcome classification
+  reporting.py     # versioned, atomic JSON output
+```
+
+An illustrative command might be `agentbench run tasks/parser.yaml --output reports/`. This is a proposed CLI contract, not a command known to exist. Decide how configuration is resolved, which defaults are safe, and how exit statuses distinguish invalid input, execution error, failed verification, and success.
+
+The coordinator should own the run identifier and resource cleanup. Each adapter should receive a bounded workspace and explicit configuration. Reporting should consume a structured result rather than infer success from terminal text.
+
+## Proposed YAML task definition
+
+```yaml
+schema_version: 1
+id: parser-empty-input
+repository:
+  path: ./fixtures/parser
+  revision: REPLACE_WITH_FULL_COMMIT_SHA
+image: registry.example/evaluation/python@sha256:REPLACE_WITH_APPROVED_DIGEST
+instructions: Handle empty input without changing valid parse results.
+verification:
+  argv: [python, -m, unittest, discover, -s, tests]
+timeout_seconds: 120
+```
+
+This is a deliberately non-executable template: revision and digest placeholders must be replaced. The timeout is an example policy value, not a measured performance claim. A real schema should reject unsupported versions, missing fields, invalid types, out-of-bounds values, and unresolved placeholders.
+
+Resolve relative paths against a documented task root. Validate that allowed repository and output paths stay within their intended boundaries, including after symlink resolution. Use a safe YAML loader, but also recognize that a task containing executable commands is a trusted program specification. Safe parsing does not make arbitrary verification commands harmless.
+
+## Proposed Docker execution and verification
+
+Prepare a fresh disposable workspace for each run and record its starting revision. Do not mount the developer's working repository as a writable execution directory. Make network access explicit, limit CPU, memory, process count, execution time, and logs, and avoid privileged mode or access to the host Docker socket.
+
+Docker configuration reduces risk but does not establish safe execution of hostile code. The proposed first scope should be trusted local tasks; support for adversarial inputs would require a separately reviewed isolation design. External agent providers also require an explicit data-flow policy. Local orchestration does not imply that code stays offline.
+
+Keep verification independent of the agent's claim that it succeeded. A trusted verifier should inspect the resulting workspace and run fixed checks whose definitions the agent cannot silently replace. Protect or restore verifier inputs and retain their identity. A task that edits its tests to pass must not be mistaken for a solved engineering problem.
+
+Distinguish agent execution errors, agent timeouts, verifier failures, verifier timeouts, invalid tasks, and reporting errors. A setup failure says something about the evaluation infrastructure; it is not evidence of an agent's coding ability. Stopping the process waiting for Docker may leave the container alive, so cleanup must target the recorded resource and be verified explicitly.
+
+## Proposed JSON reporting
+
+```json
+{
+  "schema_version": 1,
+  "run_id": "illustrative-run",
+  "task": {
+    "id": "parser-empty-input",
+    "revision": "example-only",
+    "definition_hash": "example-only"
+  },
+  "environment": {
+    "image_digest": "example-only",
+    "verifier_revision": "example-only"
+  },
+  "agent": { "adapter": "example", "config_hash": "example-only" },
+  "status": "verification_failed",
+  "verification": { "exit_code": 1 },
+  "cleanup": { "completed": true }
+}
+```
+
+Every value above is illustrative. The document is not output from an AgentBench run. A production report would need agreed timestamps, duration semantics, sanitized diagnostics, evaluator version, and appropriate host metadata. Store references or hashes without exposing credentials. Record model identity and controllable generation settings when available; fixed repository inputs cannot guarantee deterministic external model behavior.
+
+Write reports atomically and version the schema. Decide what happens if output storage fails: the CLI must not announce that a report was saved when it was not. If comparison or score aggregation is added, report missing and infrastructure-error runs separately rather than silently changing the denominator.
+
+## Proposed testing strategy and milestones
+
+Begin with deterministic fixtures rather than paid agent calls. Unit checks should cover schema validation and status classification. Integration checks should exercise real workspace isolation, Docker limits, verifier ownership, and cleanup. End-to-end checks should invoke the installed CLI and inspect a report from both passing and deliberately failing tasks.
+
+| Proposed milestone | Acceptance evidence to collect |
+| --- | --- |
+| Task contract | Valid fixture loads; invalid input stops before execution |
+| Execution lifecycle | Known command runs; timeout and cancellation clean up |
+| Verifier and report | Passing, failing, and infrastructure outcomes remain distinct |
+| One real adapter | Adapter executes a controlled task with recorded configuration |
+| Release candidate | Fresh installation, repeatable fixture, documented limitations |
+
+None of these checks is claimed completed. Retain actual commands, host details, revisions, and results when they are run. Add a source-state comparison to catch accidental mutation and a test that deliberately attempts to tamper with the verifier.
+
+## Technical risks and engineering tradeoffs
+
+Reproducibility can be weakened by mutable images, dependency downloads, nondeterministic agents, platform differences, and contaminated workspaces. Record identities and controlled inputs, then describe residual uncertainty. Do not promise identical outcomes merely because the tool uses Docker.
+
+Verifier quality limits evaluation validity. A narrow test suite can miss wrong solutions; an agent may exploit visible checks. Curated fixtures and independent verification improve confidence, but do not prove general coding ability. Publish the scope of the evidence.
+
+Other risks include runaway costs, log growth, provider credential exposure, interrupted report writes, and confusion with other projects using the AgentBench name. Investigate naming before a public release and define execution budgets before supporting broader automation.
+
+## Common mistakes
+
+A roadmap presented in the past tense invents progress. A sample report presented as a real result invents evidence. A passing fixture presented as proof of general agent quality overstates validity. Keep proposal, implementation, verification, and product adoption as separate claims, each with its own evidence.
+
+## Practical exercise
+
+Choose one proposed milestone. Turn it into a GitHub issue with a contract, failure scenario, and evidence required for completion. Write a proposed ADR for one uncertain choice. If you have access to the real AgentBench repository, inspect it and update only the status rows supported by source and reproducible observations. Leave the remaining rows unverified.
+
+## Key takeaways
+
+- The product direction is known; implementation progress is not established here.
+- Build the smallest complete trusted-task workflow before expanding features.
+- Protect isolation, verifier integrity, outcome classification, and report identity.
+- Mark a milestone complete only when concrete evidence supports the claim.

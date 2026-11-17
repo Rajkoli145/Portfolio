@@ -1,0 +1,59 @@
+---
+title: "Problem Discovery"
+summary: "Observe workflows, separate problems from solutions, and write problem statements that can be challenged."
+---
+
+## Find the failure in a real workflow
+
+Problem discovery prevents an expensive kind of waste: implementing a solution before understanding the situation it should improve. A feature request describes a possible intervention. It rarely describes the whole problem. “Add a dashboard” might mean that someone cannot find yesterday's result, cannot share a report, or cannot tell why a run failed. Those require different solutions.
+
+Begin with an actual event. Ask a potential user to walk through the last time they performed the workflow. What triggered it? Which files, commands, or services did they use? Where did they pause, repeat work, or ask someone for help? What happened when they abandoned the task? Concrete stories reveal constraints that hypothetical preferences leave out.
+
+For a developer tool, observe installation and the first useful command as well as the core technical operation. A reliable evaluator that nobody can configure has failed before evaluation begins.
+
+## Separate observation, interpretation, and proposed solution
+
+Suppose a developer shows you three ad hoc scripts for comparing coding agents. The scripts use different repository revisions. That is an observation. “Their comparison may be unreliable” is an interpretation. “They need a YAML-based benchmark runner” is a proposed solution. Recording these in separate fields makes it easier to challenge your interpretation without losing the observation.
+
+Keep a discovery log with the date, the participant's role, the task they attempted, their current workaround, the consequence, and unresolved questions. Ask permission before retaining sensitive examples. Reproduce the workflow with a harmless sample rather than copying a private repository or production credential into research notes.
+
+An interview is evidence about the participant's experience. It is not automatically evidence about every developer. Someone who regularly maintains agent infrastructure and someone experimenting on a personal laptop may have entirely different tolerance for setup work.
+
+## Write a problem statement with a boundary
+
+A useful statement identifies a person, a situation, a difficulty, and a consequence. It also states how you would know the situation improved. It should leave room for several solutions.
+
+| Weak definition | Stronger definition |
+| --- | --- |
+| “Build an AI coding dashboard.” | “Developers comparing agent configurations cannot trace a result back to its task and repository state, so they repeat setup before trusting a comparison.” |
+| “Developers need better tests.” | “Maintainers changing an API cannot detect response-shape regressions until downstream clients fail, because current checks cover only individual functions.” |
+| “Make deployment easy.” | “A maintainer releasing a Next.js app repeats undocumented configuration steps and cannot identify which artifact is running when a release fails.” |
+
+These stronger statements are still hypotheses until supported by observation. Precision makes a hypothesis testable; it does not turn it into a fact.
+
+A first AgentBench problem statement might focus narrowly on a developer comparing two agents on the same trusted repository task. That excludes public leaderboards and large-scale research evaluation from the initial discovery scope. Narrowness helps you choose whom to observe next.
+
+## Investigate the existing workaround
+
+Workarounds reveal what users already value. A spreadsheet may be inconvenient but excellent at sharing. A shell script may be brittle but require no account, upload, or recurring payment. Replacing it means preserving its useful properties as well as fixing its weaknesses.
+
+Ask what the user would lose by switching. A local-first design could preserve repository privacy, but an agent calling an external model may still send code outside the machine. Discover the actual data boundary before making privacy promises. “Local-first” is an architectural preference, not proof that all processing is offline.
+
+A discovery exit criterion could be: you can describe a recurring workflow, identify who experiences it, explain the current workaround, and name the riskiest unverified assumption. You do not need universal agreement. You need enough clarity to choose a useful next experiment.
+
+## Common mistakes and tradeoffs
+
+Leading questions such as “Would automated evaluation save you time?” invite politeness. Ask how the last comparison worked instead. Counting feature votes loses context: five requests from occasional experimenters may matter less for your chosen audience than one blocking failure from a frequent user.
+
+Discovery also has a cost. Endless interviews can postpone a cheap experiment that would resolve an uncertainty faster. When the question is whether a repository can be reset reliably, a technical spike may be more informative than another conversation. Use observation for human behavior and experiments for technical feasibility.
+
+## Practical exercise
+
+Interview or observe one developer completing a repetitive task. Record three observations without proposing a feature. Write two alternative explanations for the difficulty, then a bounded problem statement. Describe a result that would disprove your current interpretation. Turn that into the next research question.
+
+## Key takeaways
+
+- Investigate recent behavior rather than hypothetical enthusiasm.
+- Keep observations, interpretations, and solutions distinguishable.
+- Study why a workaround persists before replacing it.
+- Define a narrow audience and an explicit uncertainty to investigate next.

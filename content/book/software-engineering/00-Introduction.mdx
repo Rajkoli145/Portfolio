@@ -1,0 +1,61 @@
+---
+title: "Introduction: Thinking Like a Software Engineer"
+summary: "Connect problem discovery, software delivery, and product outcomes through one complete engineering lifecycle."
+---
+
+## Why engineering starts before the editor opens
+
+A program can be correct and still be the wrong thing to build. Imagine a Python script that compares two AI coding agents. It runs successfully on its author's laptop, but it silently reuses a modified repository between runs. The comparison is misleading. Now imagine fixing the isolation while requiring users to edit six configuration files before their first result. The software is more dependable, but the product may remain unusable.
+
+Writing code means expressing instructions. Building software means arranging those instructions into a system with explicit behavior, interfaces, failure handling, and verification. Developing a product adds another obligation: helping a particular person achieve an outcome they value. These activities overlap, but success at one does not guarantee success at the others.
+
+This handbook follows the work from the first observation of a problem to the operation and improvement of a released product. AgentBench, described here as a local-first tool for evaluating coding agents on reproducible engineering tasks, provides a continuing design example. Examples are illustrative unless explicitly supported by implementation evidence. The final case study makes that boundary explicit.
+
+## The lifecycle is a loop with evidence at each step
+
+Discovery asks who experiences a problem and how they handle it today. Research investigates existing solutions and technical constraints. Requirements turn findings into observable behavior. Design identifies components, contracts, and risks. Planning sequences work into useful increments. Implementation and testing make those increments real. Deployment puts a version into a user's environment. Production engineering keeps it dependable. Feedback changes the next version of the requirements.
+
+The sequence is useful, but it is not a conveyor belt. A prototype may expose an impossible latency assumption. A staging deployment may reveal that a dependency needs permissions the customer cannot grant. Returning to discovery or requirements is progress when new evidence changes the decision.
+
+A small team can keep the evidence lightweight:
+
+| Decision | Useful evidence | Concrete artifact |
+| --- | --- | --- |
+| Is the problem worth investigating? | A recent, costly user workflow | Problem statement |
+| What must the first version do? | An end-to-end user outcome | Scope and acceptance criteria |
+| How should it be built? | Constraints and failure scenarios | Component sketch and decision record |
+| Is it safe to release? | Checks against the required behavior | Test results and release checklist |
+| What should change next? | Observed use and failure reports | Prioritized follow-up issues |
+
+These artifacts are tools for thinking and coordination. A ten-page specification that nobody can verify is less useful than a short example that exposes an ambiguity.
+
+## Follow a single outcome through the system
+
+Consider the proposed outcome: “A developer can rerun the same coding task against a second agent and understand whether the result changed.” It immediately raises engineering questions. What identifies the starting repository state? Are the task, image, verifier, and agent configuration recorded? Is a failed test distinguished from a crashed execution environment? Can a report be read without running the agent again?
+
+None of those questions requires choosing a frontend framework. They define the properties that the eventual implementation must preserve. A local Python CLI and versioned JSON files may satisfy the first audience better than a hosted dashboard. A Next.js dashboard becomes useful only when sharing and browsing results are actual requirements.
+
+Write down the complete user journey before selecting technologies. Then choose a thin implementation that exercises its most uncertain boundary. For AgentBench that might be a trusted fixture, an isolated workspace, a known verifier, and a report—before any autonomous agent integration.
+
+## Engineering judgment is managing tradeoffs
+
+“Best practice” is incomplete without context. Adding a queue improves request handling for long-running jobs, but introduces workers, retries, and job-state coordination. Strict validation catches mistakes early, but a schema that changes every day can interrupt experimentation. Tests protect behavior, but expensive tests on every keystroke can slow feedback.
+
+A useful decision explains the requirement, the alternatives, the choice, and the condition that would make the choice worth revisiting. Prefer decisions that are inexpensive to reverse while uncertainty is high. Spend more thought on hard-to-reverse boundaries such as public APIs, stored data, and trust assumptions.
+
+## Common mistakes
+
+Starting with a technology shopping list hides the absence of a defined user outcome. Treating deployment as the finish line ignores installation, support, and recovery. Treating every learning prototype as production software creates unnecessary ceremony; treating a production release like a disposable prototype transfers its cost to users.
+
+The right amount of process depends on the consequences of failure. Make that judgment explicitly rather than copying a large company's workflow.
+
+## Practical exercise
+
+Choose a tool you want to build. Describe the code it might contain, the software guarantees it would need, and the product outcome it would serve in three separate paragraphs. Identify one assumption that could invalidate the project. Design the smallest observation or experiment that would challenge it before you start implementation.
+
+## Key takeaways
+
+- Start with a user outcome and work backward to the required behavior.
+- Use lifecycle artifacts to make uncertainty and evidence visible.
+- Treat feedback, operation, and recovery as part of engineering.
+- Choose technologies after identifying the constraints they must satisfy.

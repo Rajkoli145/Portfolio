@@ -1,0 +1,80 @@
+---
+title: "Project Planning & Task Breakdown"
+summary: "Turn scope into milestones, dependency-aware issues, realistic estimates, and demonstrable definitions of done."
+---
+
+## Plan for evidence of completion
+
+A task called “implement the backend” is difficult to estimate, review, or finish. It hides several uncertain boundaries behind one label. Useful planning decomposes an outcome until each piece has a clear result and a way to verify it.
+
+For a proposed evaluator, “produce a report from a known fixture” is a better milestone than “finish all core classes.” It demonstrates the complete path from input to output. A milestone should remove an uncertainty or deliver a usable capability, rather than merely accumulate source files.
+
+## Sequence milestones around risk
+
+Start by identifying the parts that could invalidate the design. Can the supported host run the required image? Can the selected agent operate in the intended workspace? Can cleanup reliably stop a timed-out job? Investigate expensive uncertainty before polishing a command's help text.
+
+A candidate development sequence is:
+
+| Milestone | Demonstrable outcome | Main dependency |
+| --- | --- | --- |
+| Contract and fixture | Valid and invalid tasks have unambiguous outcomes | Agreed task schema |
+| Isolated execution | Known command runs in a disposable workspace | Host and Docker feasibility |
+| Verification and report | A deliberate failure produces an attributable result | Execution lifecycle |
+| One agent integration | A supported adapter completes the same workflow | Stable execution contract |
+| Release candidate | A new user can install and reproduce a fixture | Documentation and packaging |
+
+These are proposed milestones, not AgentBench completion claims. A real project board should attach evidence to each completed item: a change, a demonstrated behavior, and relevant check results.
+
+## Write issues that can be reviewed independently
+
+A GitHub issue should identify the reason for the task, the intended behavior, scope limits, dependencies, and acceptance criteria. For example:
+
+```text
+Title: Classify verifier timeout separately from failed assertions
+Why: A stalled verifier must not appear as an agent correctness failure.
+Depends on: Execution result contract and fixture runner.
+Scope: Outcome classification and report fields; no UI changes.
+Acceptance:
+- A sleeping fixture reaches the configured deadline.
+- The result records verification_timeout.
+- The disposable workspace is cleaned up.
+- An assertion failure still records verification_failed.
+- Existing passing fixtures retain their behavior.
+```
+
+A reviewer can reason about that issue without understanding the entire project. It contains enough detail to catch an implementation that simply converts every nonzero process status to the same result.
+
+Split a task when it contains multiple independent reasons to change or cannot be verified without another unfinished subsystem. Do not split so aggressively that each issue is merely “create this file.” File creation is an activity; a reliable timeout classification is a result.
+
+## Manage dependencies and integration
+
+Some work can proceed independently after a contract is agreed. A reporter can use a representative result fixture while the runner is under development. That independence disappears if both developers keep changing the result shape without coordination.
+
+Make dependencies explicit with issue links and a small ordered list. Integrate a thin path early, then expand behavior. Long-lived parallel branches accumulate assumptions that only conflict at the end.
+
+Keep the critical path visible. If packaging depends on a runtime library that does not support the target platform, frontend polish does not advance release readiness. Replanning around that discovery is more useful than protecting the original calendar.
+
+## Estimate uncertainty rather than promise precision
+
+An estimate is a forecast under assumptions. Separate familiar implementation work from exploration. A task involving a known parser might be reasonably bounded; an unfamiliar agent integration needs a spike before a credible estimate.
+
+Use ranges when uncertainty matters and state what could widen them. Include review, integration, documentation, and verification in the forecast. Track actual outcomes to improve future estimates rather than using estimation as a performance score.
+
+Define done at the appropriate level. An issue may be done when reviewed code and acceptance checks pass. A milestone may additionally require installation documentation and a clean-environment demonstration. A release may require rollback instructions and known limitations. These gates prevent “code complete” from being mistaken for “ready for users.”
+
+## Common mistakes and tradeoffs
+
+Planning every detail before a feasibility check wastes effort when the premise changes. Planning nothing makes dependencies invisible. Maintain a detailed near-term slice and a lighter later roadmap.
+
+Avoid using percentage complete for uncertain work. “Execution works; cancellation cleanup remains unverified” tells a collaborator more than “runner 80% done.” Report the remaining behavior and the evidence still needed.
+
+## Practical exercise
+
+Break one milestone into four to six issues. Give each an observable outcome and a failure-path acceptance criterion. Link dependencies and identify the critical path. Mark one issue as a time-boxed investigation. Write separate definitions of done for an issue and the milestone.
+
+## Key takeaways
+
+- Plan milestones around capabilities that can be demonstrated.
+- Write issues with reasons, boundaries, and acceptance criteria.
+- Make dependencies explicit and integrate the end-to-end path early.
+- Include uncertainty, review, and verification in estimates.

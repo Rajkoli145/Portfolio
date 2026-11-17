@@ -1,0 +1,82 @@
+---
+title: "System Design Fundamentals"
+summary: "Describe components, contracts, data flow, persistence, and failure paths before choosing infrastructure."
+---
+
+## Design the path from input to outcome
+
+System design explains how cooperating parts deliver the required behavior. A useful design lets another engineer answer where data enters, who owns it, what can fail, and how a result becomes visible. It does not require a large distributed system. A local CLI has boundaries, state transitions, and resource lifecycles too.
+
+Begin with the happy path, then follow a failure through the same components. If you can describe how a run starts but not what happens when verification times out, the design is incomplete at precisely the point where users will need the most help.
+
+## High-level design: responsibilities and boundaries
+
+A high-level design names components and their relationships. For a proposed evaluator, task loading, workspace preparation, execution, verification, and reporting have different responsibilities. The following is a proposed data-flow sketch, not an implementation inventory:
+
+```text
+Developer
+   |
+   v
+CLI -> Task loader -> Validated task
+                         |
+                         v
+                  Run coordinator
+                    |         |
+                    v         v
+             Workspace     Agent adapter -> External provider, if configured
+                    |         |
+                    +----+----+
+                         v
+                  Isolated execution
+                         |
+                         v
+                      Verifier
+                         |
+                         v
+                 Result -> JSON report
+```
+
+The arrows represent different things: some carry task data, others request execution or return a result. In a real design review, label them more precisely and mark trust boundaries. A provider call may transmit repository content even when orchestration and reports are local.
+
+A component should own a cohesive responsibility. The loader checks schema validity. The coordinator owns run state and cleanup. The adapter translates between the evaluator's contract and a particular agent's interface. The reporter serializes a result; it should not secretly decide whether verification passed.
+
+## APIs are contracts, including inside one process
+
+An API need not be HTTP. A Python function that accepts a validated task and returns a structured result is also an interface. State what the caller may assume, which errors can occur, and who owns resources created during the call.
+
+For an HTTP version, a long-running execution could return an accepted job identifier and expose a status endpoint. That changes the design: requests can be retried, clients can disconnect, and job state must outlive one request handler. An idempotency key can prevent a retry from launching a second expensive run, but it requires storage and a clear key-retention policy.
+
+Do not put long-running agent work inside a short-lived web request merely because the UI uses Next.js. Separate the lifecycle of a user request from the lifecycle of an evaluation when their durations and recovery needs differ.
+
+## Choose storage from access patterns
+
+Files can be sufficient when one local process writes independent reports and users inspect them directly. Write a report to a temporary file in the destination directory and replace the final path only after serialization succeeds; otherwise an interruption may leave a document that looks complete but is not.
+
+A database becomes useful when users need indexed search, concurrent updates, relationships, or transactions. A relational design might separate task versions, runs, and verification results. State whether a run references an immutable task version or merely the current task row. Reproducibility depends on that distinction more than on the database brand.
+
+A queue is appropriate when jobs must wait independently of requests or workers. It adds retry behavior, duplicate delivery, ordering questions, and worker health. Design consumers so repeated delivery does not overwrite a completed report or execute billable work twice without an explicit policy.
+
+## Low-level design: make the boundary executable
+
+Low-level design specifies a module's types, algorithms, validation, and state changes. For a run, define states such as pending, preparing, executing, verifying, and terminal. Terminal outcomes should distinguish task failure from infrastructure failure.
+
+Design cancellation as a lifecycle operation. Killing the CLI's waiting process may leave the underlying container alive. The coordinator must retain the container identity and stop it during cancellation or failure. External services need their own timeouts and retry budgets; a global deadline should bound the complete workflow.
+
+For each boundary, ask: what is the input limit, who validates it, what is persisted, and what happens after interruption? Those answers often reveal a simpler design than adding infrastructure preemptively.
+
+## Common mistakes and tradeoffs
+
+Boxes labeled “backend,” “AI,” and “database” conceal responsibilities rather than explain them. Diagrams without failure paths invite optimistic assumptions. A database or queue added solely for future scale imposes present costs without proving future benefit.
+
+At the other extreme, refusing persistence when interrupted jobs must recover can make the system impossible to operate. Let concurrency, durability, and recovery requirements justify complexity.
+
+## Practical exercise
+
+Sketch one workflow with six or fewer components. Label each connection with data or a request. Mark storage, external services, and trust boundaries. Walk through a timeout after execution starts, then a failure while writing the result. Identify the component responsible for cleanup and the evidence available to the user.
+
+## Key takeaways
+
+- Explain responsibilities and failure paths, not just technologies.
+- Treat function calls, HTTP endpoints, and files as contracts.
+- Add databases and queues when durability or concurrency requires them.
+- Design interruption, cancellation, and resource ownership explicitly.

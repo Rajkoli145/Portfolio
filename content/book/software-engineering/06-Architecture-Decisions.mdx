@@ -1,0 +1,85 @@
+---
+title: "Software Architecture & Technical Decisions"
+summary: "Use modular boundaries, explicit interfaces, and decision records to make requirements-driven technical choices."
+---
+
+## Architecture determines the cost of change
+
+Architecture is the arrangement of responsibilities and dependencies that makes some changes easy and others difficult. For a small developer tool, the important question is often whether a new agent adapter can be added without rewriting verification or reporting. A fashionable deployment topology does not answer that question.
+
+Start with likely changes and important guarantees. Task formats may evolve. Agent interfaces may differ. Reports must remain interpretable. Execution cleanup must happen even when an adapter fails. These pressures suggest boundaries before they suggest frameworks.
+
+## Separate policy from mechanisms
+
+Policy decides what should happen: validate a task, execute within a deadline, verify, classify the result, and clean up. Mechanisms implement particular operations: invoke Docker, call an agent, read YAML, or write JSON. Keep the coordinator's rules understandable without embedding every provider-specific command.
+
+A Python protocol can describe the execution boundary:
+
+```python
+from dataclasses import dataclass
+from typing import Protocol
+
+@dataclass(frozen=True)
+class ExecutionResult:
+    exit_code: int
+    timed_out: bool
+    log_path: str
+
+class Runner(Protocol):
+    def run(self, argv: list[str], timeout_seconds: int) -> ExecutionResult:
+        ...
+```
+
+This is an illustrative interface. A production implementation would also need a workspace identity, cancellation, output limits, and cleanup ownership. The abstraction is useful if the coordinator needs the same behavior from a real runner and a controlled test runner. Creating an interface for every tiny helper would add indirection without protecting a meaningful boundary.
+
+In a Next.js application, keep domain rules outside route handlers and React components. The handler authenticates, validates transport input, invokes a use case, and maps its result to HTTP. A component presents state. Neither should independently reinterpret whether a run passed.
+
+## Modularity is not the same as microservices
+
+A modular monolith keeps several responsibilities in one deployable unit while maintaining internal interfaces. Microservices split them into separately deployed processes with network contracts. Both can have good or poor separation of concerns.
+
+A Python CLI is naturally a single application. Splitting reporting into a service would add deployment, authentication, network failure, and version coordination. That may be justified for a shared team platform; it is rarely necessary for the first local report writer.
+
+Consider a service boundary when independent scaling, ownership, deployment cadence, or fault isolation provides a concrete benefit. Record the operational cost alongside it. A network timeout is a new failure mode, not simply a slower function call.
+
+## Select technologies against requirements
+
+Compare candidates using the requirements that matter. Python may fit a CLI because of its ecosystem and developer familiarity. TypeScript may fit a web interface because shared client/server types reduce translation work. Docker may help standardize execution environments, while introducing host compatibility and security considerations.
+
+Dependency management is part of the architecture. Pin or lock application dependencies, review licenses, and decide who updates them. A narrow wrapper around a volatile SDK can keep provider changes from spreading across the application. Avoid wrapping a stable library just to rename its methods; that creates maintenance without reducing coupling.
+
+Distinguish replaceable decisions from sticky ones. A terminal formatting library is easy to replace. A public task schema, report format, and stored identifiers are harder to change because users and other tools depend on them.
+
+## Write an architecture decision record
+
+An ADR captures a decision and its context. Keep it short enough to update:
+
+```text
+ADR: Keep initial reports as versioned JSON files
+Status: Proposed
+Context: One local process writes independent results; no shared query service.
+Options: JSON files, SQLite, hosted relational database.
+Decision: Start with files and a schema_version field.
+Consequences: Easy inspection and export; limited concurrent querying.
+Revisit when: Users need transactional updates or indexed cross-run queries.
+Evidence needed: A pilot with enough reports to observe actual browsing needs.
+```
+
+An ADR is not evidence that a feature has shipped. Its status distinguishes a proposal, an accepted choice, and a superseded decision. Link an accepted decision to implementation and verification evidence when available.
+
+## Common mistakes and tradeoffs
+
+Premature generic frameworks make hypothetical changes easy while making today's code harder to understand. Ignoring boundaries entirely makes provider details leak into core rules. Prefer the smallest interface that protects a real variation or risk.
+
+Architecture reviews also fail when choices become identity debates. Compare consequences under the actual requirements. “We know how to debug this stack” is a legitimate criterion; “this is what serious companies use” is not an engineering argument.
+
+## Practical exercise
+
+Choose one technical decision for your project. Compare three options against deployment environment, team knowledge, failure behavior, and change cost. Write a proposed ADR with a measurable revisit condition. Identify one interface worth introducing now and one abstraction you can defer.
+
+## Key takeaways
+
+- Design boundaries around responsibilities and likely changes.
+- Keep domain policy separate from provider and transport mechanisms.
+- Treat microservices as an operational tradeoff, not a maturity milestone.
+- Record context and consequences so decisions can be revisited intelligently.

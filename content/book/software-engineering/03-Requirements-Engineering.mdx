@@ -1,0 +1,81 @@
+---
+title: "Requirements Engineering"
+summary: "Turn a vague idea into functional behavior, measurable qualities, and verifiable acceptance criteria."
+---
+
+## Requirements connect intent to verification
+
+“Evaluate coding agents” sounds concrete until two developers implement it differently. One compares text responses; another runs generated code. One treats a container crash as a failed solution; another retries it indefinitely. Requirements expose those differences before they become incompatible software.
+
+A requirement describes an observable obligation. It should explain enough context to support a design decision, while leaving room for implementation choices. “Use PostgreSQL” is usually a technical constraint or decision. “Retain completed results after a process restart” is the behavior that might justify storage.
+
+## Separate behavior from quality
+
+Functional requirements describe what the system does. In a proposed local evaluator, a valid task starts an execution, a verifier evaluates the resulting workspace, and a report records the outcome. Failure paths belong here too: invalid YAML must produce a useful error before agent code runs.
+
+Non-functional requirements describe the qualities and constraints of that behavior: supported platforms, reproducibility, reliability, security, performance, and accessibility. Replace “fast” with a measurement method and a target appropriate to the audience. For example, “Validate a small local task file without starting Docker” describes an inexpensive boundary; a timing target still requires a specified machine and workload.
+
+Do not invent a performance guarantee because a specification template has a latency field. Mark unmeasured goals as targets and define how you will test them.
+
+## Build a small specification
+
+Start with the user outcome and a story: “As a developer comparing agent configurations, I want each report to identify the inputs and verification outcome so I can explain a difference between runs.” A story is a conversation starter. Acceptance criteria make it testable.
+
+```text
+Scenario: A verifier fails after an agent completes
+Given a valid, trusted task and a clean workspace
+And the agent exits successfully
+When the verifier exits with a nonzero status
+Then the report records verification_failed
+And preserves the verifier exit status and bounded diagnostic output
+And does not record the task as passed
+And cleanup still occurs
+```
+
+This scenario separates agent completion from task success. Add scenarios for a missing image, an agent timeout, malformed task data, and an unwritable report destination. Each should identify the behavior a user can observe.
+
+A compact specification can use these sections:
+
+| Section | Example content |
+| --- | --- |
+| Goal | Compare agent outcomes on a reproducible local task |
+| Functional behavior | Validate input, prepare workspace, run, verify, report, clean up |
+| Quality requirements | Bounded execution, attributable inputs, diagnostic failures |
+| Assumptions | Tasks are trusted; Docker is available on a supported host |
+| Constraints | CLI first; no hosted service in the initial scope |
+| Exclusions | Public leaderboards, billing, remote worker scheduling |
+| Open decisions | Report schema and exit-code policy |
+
+An assumption is something you rely on but have not guaranteed. A constraint is a boundary the design must respect. Scope names what the release includes and excludes. Keep these distinct so a failed assumption does not quietly become a requirement violation.
+
+## Define contracts at boundaries
+
+Requirements become especially valuable where data crosses a boundary. A TypeScript client may expect an API to return a discriminated union rather than an ambiguous string:
+
+```typescript
+type RunOutcome =
+  | { status: "passed"; reportPath: string }
+  | { status: "verification_failed"; reportPath: string }
+  | { status: "execution_error"; message: string };
+```
+
+The type makes several states visible, but it does not validate incoming JSON at runtime. Specify runtime validation, version compatibility, and the meaning of each state as part of the contract. Decide whether a report is still required after an infrastructure failure; otherwise different implementations will make different choices.
+
+Trace each important requirement to one or more checks. “Never overwrite the user's source repository” should lead to an isolation design and a test that compares the source state before and after a deliberately failing run.
+
+## Common mistakes and tradeoffs
+
+Exhaustive specifications written before discovery can harden guesses into bureaucracy. Vague stories shift unresolved decisions into implementation. Aim for enough precision to develop the next useful slice, then update the specification as you learn.
+
+Avoid specifying every function name. Reserve detailed contracts for public interfaces, stored data, and boundaries where disagreement is expensive. Keep the reason for a requirement alongside it; knowing why bounded output matters helps an engineer preserve the requirement during refactoring.
+
+## Practical exercise
+
+Take “build an agent evaluator” or another vague project idea. Write three functional requirements, three quality requirements, two assumptions, and two exclusions. Add acceptance scenarios for a successful run, invalid input, and a failure during cleanup. Identify which requirement has no verification method yet.
+
+## Key takeaways
+
+- Specify user-observable behavior, including failures.
+- Distinguish functional requirements, quality targets, assumptions, and constraints.
+- Use concrete scenarios to settle ambiguous status and recovery behavior.
+- Trace important requirements to evidence that can demonstrate them.

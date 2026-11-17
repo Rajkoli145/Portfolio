@@ -1,0 +1,91 @@
+---
+title: "Deployment & CI/CD"
+summary: "Move a verified artifact through environments with explicit configuration, automated checks, and recoverable releases."
+---
+
+## A release changes someone else's environment
+
+A development server running on your laptop is not a release. Deployment introduces a built artifact, configuration, permissions, external dependencies, and a user population you do not directly control. CI/CD makes that transition repeatable; it does not remove the need to decide what is safe to release.
+
+For a web application, deployment may mean promoting a server build and static assets. For a local Python CLI, it may mean publishing an installable package and documenting compatible runtimes. An evaluator's Docker execution image is another artifact with its own version and dependency history. Treat these as related but separate release units.
+
+## Define the role of each environment
+
+Development supports rapid changes and disposable data. Staging exercises a release-like configuration without putting real users at risk. Production serves actual users and requires controlled access, reliable backups where applicable, and recovery procedures.
+
+Staging should resemble production where differences could invalidate a check: runtime version, database behavior, build method, and permission model. It need not have the same scale. Use separate credentials and data; a staging mistake must not mutate the production database.
+
+Environment variables provide values at build time or runtime depending on the framework and hosting setup. Know which applies. A client-visible variable may be embedded during a Next.js build, so changing a server setting after deployment may not update the browser bundle. Never expose a secret through a public variable simply because it makes local setup easier.
+
+## Build an artifact you can identify
+
+Docker packages a filesystem and process configuration into an image. A minimal trusted Python verifier fixture might use:
+
+```dockerfile
+FROM python:3.12-slim
+WORKDIR /workspace
+RUN useradd --create-home --uid 10001 runner
+COPY --chown=runner:runner . .
+USER runner
+CMD ["python", "-m", "unittest", "discover", "-s", "tests"]
+```
+
+This illustrative image assumes standard-library tests and no third-party dependencies. A real application should use reviewed dependency locks and appropriate build stages. A mutable tag such as `python:3.12-slim` is convenient for an example; reproducible evaluation should record and use an approved immutable image digest. The Dockerfile alone does not define resource limits, network policy, or a secure execution environment.
+
+Build once and promote the identified artifact when possible. Rebuilding separately for staging and production can introduce different dependencies under the same release label. Record the commit, build identifier, dependency lock, and image digest so a failure can be traced to the deployed version.
+
+## Automate checks before promotion
+
+[GitHub Actions](https://docs.github.com/en/actions/get-started/quickstart) runs workflows for repository events. A basic Next.js check can be expressed as:
+
+```yaml
+name: Verify
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npx tsc --noEmit
+      - run: npm run build
+```
+
+This is a starting example, not a workflow installed by this handbook. Add the project's actual test command when it has one. Version tags make the example readable; security-sensitive workflows should pin reviewed action commit SHAs and maintain those pins. Check runtime compatibility and action support before adopting the snippet.
+
+Continuous integration checks each proposed change. Continuous delivery keeps a passing artifact ready for release. Continuous deployment promotes it automatically under a defined policy. A pipeline can still include human review where the consequence warrants it. Keep production credentials unavailable to untrusted pull-request code.
+
+## Make release and recovery explicit
+
+A release checklist should identify the artifact, configuration changes, migrations, smoke checks, known limitations, and rollback strategy. Smoke checks verify the service starts and a small critical path works after deployment; they supplement earlier tests rather than replace them.
+
+Database changes need extra care. A rollback to old application code may fail against a new schema. Prefer backward-compatible expansion, deploy code that can tolerate both states, then remove obsolete fields in a later change. Backups are useful only when restoration has a known procedure.
+
+For a CLI release, verify installation into a fresh environment, help output, fixture execution, report compatibility, and upgrade instructions. Publishing a package that works only from the source checkout is a deployment failure even if its unit tests pass.
+
+## Common mistakes and tradeoffs
+
+Manual steps hidden in someone's terminal make releases depend on memory. Fully automated deployment without reliable checks merely automates mistakes. Staging environments that use production secrets create avoidable consequences.
+
+Automation has maintenance cost. Start with repeatable installation, checks, and artifact creation. Add promotion and rollback automation as operational needs justify it, while keeping a documented recovery path from the first real release.
+
+## Practical exercise
+
+Write a release plan for a small web app or CLI. Name the artifact, required settings, automated checks, post-release smoke check, and recovery method. Identify one build-time setting and one runtime setting. Describe what happens if a database migration succeeds but the new application fails.
+
+## Key takeaways
+
+- Deploy identifiable artifacts with explicit environment configuration.
+- Keep staging and production credentials and data separate.
+- Automate meaningful checks and preserve least-privilege execution.
+- Plan recovery for code, configuration, data, and package compatibility.

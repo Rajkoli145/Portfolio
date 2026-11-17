@@ -1,0 +1,66 @@
+---
+title: "Product Feedback & Iteration"
+summary: "Release a useful slice, investigate behavior, measure adoption honestly, and prioritize the next engineering improvement."
+---
+
+## A release starts a new round of discovery
+
+Once users can try a product, the evidence changes. You can observe what they actually complete, what they misunderstand, and where they stop. The challenge is separating a request for a particular feature from the underlying obstacle to a valuable outcome.
+
+For a proposed AgentBench pilot, a developer asking for a dashboard may be struggling to compare two reports. A simpler summary command might solve that problem. Another developer may need to share evidence with teammates, in which case a local summary alone is insufficient. Ask about the workflow before choosing the implementation.
+
+## Release to a defined audience
+
+Choose users who match the first supported workflow and environment. Explain what the release can do, what is still experimental, what data may leave the machine, and how to report a problem. Provide a small fixture that produces an understandable result before asking users to configure a complex real-world task.
+
+Observe the path to the first useful outcome. Can the user install the tool, discover prerequisites, run the fixture, locate the report, and explain its status? Record the points where you intervene. An outcome that requires the author to repair setup is different evidence from an outcome the user achieves independently.
+
+A small pilot can reveal usability problems, but it does not establish broad market demand. Keep sample size, participant selection, and supported conditions visible in your conclusions.
+
+## Measure an outcome rather than attention
+
+Downloads, repository stars, and page views can be useful context, but they do not show that a product solved a problem. Define an adoption sequence appropriate to the tool:
+
+| Stage | Observable behavior | Question |
+| --- | --- | --- |
+| Setup | Installs and finds prerequisites | Is the starting path understandable? |
+| Activation | Completes a meaningful task and reads the result | Does the tool deliver initial value? |
+| Reuse | Returns for another real comparison | Is the value recurring? |
+| Trust | Can explain the result and its limitations | Does the evidence support a decision? |
+
+These are measurement ideas, not observed AgentBench metrics. A local-first tool may not have automatic telemetry. Voluntary interviews, opt-in diagnostics, or user-shared reports can provide evidence without making silent collection a prerequisite for learning.
+
+If you add telemetry, define its purpose, consent model, data fields, and retention. Avoid collecting raw repositories, prompts, credentials, or unbounded logs merely because they are available. Instrumentation should help answer a decision, not create an unexplained data exhaust.
+
+## Investigate failures before counting them
+
+A failed evaluation might mean an agent produced an incorrect solution, the task was invalid, the host lacked a dependency, or the evaluator malfunctioned. These events demand different product work. Retain a structured classification and enough redacted context to reproduce the problem.
+
+Ask the user what they expected, what happened, which version they used, and whether the issue occurs with the sample fixture. Reproduction narrows a report without making the user prove that their frustration is legitimate. When the tool's error message hides the distinction, improving diagnostics may be the highest-value next change.
+
+Combine quantitative signals with qualitative explanation. A drop in completed runs identifies where to investigate; an observed session may explain why. Neither alone provides a complete causal story.
+
+## Choose the next change deliberately
+
+For each candidate improvement, describe the affected users, evidence, expected outcome, effort, risk, and uncertainty. Avoid a scoring formula whose invented numbers conceal weak evidence. A short comparison with explicit assumptions can be more honest.
+
+Correctness and trust defects often outrank new features. A beautiful comparison screen cannot compensate for reports that conflate timeouts with failed assertions. Once the core evidence is reliable, repeated requests from the chosen audience can justify broader task support, more adapters, or easier sharing.
+
+Use a small experiment when the desired outcome is uncertain. Prototype a summary command, observe whether it resolves confusion, then decide whether to harden it. Define a stop condition as well as a success criterion: if users still cannot explain the comparison, adding formatting has not addressed the problem.
+
+## Common mistakes and tradeoffs
+
+Treating every request as a commitment turns a focused tool into unrelated workflows. Ignoring uncomfortable feedback protects the roadmap at the expense of the product. Explain the current focus, retain the evidence, and revisit when patterns emerge.
+
+Changing too many things at once makes improvement difficult to attribute. Very small experiments can also miss the context that makes a workflow useful. Choose a change large enough to affect the outcome and narrow enough to interpret.
+
+## Practical exercise
+
+Draft a pilot plan for three representative users. Define the first useful outcome, the observations you will record, and the data you will avoid collecting. Imagine one setup failure, one correctness concern, and one feature request. Prioritize the next change and explain what evidence could reverse your decision.
+
+## Key takeaways
+
+- Observe real workflows after release and revisit the original assumptions.
+- Measure activation, reuse, and trust rather than attention alone.
+- Classify failures before drawing conclusions about product or agent quality.
+- Prioritize changes using evidence, consequence, and uncertainty.

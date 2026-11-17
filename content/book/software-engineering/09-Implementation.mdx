@@ -1,0 +1,79 @@
+---
+title: "Implementation & Clean Code"
+summary: "Build in small verified increments with explicit errors, cohesive modules, and configuration at system boundaries."
+---
+
+## Make correctness easy to inspect
+
+Maintainable code reveals what it does, where inputs are trusted, and how failures travel. Short functions help only when they express coherent responsibilities. Splitting a simple operation across twelve generic helpers can make it harder to understand than a slightly longer, direct implementation.
+
+Start with a thin path through the system. For an evaluator, parse a trusted task, run a known fixture, classify its result, and write a report. Keep the first fixture deliberately boring. Once the lifecycle works, add more realistic tasks and one agent integration. Generating an entire application at once makes it harder to identify which assumption caused a failure.
+
+## Organize by responsibility
+
+A small Python project might separate `tasks`, `execution`, `verification`, and `reporting`, with a CLI that coordinates them. A Next.js app can separate route handlers, domain functions, and UI components. The exact folder names matter less than keeping responsibilities from leaking across boundaries.
+
+A verifier should decide whether its checks passed. A report writer should serialize a result. A CLI should turn user input and domain errors into a useful terminal response. If each module reinterprets exit codes, they will eventually disagree.
+
+Name functions after intent. `validate_task`, `prepare_workspace`, and `write_report` communicate more than `process_data`. Keep input and output types narrow enough to expose assumptions. Avoid passing a large application context into every function when only a path and a deadline are needed.
+
+## Handle expected failure explicitly
+
+The following example illustrates calling a trusted command with an argument list and a timeout:
+
+```python
+import subprocess
+from pathlib import Path
+
+class VerificationTimedOut(Exception):
+    pass
+
+def run_verifier(argv: list[str], workspace: Path, timeout_seconds: int) -> int:
+    try:
+        result = subprocess.run(
+            argv,
+            cwd=workspace,
+            timeout=timeout_seconds,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise VerificationTimedOut("Verifier exceeded its deadline") from exc
+    return result.returncode
+```
+
+A nonzero exit status is returned because a failed verification is a domain outcome. A timeout is a different failure. A missing executable may raise another exception that the CLI should report clearly. Do not catch every exception and return `passed=False`; that erases the distinction between a wrong solution and a broken evaluator.
+
+Using an argument list avoids shell interpolation, but it does not make the command safe. A trusted executable can still run dangerous code, and subprocess timeout handling does not replace isolation or full process/container cleanup. Production execution needs resource limits, bounded logs, and lifecycle ownership. The [Python subprocess documentation](https://docs.python.org/3/library/subprocess.html) explains its process and timeout behavior.
+
+## Put configuration at the boundary
+
+Read configuration near application startup, validate it, and pass explicit values to core functions. Repeatedly reading environment variables deep inside business logic hides dependencies and makes tests brittle.
+
+Distinguish a missing value from an intentionally empty one. Reject an invalid timeout instead of silently replacing it with an unlimited execution. Keep safe defaults in code and environment-specific values outside it. In Next.js, variables exposed with a public prefix belong to the client-visible bundle; credentials must stay on the server.
+
+Configuration is also a compatibility interface. Renaming an environment variable may break deployed installations even when TypeScript compiles. Document required settings, defaults, and upgrade changes alongside the code.
+
+## Document decisions, not obvious syntax
+
+A comment explaining that a report is replaced atomically to avoid partial files is useful. A comment saying “increment index” beside `index += 1` is usually noise. Public functions need clear behavior, error semantics, and ownership rules more than a narration of each line.
+
+Use abstractions when they remove real duplication or isolate a changing boundary. Wait until you understand repeated behavior before inventing a generic plugin system. Two agent adapters may reveal a useful shared contract; one speculative adapter rarely justifies a framework.
+
+Incremental implementation supports this judgment. Make one change, run the smallest relevant check, inspect the result, then continue. Review generated code with the same standards as handwritten code: does it satisfy the requirement, handle the relevant failure, and fit the existing architecture?
+
+## Common mistakes and tradeoffs
+
+Swallowing errors creates false success. Logging an exception and rethrowing it at every layer creates repeated noise. Decide which layer adds context and which layer presents the final error.
+
+Avoid both excessive abstraction and giant all-purpose functions. Cohesion is the useful criterion: a function should have one reason to change, and its caller should understand its contract without reading every dependency.
+
+## Practical exercise
+
+Implement a task validator and a report writer separately, then connect them with one fixture. Add invalid input and an unwritable output path. Observe whether errors retain their meaning across layers. Remove one abstraction that adds indirection without protecting a real boundary, or explain why the abstraction earns its place.
+
+## Key takeaways
+
+- Implement a thin end-to-end path before expanding feature breadth.
+- Keep domain outcomes distinct from infrastructure errors.
+- Validate configuration once and pass dependencies explicitly.
+- Prefer cohesive, readable code over arbitrary function-length rules.

@@ -1,0 +1,62 @@
+---
+title: "Minimum Viable Product (MVP)"
+summary: "Choose the smallest complete workflow that can test a product assumption and define evidence for its success."
+---
+
+## Minimize the experiment, not the usefulness
+
+An MVP is a version that can test an important product assumption with real users. It is not a randomly incomplete feature set. A CLI that runs an agent but cannot explain its result may demonstrate execution technology without testing whether developers can trust comparisons.
+
+For a proposed AgentBench MVP, a complete workflow could be: select a trusted task, prepare a fixed starting state, run one supported agent adapter, verify the output, and save a report. Each step contributes to a usable result. A dashboard, accounts, remote workers, and a plugin marketplace can wait because this workflow can be evaluated without them.
+
+Viability includes the minimum reliability and safety needed for the experiment. “MVP” does not justify running untrusted commands with access to a user's home directory or silently labeling infrastructure failures as successful evaluations.
+
+## Name the learning objective
+
+Before choosing features, write the question the release should answer. “Can a developer complete a meaningful comparison without modifying the evaluator's source?” is more useful than “Will people like this?” It identifies a workflow, an audience, and a visible result.
+
+Then define the conditions of the experiment. Which host platforms are supported? Are tasks curated? Is the agent already installed? Are dependencies available? A narrow supported environment is acceptable when clearly documented. An undocumented dependency is a failure waiting to be misinterpreted as user error.
+
+Choose success criteria before the trial. A proposed pilot might require participants to install the CLI from its documentation, run the same fixture twice, locate the reports, and explain which inputs were held constant. Record setup interventions and confusing errors as evidence. These are proposed evaluation criteria, not claims about AgentBench's current adoption or completed tests.
+
+## Prioritize around a dependency chain
+
+Feature voting can overlook prerequisites. Rich JSON reporting depends on a meaningful execution result. A meaningful result depends on isolated workspaces and a trusted verifier. An agent adapter depends on a stable contract for starting and stopping work.
+
+| Candidate | Why it matters | Initial decision |
+| --- | --- | --- |
+| Task validation | Prevents ambiguous execution inputs | Include |
+| Workspace isolation | Protects source state and comparability | Include |
+| Timeout and cleanup | Bounds failure cost | Include |
+| Report with input identities | Makes results inspectable | Include |
+| Many agent providers | Expands audience but multiplies integration work | Support one first |
+| Hosted result browsing | Convenient sharing with additional operations | Defer |
+
+Read the table as a proposal with reasons, not a permanent roadmap. A user study may show that report sharing is essential; a feasibility spike may show that the first adapter is impractical.
+
+## Reduce breadth before weakening guarantees
+
+Scope reduction can remove supported languages, agent adapters, operating systems, or task types. These are often cleaner cuts than removing diagnostics or accepting state contamination. A first version that handles one repository type dependably can teach more than a broad implementation whose failures cannot be explained.
+
+Use vertical slices. First run a known deterministic command in an isolated fixture and produce a result. Next add a verifier. Then add a real adapter. Each slice exercises the path through the system, while increasing one dimension of uncertainty. Building every module separately and connecting them at the end postpones the most informative failures.
+
+A dependency spike is different from a shippable slice. A short experiment that checks whether Docker cleanup works on the supported host may be disposable. State what it is intended to learn so that experimental code does not accidentally become the release architecture.
+
+## Common mistakes and tradeoffs
+
+“Just one more feature” frequently enters through edge cases that belong to a different audience. Keep a deferred list with the reason each item is outside the current learning objective. That makes saying no a reversible prioritization decision.
+
+Overly narrow MVPs have a different failure mode: the workflow becomes so artificial that users cannot judge its value. A hardcoded demonstration can test technical feasibility, but it does not establish that developers can bring their own tasks. Distinguish those experiments and use the right evidence for each.
+
+A release gate should include the selected acceptance scenarios, installation instructions, known limitations, and a way to report a reproducible failure. Without these, feedback will describe confusion more often than the product assumption you meant to test.
+
+## Practical exercise
+
+List ten features for your project. Choose one user outcome and keep only the features needed to complete it safely. Draw their dependency order in plain text. Define one adoption signal, one correctness check, and one observation that would make you change the MVP scope. Label every numerical goal as a target until measured.
+
+## Key takeaways
+
+- Define an MVP around a complete outcome and a learning objective.
+- Cut audience or feature breadth before essential correctness guarantees.
+- Sequence prerequisites through small vertical slices.
+- Decide how success will be evaluated before collecting feedback.

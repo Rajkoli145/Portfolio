@@ -1,0 +1,69 @@
+---
+title: "Market Research & Existing Solutions"
+summary: "Investigate tools, repositories, technical limits, and complaints while keeping evidence separate from assumptions."
+---
+
+## Research the engineering gap
+
+Before building a developer tool, find out whether the required capability already exists. Existing software can be a dependency, a reference implementation, a competitor, or a reason to abandon the idea. The useful question is not “Does anything have this name?” It is “Can the target user complete this workflow with the tools available to them?”
+
+The [Startup Research Handbook](/book#startup-research) covers opportunity research, communities, competitive analysis, and interviews in depth. This chapter concentrates on the engineering investigation: whether a tool meets a technical requirement, what integration would cost, and how to record claims so another developer can verify them.
+
+## Start with a workflow-based comparison
+
+For a proposed evaluator, compare setting up a repository task, running an agent, verifying the result, and retaining evidence. Include the current shell-script workflow as an alternative. “Do nothing” is a real competitor whenever changing tools costs more than the problem.
+
+Do not collapse different categories into one ranking. [SWE-bench](https://www.swebench.com/) evaluates agents on repository issue-resolution tasks. [BigCodeBench](https://github.com/bigcode-project/bigcodebench) focuses on code-generation tasks with functional evaluation. Their official materials support those descriptions; they do not establish whether either satisfies your users' exact local workflow. AgentBench's proposed contribution must be tested against that workflow rather than inferred from a different benchmark's scope.
+
+Build a comparison around requirements:
+
+| Question | Evidence to collect | Decision it informs |
+| --- | --- | --- |
+| Can users bring a small custom task? | Documented task schema and a successful trial | Extend an existing tool or build a task format |
+| Can a result be reproduced? | Recorded revisions, images, inputs, and verifier versions | Required report metadata |
+| What must leave the machine? | Actual provider calls and data-flow documentation | Trust model and audience fit |
+| What is the installation burden? | A clean-environment trial and its logs | Supported operating systems and prerequisites |
+
+Leave unknown cells unknown. An empty cell is a research task, not a product advantage.
+
+## Inspect a repository beyond its README
+
+Read the license before planning reuse. Identify the documented installation method, supported runtimes, dependency pins, task examples, and test commands. Check how commands are parsed and executed. A tool that accepts arbitrary shell commands has a different trust model from one with a fixed verifier interface.
+
+Follow one concrete input through the code: from a CLI argument to a task object, then execution, verification, and output. Compare that behavior with the documentation. Review issues for recurring failure patterns, but inspect the affected version and resolution before treating an old complaint as a current limitation.
+
+Stars and download counts may indicate attention; they do not demonstrate correctness, maintainability, or fit. Similarly, a repository's latest commit date does not tell you whether its stable features work. Prefer a reproducible trial over impressions.
+
+## Keep an evidence ledger
+
+Write claims in a way another engineer can challenge:
+
+```text
+Claim: Tool X can execute a task without contacting a hosted control plane.
+Evidence: Documentation section + recorded clean-environment trial.
+Version: Repository commit or released version used in the trial.
+Conditions: Dependencies preinstalled; external agent API disabled.
+Confidence: Observed for this fixture, not all supported agents.
+Open question: Does image preparation require a network connection?
+```
+
+Distinguish vendor claims, your observations, user reports, and hypotheses. “No dashboard mentioned in the README” is not evidence that a dashboard does not exist. “The documented command failed under these conditions” is useful evidence, but it does not prove the tool is broken everywhere.
+
+Store investigation commands and redacted outputs with the ledger. Time-box broad browsing, then test the two or three alternatives most likely to meet the critical requirements.
+
+## Common mistakes and tradeoffs
+
+Copying competitors' feature lists often reproduces complexity without reproducing their users' needs. Dismissing a mature tool because its internals look different can waste months rebuilding it. On the other hand, integrating a large evaluation platform may create a harder setup problem than a small purpose-built CLI.
+
+A build-versus-adopt decision should account for integration effort, license obligations, operational burden, and the cost of maintaining your own version. A short adapter can be a better product decision than a new framework. Record what would make you revisit the choice.
+
+## Practical exercise
+
+Choose two existing tools and one manual workaround. Evaluate the same small task in each using a fixed repository revision. Record one verified strength, one observed limitation, and one unknown per alternative. Write a short recommendation that includes the conditions under which it could be wrong.
+
+## Key takeaways
+
+- Compare completed workflows rather than isolated feature names.
+- Inspect licenses, code paths, documentation, and real execution together.
+- Attach versions and conditions to every technical claim.
+- Treat unknowns as investigation work rather than evidence of differentiation.

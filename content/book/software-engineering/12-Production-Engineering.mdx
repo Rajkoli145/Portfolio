@@ -1,0 +1,74 @@
+---
+title: "Production Engineering"
+summary: "Operate dependable software through observability, bounded work, secure boundaries, and practical incident response."
+---
+
+## Reliability includes the ability to explain failure
+
+Software that runs locally benefits from an unusually forgiving operator: its author knows the setup and can inspect the code. Production users do not share that context. Reliable operation requires observable state, bounded resource use, controlled access, and recovery that does not depend on guesswork.
+
+A local developer tool still has operational responsibilities. It can fill a disk with logs, leave containers running, overwrite a user's repository, or leak a provider credential. Production engineering applies to the environment where the product is used, even when there is no hosted server.
+
+## Use logs, metrics, and traces for different questions
+
+Logs describe discrete events. A structured record can answer what failed for a specific run:
+
+```json
+{
+  "event": "verification_finished",
+  "run_id": "example-run-001",
+  "task_id": "fixture-parser",
+  "status": "verification_failed",
+  "exit_code": 1,
+  "duration_ms": 240
+}
+```
+
+These are invented example values, not AgentBench measurements. Stable event names and identifiers make logs searchable. Include enough context to investigate without writing raw credentials, full prompts, or private source by default. Limit output size and define retention; diagnostic data is still data you must manage.
+
+Metrics summarize behavior over time: successful runs, failure categories, queue depth, or execution duration distributions. Avoid treating an average as the whole experience. A few very slow runs can harm users while the average looks acceptable. Separate infrastructure failures from incorrect agent outputs so operational incidents do not become misleading evaluation scores.
+
+Traces connect related operations across boundaries. A trace can show time spent preparing a workspace, calling a provider, executing, and verifying. A local tool may only need phase timing and a run identifier; a distributed service may need trace context propagated through requests and jobs. Choose instrumentation to answer real questions.
+
+## Bound work and measure before optimizing
+
+Set deadlines for external calls and for the complete workflow. A per-attempt timeout with unlimited retries is still unbounded. Retry transient failures with limits and backoff; do not retry invalid input or a deterministic failing assertion as if it were a network outage.
+
+For expensive or externally visible operations, decide how to avoid duplicate work. Retrying a request after a lost response can launch a second agent run and incur another charge. Idempotency and durable state can help, but their behavior must be specified.
+
+Profile before changing algorithms or infrastructure. Determine whether delay comes from image preparation, disk access, the provider, or verification. Cache immutable preparation inputs where safe, while keeping mutable workspaces isolated. A cache that changes the evaluation's starting state sacrifices validity for speed.
+
+Define a reliability objective from the user's perspective. For example, a future CLI objective might concern correctly classified terminal results and bounded cleanup under supported conditions. It should name a measurement window and exclusions before it becomes a service-level claim. Do not publish unmeasured uptime or latency promises.
+
+## Design security at trust boundaries
+
+Validate inputs where they cross into the system. Use allowlists for schema fields and appropriate path restrictions. Treat task files and generated code as executable inputs when they can launch commands. A YAML parser that avoids arbitrary object construction is necessary, but insufficient if the accepted task intentionally contains arbitrary commands.
+
+[Docker's security documentation](https://docs.docker.com/engine/security/) explains the roles of namespaces, control groups, capabilities, and daemon access. Containers reduce some risks but are not an unconditional boundary for hostile code. Avoid privileged execution, host Docker-socket mounts, broad host-directory mounts, and inherited credentials. Apply resource limits and an explicit network policy. Truly adversarial evaluation may require disposable machines or stronger isolation designed for that threat model.
+
+Store secrets in the environment's supported secret mechanism and pass only the values an operation needs. Local-first orchestration does not guarantee offline processing: an external agent provider may receive repository content. Document the actual data flow and give users control over it.
+
+## Handle incidents as a repeatable process
+
+An incident is a user-impacting failure that requires coordinated recovery. First establish the affected behavior, scope, and version. Contain the problem: pause new work, disable a dangerous feature, or stop a faulty release. Preserve enough evidence for investigation without collecting unnecessary private data.
+
+Restore service using a known rollback or mitigation. Communicate what is known, what remains uncertain, and when the next update will arrive. Afterward, reconstruct the timeline and contributing conditions. Add corrective actions with owners: a cleanup fix, a regression fixture, better diagnostics, or a changed release gate.
+
+For a local evaluator that leaves processes behind, the response may be a documented way to identify and stop only its own resources, followed by a fix that guarantees cleanup. A broad command that deletes all containers would transfer the incident's cost to unrelated user work.
+
+## Common mistakes and tradeoffs
+
+Logging everything increases cost and exposure without ensuring observability. Alerting on every exception teaches people to ignore alerts. Build alerts around actionable user impact and provide a clear investigation path.
+
+Perfect reliability is not free. Choose safeguards from likely failures and their consequences, and make supported conditions explicit. Spend attention on failures that corrupt results, lose data, or break trust before optimizing cosmetic metrics.
+
+## Practical exercise
+
+Choose a timeout or disk-full incident. Write the events needed to diagnose it, the metric that would reveal its spread, and a recovery procedure. Identify one secret that must never enter logs. Define how you would prove cleanup preserves unrelated user resources.
+
+## Key takeaways
+
+- Observe user-relevant outcomes and preserve the context needed to diagnose them.
+- Bound time, retries, output, and resource consumption.
+- Treat executable inputs and external providers as explicit trust boundaries.
+- Practice recovery and turn incidents into concrete engineering improvements.

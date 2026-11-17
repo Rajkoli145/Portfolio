@@ -1,0 +1,80 @@
+---
+title: "Git, GitHub & Engineering Workflows"
+summary: "Develop a small feature through a branch, focused commits, a reviewable pull request, and verified integration."
+---
+
+## Version control preserves the reasoning behind change
+
+Git records changes to content. A good engineering workflow uses that history to explain why behavior changed, how it was verified, and how to recover when it causes trouble. GitHub adds issues, pull requests, review, and automation around that history.
+
+A branch is a movable reference to a commit, not a private copy of the entire project. A pull request compares changes and creates a place for review; opening one does not demonstrate correctness. The workflow becomes useful when changes are small enough to understand and their intended behavior is explicit.
+
+## Develop one feature in a short-lived branch
+
+Suppose an evaluator needs to distinguish a verifier timeout from a failed assertion. Start from an up-to-date base and inspect the working tree before switching branches. Preserve unrelated local changes; do not use a hard reset merely to obtain a clean screen.
+
+```bash
+git status
+git switch main
+git pull --ff-only
+git switch -c feat/verifier-timeout
+
+# Implement the behavior and its relevant checks.
+git diff
+git add src/verification.py tests/test_verification.py
+git diff --cached
+git commit -m "feat: distinguish verifier timeouts from failed checks"
+git push -u origin feat/verifier-timeout
+```
+
+These commands are an illustrative Python-project workflow; paths and checks must match the repository you are actually changing. Explicit staging helps avoid committing secrets, generated output, or unrelated edits. Inspecting the staged diff is a small habit that prevents expensive mistakes.
+
+A useful commit message describes a coherent behavior change. Conventional commits add a prefix such as `feat`, `fix`, or `docs`; a team can use that convention for release automation. The prefix does not make a large or ambiguous commit easy to review. Agree on the convention before making automation depend on it.
+
+## Write a pull request for someone without your context
+
+Lead with the concrete problem and the resulting behavior. Include the issue reference, relevant verification, and any important compatibility or rollout concern.
+
+```text
+Verifier timeouts previously appeared as failed assertions, hiding execution
+problems in agent comparisons. This change records verification_timeout and
+preserves the verifier deadline in the report.
+
+Validation: passing, assertion-failure, and sleeping fixtures; cleanup checked
+for the timeout path. Report consumers must handle the new outcome value.
+```
+
+A reviewer should not need to reconstruct the conversation that led to the change. If scope changes during implementation, rewrite the description to match the final diff.
+
+Ask reviewers to examine behavior, failure handling, tests, and clarity. Style comments are useful when they improve consistency, but they should not obscure a missed cleanup path or a report compatibility break. Explain the reason for a requested change and distinguish a blocking defect from a suggestion.
+
+## Integrate without losing other work
+
+Keep the feature branch current using the repository's agreed merge or rebase policy. Rebase rewrites commit identities, so coordinate before rewriting a branch used by others. When a conflict occurs, understand both changes and rerun the checks affected by the resolution. Removing conflict markers is not enough.
+
+Use `git log` and `git diff` to inspect the final change relative to the base. A PR that accidentally includes unrelated work is harder to reason about and harder to revert. A squash merge can produce a simple history; preserving individual commits can retain useful intermediate decisions. Choose intentionally and keep either result coherent.
+
+For a defect already merged into a shared branch, a new revert commit generally preserves the shared history. Recovery should also consider data and deployment state: reverting code cannot automatically undo an incompatible migration or an external API call.
+
+## Protect the feedback loop
+
+Link issues to PRs so a completed implementation can be traced back to acceptance criteria. Require the checks that establish the relevant behavior, while keeping fast feedback available locally. Review permissions and protected branches should reflect the team's collaboration needs.
+
+Never commit credentials as a shortcut for passing CI. An accidental credential exposure requires rotation or revocation; deleting the file in a later commit does not erase previous exposure. Use repository secrets or the deployment environment's credential mechanism.
+
+## Common mistakes and tradeoffs
+
+Long-lived branches defer integration risk. Huge “cleanup plus feature” PRs make behavior changes difficult to isolate. Tiny commits that do not form meaningful review units can create noise too. Aim for focused changes, not the maximum number of commits.
+
+A solo developer still benefits from a PR description and an inspected diff. The point is making decisions reviewable—including by your future self—rather than imitating a large team's approval ceremony.
+
+## Practical exercise
+
+Create a small feature branch in a practice repository. Make one behavior change, inspect the staged diff, and write a PR description with its validation evidence. Introduce a conflicting edit on another branch and resolve it deliberately. Explain which checks the resolution requires and why.
+
+## Key takeaways
+
+- Keep branches short-lived and changes focused on one outcome.
+- Inspect both unstaged and staged diffs before committing.
+- Make review about behavior, failure paths, and evidence.
+- Treat shared history and release recovery as separate responsibilities.
